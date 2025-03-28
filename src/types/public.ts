@@ -5,3 +5,10 @@ export interface SocialMediaLinkType {
     url: string;
     icon: IconType;
   }
+
+export interface HeroNavigationType {
+    id: string;
+    name: string;
+    url: string;
+    count?: number
+  }

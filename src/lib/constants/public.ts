@@ -38,3 +38,69 @@ export const SocialMediaLinks: SocialMediaLinkType[] = [
     icon: FiTwitter,
   },
 ];
+
+
+/**
+ * Hero navigation items for the main navigation bar
+ *
+ * Contains information about each navigation item including:
+ * - id: Unique identifier for the item
+ * - name: Display name of the navigation item
+ * - url: Link to the corresponding page
+ * - count: Optional count of news items (if applicable)
+ *
+ * @type {HeroNavigationType[]}
+ */
+export const HeroNavigationItems = [
+  {
+    id: 'home',
+    name: 'Home',
+    url: '/',
+  },
+  {
+    id: 'news',
+    name: 'News',
+    url: '/news',
+    count: 5,
+  },
+  {
+    id: 'entertainment',
+    name: 'Entertainment',
+    url: '/entertainment',
+    count: 3,
+  },
+  {
+    id: 'sports',
+    name: 'Sports',
+    url: '/sports',
+  },
+  {
+    id: 'business',
+    name: 'Business',
+    url: '/business',
+  },
+  {
+    id: 'lifestyle',
+    name: 'Lifestyle',
+    url: '/lifestyle',
+  },
+];
+
+/**
+ * Popular tags for the hero section
+ *
+ * Contains information about each tag including:
+ * - id: Unique identifier for the tag
+ * - name: Display name of the tag
+ * - url: Link to the corresponding category page
+ *
+ * @type {Array<{id: number, name: string, url: string}>}
+ */
+export const PopularTags = [
+  { id: 1, name: 'Politics', url: '/category/politics' },
+  { id: 2, name: 'Business', url: '/category/business' },
+  { id: 3, name: 'Technology', url: '/category/technology' },
+  { id: 4, name: 'Health', url: '/category/health' },
+  { id: 5, name: 'Entertainment', url: '/category/entertainment' },
+  { id: 6, name: 'Sports', url: '/category/sports' },
+];
