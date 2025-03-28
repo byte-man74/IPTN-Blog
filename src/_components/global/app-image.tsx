@@ -41,9 +41,9 @@ export const AppImage = ({
   src,
   alt,
   className = '',
-  width=100,
-  height=100,
-  priority = false,
+  width=1000,
+  height=1000,
+  priority = true,
   objectFit = 'cover',
   objectPosition = 'center',
   opacity = 1

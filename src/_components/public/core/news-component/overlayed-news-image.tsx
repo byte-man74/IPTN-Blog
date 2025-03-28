@@ -54,7 +54,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
       <div className="absolute inset-0 flex flex-col justify-between p-4 z-10">
         {/* Top metadata */}
         <div className="flex items-center gap-2">
-          <div className="bg-green-700 rounded-full p-2 text-white flex items-center justify-center shadow-md">
+          <div className="bg-primaryGreen rounded-full p-2 text-white flex items-center justify-center shadow-md">
             <CalendarDays className="w-4 h-4" />
           </div>
           <span className="text-white text-sm font-medium drop-shadow-md">{date ?? "Date not available"}</span>
@@ -66,7 +66,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
           <div className="flex flex-wrap gap-2 items-center text-sm">
             {readTime && (
               <div className="flex items-center gap-1">
-                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
                   <Clock className="w-3 h-3" />
                 </div>
                 <span className="text-white font-medium drop-shadow-md">{readTime}</span>
@@ -74,7 +74,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
             )}
 
             {category && (
-              <div className="bg-green-800 px-2 py-1 rounded-md shadow-md flex items-center gap-1">
+              <div className="bg-primaryGreen px-2 py-1 rounded-md shadow-md flex items-center gap-1">
                 <Tag className="w-3 h-3 text-white" />
                 <span className="text-white text-xs">{category}</span>
               </div>
@@ -82,7 +82,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
 
             {views !== undefined && views !== null && (
               <div className="flex items-center gap-1">
-                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
                   <Eye className="w-3 h-3" />
                 </div>
                 <span className="text-white text-xs font-medium drop-shadow-md">{views}</span>
@@ -91,7 +91,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
 
             {comments !== undefined && comments !== null && (
               <div className="flex items-center gap-1">
-                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
                   <MessageSquare className="w-3 h-3" />
                 </div>
                 <span className="text-white text-xs font-medium drop-shadow-md">{comments}</span>
@@ -101,7 +101,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
 
           {/* Headline */}
           <AppLink href={slug ?? "#"} className="block">
-            <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold leading-tight hover:text-green-400 transition-colors drop-shadow-lg">
+            <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold leading-tight hover:text-primaryGreen transition-colors drop-shadow-lg">
               {title ?? "News title"}
             </h3>
           </AppLink>
