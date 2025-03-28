@@ -2,7 +2,9 @@ import React from 'react'
 import { SocialMediaLinks } from '@/lib/constants/public'
 import { AppLink } from '@/_components/global/app-link';
 
-
+/** 
+Component for the whole public pages, its just a container that holdes the brands social media links
+*/
 const GlobalSocialBanner = () => {
   return (
     <div className='flex justify-end items-center py-4 w-full bg-primaryDark px-x-md md:px-x-lg lg:px-x-xl xl:px-x-2xl '>
