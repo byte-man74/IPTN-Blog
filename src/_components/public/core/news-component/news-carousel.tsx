@@ -1,12 +1,11 @@
 "use client"
 
 import React from "react";
-import { Calendar, Camera, Eye, MessageCircle } from "lucide-react";
+import { Calendar, Camera, Eye, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"; // Changed arrow icons
 import { AppImage } from "@/_components/global/app-image";
 import { AppLink } from "@/_components/global/app-link";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 interface NewsItem {
   id: number;
@@ -27,32 +26,36 @@ interface NewsCarouselProps {
 export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   const items = newsItems ?? [];
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-    pauseOnHover: true,
-    arrows: true,
-    customPaging: function() {
-      return (
-        <div className="w-3 h-3 rounded-full hover:bg-white transition-colors"></div>
-      );
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 1024 },
+      items: 1
     },
-    dotsClass: "slick-dots custom-dots",
-    appendDots: (dots: React.ReactNode) => (
-      <div style={{ position: "absolute", bottom: "20px", width: "100%", textAlign: "center" }}>
-        <ul style={{ margin: "0", padding: "0" }}>{dots}</ul>
-      </div>
-    ),
+    desktop: {
+      breakpoint: { max: 1024, min: 768 },
+      items: 1
+    },
+    tablet: {
+      breakpoint: { max: 768, min: 464 },
+      items: 1
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1
+    }
   };
 
   return (
     <div className="relative max-w-5xl h-full mx-auto border border-gray-200 overflow-hidden shadow-lg">
-      <Slider {...settings}>
+      <Carousel
+        responsive={responsive}
+        infinite={true}
+        autoPlay={true}
+        autoPlaySpeed={5000}
+        arrows={false}
+        renderButtonGroupOutside={true}
+        customButtonGroup={<CustomButtonGroup />}
+      >
         {items.map((item) => (
           <div key={item.id}>
             {/* Main Image Container */}
@@ -126,39 +129,29 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
             </div>
           </div>
         ))}
-      </Slider>
-
-      <style jsx global>{`
-        .slick-prev, .slick-next {
-          z-index: 10;
-          width: 50px;
-          height: 50px;
-          background-color: var(--color-primary-green, rgba(22, 163, 74, 0.8)) !important;
-          border-radius: 50%;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .slick-prev:before, .slick-next:before {
-          font-size: 24px;
-          color: rgba(255, 255, 255, 0.9);
-        }
-
-        .slick-prev {
-          left: 20px;
-        }
-
-        .slick-next {
-          right: 20px;
-        }
-
-        .custom-dots li.slick-active div {
-          background-color: white;
-        }
-
-        .custom-dots li div {
-          transition: all 0.3s ease;
-        }
-      `}</style>
+      </Carousel>
     </div>
   );
 }
+
+interface CustomButtonGroupProps {
+  next?: () => void;
+  previous?: () => void;
+}
+
+const CustomButtonGroup = ({ next, previous }: CustomButtonGroupProps) => {
+  return (
+    <div className="absolute top-1/2 transform -translate-y-1/2 w-full flex justify-between px-4 z-20">
+      <button onClick={previous} className="text-white">
+        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
+          <ChevronLeft />
+        </div>
+      </button>
+      <button onClick={next} className="text-white">
+        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
+          <ChevronRight />
+        </div>
+      </button>
+    </div>
+  );
+};

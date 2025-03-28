@@ -6,7 +6,7 @@ import React from 'react'
 
 const EditorsPick = () => {
   return (
-    <div className="w-[33%] h-full">
+    <div className="w-[30%] h-full">
     <BasicTitle title="Editor's pick "/>
     <OverlayedNewsImage
         newsContent={dummyNewsData}

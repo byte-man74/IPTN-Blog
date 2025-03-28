@@ -29,7 +29,7 @@ export default {
         'x-2xl': '3.5rem',
       },
       fontSize: {
-        'basic-header': '18px',
+        'basic-header': '16px',
       },
       animation: {
         marquee: "marquee 30s linear infinite",

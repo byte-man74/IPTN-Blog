@@ -34,7 +34,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
 
   return (
     <AppLink href={slug} className='w-full'>
-    <div className="relative w-full h-[20rem] overflow-hidden group">
+    <div className="relative w-full h-[21rem] overflow-hidden group">
       {imageUrl ? (
         <AppLink href={slug}>
           <AppImage
@@ -74,7 +74,7 @@ const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
             )}
 
             {category && (
-              <div className="bg-primaryGreen px-2 py-1 rounded-md shadow-md flex items-center gap-1">
+              <div className="bg-primaryGreen px-2 py-1 shadow-md flex items-center gap-1">
                 <Tag className="w-3 h-3 text-white" />
                 <span className="text-white text-xs">{category}</span>
               </div>
