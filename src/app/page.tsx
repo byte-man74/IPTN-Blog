@@ -1,3 +1,4 @@
+import { HeroBreakingNews } from "@/_components/public/hero-breaking-news";
 import HeroNavigation from "@/_components/public/hero-navigation";
 import HeroTags from "@/_components/public/hero-tags";
 import MainNavBanner  from "@/_components/public/main-nav-banner";
@@ -8,9 +9,14 @@ export default function Home() {
         <>
             <GlobalSocialBanner />
             <MainNavBanner />
-            <HeroNavigation />
-            <HeroTags />
-            {/* <BreakingNews /> */}
+
+            {/* hero component -- i may use this later on */}
+            <>
+                <HeroNavigation />
+                <HeroTags />
+                <HeroBreakingNews />
+            </>
+
 
         </>
     )
