@@ -8,10 +8,10 @@ import { PopularTags } from '@/lib/constants/public'
  */
 const HeroTags = () => {
   return (
-    <div className="bg-gray-100 w-full">
+    <div className=" w-full">
         <div className="flex flex-wrap items-center gap-8 h-16">
           <div className="h-full flex w-[12rem] items-center justify-end bg-gray-200 px-6">
-            <span className="font-semibold text-black">Popular Tags</span>
+            <span className="font-semibold">Popular Tags</span>
           </div>
           {PopularTags && PopularTags.length > 0 ? (
             PopularTags.map((tag) => (

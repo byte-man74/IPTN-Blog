@@ -28,6 +28,18 @@ export default {
         'x-xl': '2rem',
         'x-2xl': '3.5rem',
       },
+      fontSize: {
+        'basic-header': '18px',
+      },
+      animation: {
+        marquee: "marquee 30s linear infinite",
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(-100%)" },
+        },
+      },
     },
   },
   plugins: [],

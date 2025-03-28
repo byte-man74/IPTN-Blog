@@ -1,0 +1,116 @@
+import React from 'react';
+import { CalendarDays, Clock, Eye, MessageSquare, Tag } from 'lucide-react';
+import { AppImage } from '@/_components/global/app-image';
+import { AppLink } from '@/_components/global/app-link';
+
+interface NewsContent {
+  imageUrl?: string;
+  title: string;
+  category: string;
+  date: string;
+  slug: string;
+  readTime?: string;
+  views?: number;
+  comments?: number;
+}
+
+interface OverlayedNewsImageProps {
+  newsContent: NewsContent;
+}
+/**
+ * this is a news component that has the component overlayed as the bg image with its meta data above it
+ */
+const OverlayedNewsImage = ({ newsContent }: OverlayedNewsImageProps) => {
+  const {
+    imageUrl,
+    title,
+    category,
+    date,
+    slug,
+    readTime,
+    views,
+    comments
+  } = newsContent ?? {};
+
+  return (
+    <AppLink href={slug} className='w-full'>
+    <div className="relative w-full h-[20rem] overflow-hidden group">
+      {imageUrl ? (
+        <AppLink href={slug}>
+          <AppImage
+            src={imageUrl}
+            alt={title ?? "News image"}
+            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            priority
+          />
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black opacity-50 transition-opacity duration-300 group-hover:opacity-40"></div>
+        </AppLink>
+      ) : (
+        <div className="w-full h-full bg-gray-200"></div>
+      )}
+
+      {/* Metadata Overlay */}
+      <div className="absolute inset-0 flex flex-col justify-between p-4 z-10">
+        {/* Top metadata */}
+        <div className="flex items-center gap-2">
+          <div className="bg-green-700 rounded-full p-2 text-white flex items-center justify-center shadow-md">
+            <CalendarDays className="w-4 h-4" />
+          </div>
+          <span className="text-white text-sm font-medium drop-shadow-md">{date ?? "Date not available"}</span>
+        </div>
+
+        {/* Bottom content */}
+        <div className="space-y-3">
+          {/* Bottom metadata */}
+          <div className="flex flex-wrap gap-2 items-center text-sm">
+            {readTime && (
+              <div className="flex items-center gap-1">
+                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                  <Clock className="w-3 h-3" />
+                </div>
+                <span className="text-white font-medium drop-shadow-md">{readTime}</span>
+              </div>
+            )}
+
+            {category && (
+              <div className="bg-green-800 px-2 py-1 rounded-md shadow-md flex items-center gap-1">
+                <Tag className="w-3 h-3 text-white" />
+                <span className="text-white text-xs">{category}</span>
+              </div>
+            )}
+
+            {views !== undefined && views !== null && (
+              <div className="flex items-center gap-1">
+                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                  <Eye className="w-3 h-3" />
+                </div>
+                <span className="text-white text-xs font-medium drop-shadow-md">{views}</span>
+              </div>
+            )}
+
+            {comments !== undefined && comments !== null && (
+              <div className="flex items-center gap-1">
+                <div className="bg-green-700 rounded-full p-1.5 text-white flex items-center justify-center shadow-md">
+                  <MessageSquare className="w-3 h-3" />
+                </div>
+                <span className="text-white text-xs font-medium drop-shadow-md">{comments}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Headline */}
+          <AppLink href={slug ?? "#"} className="block">
+            <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold leading-tight hover:text-green-400 transition-colors drop-shadow-lg">
+              {title ?? "News title"}
+            </h3>
+          </AppLink>
+        </div>
+      </div>
+    </div>
+    </AppLink>
+
+  );
+};
+
+export default OverlayedNewsImage;
