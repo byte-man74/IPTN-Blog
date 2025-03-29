@@ -1,23 +1,23 @@
-import React from 'react';
-import { AppImage } from '@/_components/global/app-image';
-import { AppLink } from '@/_components/global/app-link';
+import React from 'react'
+import { AppImage } from '@/_components/global/app-image'
+import { AppLink } from '@/_components/global/app-link'
 
 /**
  * Interface for AppLogo component props
  */
 interface AppLogoProps {
   /** Alternative text for the logo */
-  alt?: string;
+  alt?: string
   /** Optional width of the logo */
-  width?: number;
+  width?: number
   /** Optional height of the logo */
-  height?: number;
+  height?: number
   /** Optional CSS class names */
-  className?: string;
+  className?: string
   /** Optional link URL */
-  href?: string;
+  href?: string
   /** Optional link target */
-  target?: string;
+  target?: string
 }
 
 /**
@@ -37,11 +37,11 @@ export const AppLogo = ({
   height = 50,
   className = 'z-10',
   href,
-  target
+  target,
 }: AppLogoProps) => {
   const logoImage = (
     <AppImage
-      src='/assets/iptn-logo.svg'
+      src="/assets/iptn-logo.svg"
       alt={alt ?? 'Company Logo'}
       width={width}
       height={height}
@@ -49,10 +49,10 @@ export const AppLogo = ({
       priority={true}
       objectFit="contain"
     />
-  );
-    return (
-      <AppLink href={href ?? '/'} target={target} className="inline-block">
-        {logoImage}
-      </AppLink>
-    );
-};
+  )
+  return (
+    <AppLink href={href ?? '/'} target={target} className="inline-block">
+      {logoImage}
+    </AppLink>
+  )
+}

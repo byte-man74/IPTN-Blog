@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import { Calendar, Camera, Eye, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"; // Changed arrow icons
+import { Calendar, Camera, Eye, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { AppImage } from "@/_components/global/app-image";
 import { AppLink } from "@/_components/global/app-link";
 import Carousel from 'react-multi-carousel';

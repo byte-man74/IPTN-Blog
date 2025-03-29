@@ -15,9 +15,9 @@ import React from 'react'
 const HomeCoreHero = () => {
   return (
     <div className="flex w-full justify-between gap-2  items-stretch">
-        <EditorsPick />
-        <MainContent />
-        <TrendingNow />
+      <EditorsPick />
+      <MainContent />
+      <TrendingNow />
     </div>
   )
 }

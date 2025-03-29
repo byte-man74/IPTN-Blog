@@ -1,10 +1,5 @@
-import { SocialMediaLinkType } from '@/types/public';
-import {
-  FiYoutube,
-  FiInstagram,
-  FiFacebook,
-  FiTwitter
-} from 'react-icons/fi';
+import { SocialMediaLinkType } from '@/types/public'
+import { FiYoutube, FiInstagram, FiFacebook, FiTwitter } from 'react-icons/fi'
 
 /**
  * Array of social media links used throughout the application
@@ -18,27 +13,26 @@ import {
  */
 export const SocialMediaLinks: SocialMediaLinkType[] = [
   {
-    name: "YouTube",
-    url: "https://youtube.com",
+    name: 'YouTube',
+    url: 'https://youtube.com',
     icon: FiYoutube,
   },
   {
-    name: "Facebook",
-    url: "https://facebook.com",
+    name: 'Facebook',
+    url: 'https://facebook.com',
     icon: FiFacebook,
   },
   {
-    name: "Instagram",
-    url: "https://instagram.com",
+    name: 'Instagram',
+    url: 'https://instagram.com',
     icon: FiInstagram,
   },
   {
-    name: "Twitter",
-    url: "https://twitter.com",
+    name: 'Twitter',
+    url: 'https://twitter.com',
     icon: FiTwitter,
   },
-];
-
+]
 
 /**
  * Hero navigation items for the main navigation bar
@@ -84,7 +78,7 @@ export const HeroNavigationItems = [
     name: 'Lifestyle',
     url: '/lifestyle',
   },
-];
+]
 
 /**
  * Popular tags for the hero section
@@ -103,4 +97,4 @@ export const PopularTags = [
   { id: 4, name: 'Health', url: '/category/health' },
   { id: 5, name: 'Entertainment', url: '/category/entertainment' },
   { id: 6, name: 'Sports', url: '/category/sports' },
-];
+]

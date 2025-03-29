@@ -1,27 +1,27 @@
-import React from 'react';
-import Link from 'next/link';
-import { IconType } from 'react-icons';
+import React from 'react'
+import Link from 'next/link'
+import { IconType } from 'react-icons'
 
 /**
  * Interface for AppLink component props
  */
 interface AppLinkProps {
   /** URL the link points to */
-  href: string;
+  href: string
   /** Content to be rendered inside the link */
-  children: React.ReactNode;
+  children: React.ReactNode
   /** Optional CSS class names */
-  className?: string;
+  className?: string
   /** Optional target attribute for the link */
-  target?: string;
+  target?: string
   /** Optional rel attribute for the link */
-  rel?: string;
+  rel?: string
   /** Optional aria-label for accessibility */
-  ariaLabel?: string;
+  ariaLabel?: string
   /** Optional icon to display before the link text */
-  icon?: IconType;
+  icon?: IconType
   /** Optional size for the icon (defaults to 20) */
-  iconSize?: number;
+  iconSize?: number
 }
 
 /**
@@ -44,13 +44,15 @@ export const AppLink = ({
   rel,
   ariaLabel,
   icon: Icon,
-  iconSize = 20
+  iconSize = 20,
 }: AppLinkProps) => {
-  const isExternal = href?.startsWith('http') || href?.startsWith('mailto:');
-  const linkProps = isExternal ? {
-    target: target || "_blank",
-    rel: rel || "noopener noreferrer"
-  } : {};
+  const isExternal = href?.startsWith('http') || href?.startsWith('mailto:')
+  const linkProps = isExternal
+    ? {
+        target: target || '_blank',
+        rel: rel || 'noopener noreferrer',
+      }
+    : {}
 
   return (
     <Link
@@ -62,5 +64,5 @@ export const AppLink = ({
       {Icon && <Icon size={iconSize} className="inline-block mr-2" />}
       {children}
     </Link>
-  );
-};
+  )
+}
