@@ -1,12 +1,16 @@
-
+import { NewsBanner } from '@/_components/public/news-top-banner'
 import HeroNavigation from '@/_components/public/hero-navigation'
 import HeroTags from '@/_components/public/hero-tags'
-import HomePageContent from '@/_components/pages/public-home'
+
 import MainNavBanner from '@/_components/public/main-nav-banner'
 import GlobalSocialBanner from '@/_components/public/social-banner'
-import { NewsBanner } from '@/_components/public/news-top-banner'
+import { NewsPageContent } from '@/_components/pages/public-news'
 
-export default function Home() {
+/**
+ * News component that renders the news page with various hero components and banners.
+ * @returns {JSX.Element} The rendered news page component.
+ */
+const News = () => {
   return (
     <div className="relative">
       <GlobalSocialBanner />
@@ -15,10 +19,12 @@ export default function Home() {
       <>
         <HeroNavigation />
         <HeroTags />
-        <NewsBanner title="Breaking News" />
+        <NewsBanner title="Top News"/>
       </>
 
-      <HomePageContent />
+      <NewsPageContent />
     </div>
   )
 }
+
+export default News

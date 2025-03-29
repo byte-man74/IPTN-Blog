@@ -3,14 +3,21 @@ import { FiCircle } from 'react-icons/fi'
 import BreakingNewsItem from './core/breaking-news-item'
 
 /**
- * HeroBreakingNews component displays a scrolling banner of breaking news items
+ * NewsBanner component displays a scrolling banner of news items
  * Features:
  * - Animated marquee effect for continuous scrolling of news items
  * - Visual indicator with pulsing circle icon
  * - Displays news items with images, titles, and timestamps
  * - Falls back to a message when no news items are available
+ *
+ * @param {Object} props - Component properties
+ * @param {string} props.title - The title to display on the banner
  */
-export const HeroBreakingNews = () => {
+
+interface NewsBannerProps {
+    title: string
+}
+export const NewsBanner = ({ title }: NewsBannerProps) => {
   // Dummy breaking news data
   const dummyBreakingNews = [
     {
@@ -43,12 +50,12 @@ export const HeroBreakingNews = () => {
     }
   ];
 
-  // Breaking news banner similar to the image
+  // News banner similar to the image
   return (
     <div className="relative w-full bg-[#DCDCDC] flex items-center h-[4rem]">
       <div className="font-bold px-8 mr-4 h-full bg-primaryGreen flex items-center text-white absolute left-0 z-10">
         <FiCircle className="mr-2 animate-pulse" size={24} />
-        <span>Breaking News</span>
+        <span>{title}</span>
       </div>
       <div className="text-gray-700 flex items-center overflow-hidden whitespace-nowrap">
         <div className="animate-marquee flex items-center">
