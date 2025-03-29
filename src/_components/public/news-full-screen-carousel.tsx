@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import FullWidthAternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
+import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import 'react-multi-carousel/lib/styles.css'
 import { NewsItemType } from '@/types/public'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -49,7 +49,7 @@ export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullS
   const CustomButtonGroup = ({ next, previous }: { next?: () => void; previous?: () => void }) => {
     return (
       <div className="absolute top-1/2 mt-10 transform -translate-y-1/2 w-full flex justify-between z-20">
-        <button onClick={previous} className="text-white">
+        <button onClick={previous} className="text-white opacity-0">
           <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
             <ChevronLeft />
           </div>
@@ -71,7 +71,7 @@ export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullS
 
   return (
     <div className="mt-6 flex flex-col gap-8 relative">
-      <FullWidthAternateTitle title={title} />
+      <FullWidthAlternateTitle title={title} />
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -80,7 +80,9 @@ export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullS
         arrows={false}
         renderButtonGroupOutside={true}
         customButtonGroup={<CustomButtonGroup />}
-        itemClass="flex relative h-full pl-4"
+        itemClass="flex relative h-full pl-0"
+        sliderClass="h-full"
+        containerClass="h-full"
       >
         {items?.map(item => (
             <div className="h-full w-full flex items-stretch overflow-hidden" key={item.id} >

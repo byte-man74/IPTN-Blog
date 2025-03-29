@@ -26,7 +26,7 @@ const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
   } = newsItem ?? {};
 
   return (
-    <AppLink href={slug ?? "#"} className='w-full bg-red-500'>
+    <AppLink href={slug ?? "#"} className='w-full'>
       <div className="relative w-full h-[21rem] overflow-hidden group flex">
         {imageUrl ? (
           <AppLink href={slug ?? "#"} className="w-full">

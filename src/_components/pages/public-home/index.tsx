@@ -3,6 +3,7 @@ import HomeCoreHero from '@/_components/pages/public-home/sub-sections/home-core
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { dummyBasicNewsData, longCarouselBasicNewsData } from '@/lib/constants/pre-data'
 import { NewsFullScreenCarousel } from '@/_components/public/news-full-screen-carousel'
+import YouMayHaveMissed from '@/_components/pages/public-home/sub-sections/you-may-have-missed'
 
 /**
  * HomePageContent component
@@ -28,6 +29,7 @@ const HomePageContent = () => {
         items={dummyBasicNewsData}
         carouselItem={{ itemType: 'news-fullscreen' }}
       />
+      <YouMayHaveMissed />
     </div>
   )
 }

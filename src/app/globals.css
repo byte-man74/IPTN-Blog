@@ -11,6 +11,11 @@
   --textColor: #d8d8d8;
 }
 
+/* this wasnt working from the docs recommnedation */
+.react-multi-carousel-track {
+    height: 100% !important;
+  }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #e4e4e4;

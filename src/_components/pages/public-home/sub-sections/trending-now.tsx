@@ -5,10 +5,10 @@ import React from 'react'
 
 const TrendingNow = () => {
   return (
-    <div className="w-[30%] h-full">
+    <div className="w-[30%] h-full  flex flex-col justify-between">
       <BasicTitle title="Trending Now " />
 
-      <div className="flex mt-3 flex-col gap-3">
+      <div className="flex mt-3 flex-col gap-3 justify-between">
         {carouselBasicNewsData &&
           carouselBasicNewsData.map((news) => <BasicNews key={news.id} newsContent={news} />)}
       </div>

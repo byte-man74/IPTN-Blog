@@ -5,7 +5,7 @@ import React from 'react'
 
 const MainContent = () => {
   return (
-    <div className="w-[46%] h-full">
+    <div className="w-[46%] min-h-full ">
       <BasicTitle title="Main content" />
       <NewsCarousel newsItems={carouselBasicNewsData} />
     </div>

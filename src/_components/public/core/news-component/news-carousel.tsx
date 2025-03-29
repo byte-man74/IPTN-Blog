@@ -8,12 +8,16 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { NewsItemType } from "@/types/public";
 
-
-
 interface NewsCarouselProps {
   newsItems: NewsItemType[];
 }
 
+/**
+ * NewsCarousel component
+ *
+ * This component displays a carousel of news items. Each item includes an image, title, date, and metadata such as read time, category, views, and comments.
+ * The carousel is responsive and auto-plays through the items.
+ */
 export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   const items = newsItems ?? [];
 
@@ -37,7 +41,7 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   };
 
   return (
-    <div className="relative max-w-5xl h-full mx-auto border border-gray-200 overflow-hidden shadow-lg">
+    <div className="relative h-[29rem] mx-auto border border-gray-200 overflow-hidden shadow-lg">
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -46,9 +50,12 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
         arrows={false}
         renderButtonGroupOutside={true}
         customButtonGroup={<CustomButtonGroup />}
+        className="h-full flex"
+        itemClass="w-full h-full"
+        containerClass="h-full"
       >
         {items.map((item) => (
-          <div key={item.id}>
+          <div key={item.id} className="w-full h-full">
             {/* Main Image Container */}
             <div className="relative w-full h-full">
               <AppLink href={item?.slug ?? "#"}>
@@ -130,9 +137,14 @@ interface CustomButtonGroupProps {
   previous?: () => void;
 }
 
+/**
+ * CustomButtonGroup component
+ *
+ * This component provides custom navigation buttons for the carousel.
+ */
 const CustomButtonGroup = ({ next, previous }: CustomButtonGroupProps) => {
   return (
-    <div className="absolute top-1/2 transform -translate-y-1/2 w-full flex justify-between px-4 z-20">
+    <div className="absolute top-1/2 transform -translate-y-1/2 w-full flex justify-between z-20">
       <button onClick={previous} className="text-white">
         <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
           <ChevronLeft />

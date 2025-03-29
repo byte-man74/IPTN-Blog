@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import FullWidthAternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
+import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import 'react-multi-carousel/lib/styles.css'
 import { NewsItemType } from '@/types/public'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -71,7 +71,7 @@ export const NewsCategoryCarousel = ({ title, items, carouselItem }: NewsCategor
 
   return (
     <div className="mt-6 flex flex-col gap-8 relative">
-      <FullWidthAternateTitle title={title} />
+      <FullWidthAlternateTitle title={title} />
       <Carousel
         responsive={responsive}
         infinite={true}

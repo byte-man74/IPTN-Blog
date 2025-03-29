@@ -5,16 +5,16 @@ import { NewsItemType } from '@/types/public';
 
 
 
-interface BasicNewsWithTagProps {
+interface DarkerBasicNewsWithTagProps {
   newsContent: NewsItemType;
 }
 
-const BasicNewsWithTag: React.FC<BasicNewsWithTagProps> = ({ newsContent }) => {
+const DarkerBasicNewsWithTag: React.FC<DarkerBasicNewsWithTagProps> = ({ newsContent }) => {
   const { title, readTime, category, date, slug } = newsContent ?? {};
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-4 hover:shadow-md transition-shadow duration-300 border-primaryGreen">
-      <div className="space-y-3">
+    <div className="max-w-3xl mx-auto bg-[#D9D9D9] px-4 py-10 shadow-md hover:shadow-lg transition-shadow duration-300 border-primaryGreen">
+      <div className="space-y-6">
         <AppLink href={slug ?? '#'}>
           <h3 className="text-basic-header font-semibold leading-tight text-primaryDark hover:text-primaryGreen transition-colors duration-200">
             {title ?? ""}
@@ -50,4 +50,4 @@ const BasicNewsWithTag: React.FC<BasicNewsWithTagProps> = ({ newsContent }) => {
   )
 }
 
-export default BasicNewsWithTag
+export default DarkerBasicNewsWithTag
