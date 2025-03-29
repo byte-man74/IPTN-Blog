@@ -6,21 +6,12 @@ import { AppImage } from "@/_components/global/app-image";
 import { AppLink } from "@/_components/global/app-link";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { NewsItemType } from "@/types/public";
 
-interface NewsItem {
-  id: number;
-  imageUrl: string;
-  date: string;
-  readTime?: string;
-  category?: string;
-  views?: number;
-  comments?: number;
-  title: string;
-  slug: string;
-}
+
 
 interface NewsCarouselProps {
-  newsItems: NewsItem[];
+  newsItems: NewsItemType[];
 }
 
 export default function NewsCarousel({ newsItems }: NewsCarouselProps) {

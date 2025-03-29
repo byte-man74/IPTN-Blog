@@ -12,3 +12,17 @@ export interface HeroNavigationType {
     url: string;
     count?: number
   }
+
+
+export interface NewsItemType {
+    id: number;
+    imageUrl: string;
+    date: string;
+    readTime?: string;
+    category?: string;
+    views?: number;
+    comments?: number;
+    title: string;
+    slug: string;
+    description?: string 
+  }

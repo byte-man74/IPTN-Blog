@@ -1,0 +1,25 @@
+import EditorsPick from '@/_components/pages/public-home/sub-sections/editors-pick'
+import MainContent from '@/_components/pages/public-home/sub-sections/main-content'
+import TrendingNow from '@/_components/pages/public-home/sub-sections/trending-now'
+import React from 'react'
+
+/**
+ * HomeCoreHero component
+ *
+ * This component serves as the main hero section of the home page.
+ * It includes three main sections:
+ * - EditorsPick: Displays the editor's pick articles.
+ * - MainContent: Displays the main content of the home page.
+ * - TrendingNow: Displays the currently trending articles.
+ */
+const HomeCoreHero = () => {
+  return (
+    <div className="flex w-full justify-between gap-2  items-stretch">
+        <EditorsPick />
+        <MainContent />
+        <TrendingNow />
+    </div>
+  )
+}
+
+export default HomeCoreHero
