@@ -8,7 +8,7 @@ import { PopularTags } from '@/lib/constants/public'
  */
 const HeroTags = () => {
   return (
-    <div className=" w-full">
+    <div className="w-full sticky top-[4rem] z-50 bg-background">
         <div className="flex flex-wrap items-center gap-8 h-16">
           <div className="h-full flex w-[12rem] items-center justify-end bg-gray-200 px-6">
             <span className="font-semibold">Popular Tags</span>

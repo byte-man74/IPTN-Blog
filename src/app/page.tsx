@@ -7,7 +7,7 @@ import GlobalSocialBanner from "@/_components/public/social-banner";
 
 export default function Home() {
     return(
-        <div>
+        <div className="relative">
             <GlobalSocialBanner />
             <MainNavBanner />
             {/* hero component -- i may use this later on */}

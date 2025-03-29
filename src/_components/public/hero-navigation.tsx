@@ -9,7 +9,7 @@ import HeroNavItem from '@/_components/public/core/hero-nav-item';
  */
 const HeroNavigation = () => {
   return (
-    <div className="w-full h-[4rem] bg-[#1E1E1E] flex items-center justify-between px-24">
+    <div className="w-full h-[4rem] bg-[#1E1E1E] flex items-center justify-between px-24 sticky top-0 z-50">
         <div className="flex items-center gap-6 h-full">
         {HeroNavigationItems && HeroNavigationItems.map((item) => (
             <HeroNavItem item={item} key={item.id}/>

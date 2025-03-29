@@ -9,7 +9,7 @@ const EditorsPick = () => {
     <div className="w-[30%] h-full">
     <BasicTitle title="Editor's pick "/>
     <OverlayedNewsImage
-        newsContent={dummyNewsData}
+        newsItem={dummyNewsData}
     />
 
     <div className="flex mt-3 flex-col gap-3">
