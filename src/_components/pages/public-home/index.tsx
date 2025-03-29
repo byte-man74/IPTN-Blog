@@ -1,7 +1,8 @@
 import React from 'react'
 import HomeCoreHero from '@/_components/pages/public-home/sub-sections/home-core-hero'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
-import { longCarouselBasicNewsData } from '@/lib/constants/pre-data'
+import { dummyBasicNewsData, longCarouselBasicNewsData } from '@/lib/constants/pre-data'
+import { NewsFullScreenCarousel } from '@/_components/public/news-full-screen-carousel'
 
 
 /**
@@ -15,6 +16,7 @@ const HomePageContent = () => {
         <HomeCoreHero />
         <NewsCategoryCarousel title="Featured List" items={longCarouselBasicNewsData} carouselItem={{ itemType: "news-with-description" }}  />
         <NewsCategoryCarousel title="Videos" items={reversedCarouselList} carouselItem={{ itemType: "news-overlay" }} />
+        < NewsFullScreenCarousel title="Diaspora" items={dummyBasicNewsData} carouselItem={{ itemType: "news-fullscreen" }}/>
     </div>
   )
 }
