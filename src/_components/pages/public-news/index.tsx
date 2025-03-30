@@ -3,6 +3,7 @@ import { NewsHero } from '@/_components/pages/public-news/sub-sections/news-hero
 import { AdsBox } from '@/_components/public/core/ads-box'
 import TopNews from '@/_components/pages/public-news/sub-sections/top-news'
 import Politics from '@/_components/pages/public-news/sub-sections/politics'
+import Sports from '@/_components/pages/public-news/sub-sections/sports'
 
 export const NewsPageContent = () => {
   return (
@@ -11,6 +12,7 @@ export const NewsPageContent = () => {
         <AdsBox />
         <TopNews />
         <Politics />
+        <Sports />
     </div>
   )
 }

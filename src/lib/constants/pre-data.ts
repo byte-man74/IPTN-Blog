@@ -163,4 +163,32 @@ export const longCarouselBasicNewsData = [
     description:
       'Exploring the latest advancements in renewable energy storage technology and their potential impact on accelerating the transition to green energy.',
   },
+  {
+    id: 7,
+    imageUrl:
+      'https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    title: 'Breakthrough in Renewable Energy Storage Could Accelerate Green Transition',
+    readTime: '6 min read',
+    category: 'Science',
+    date: 'October 28, 2023',
+    slug: '/news/renewable-energy-breakthrough',
+    views: 1250,
+    comments: 45,
+    description:
+      'Exploring the latest advancements in renewable energy storage technology and their potential impact on accelerating the transition to green energy.',
+  },
+  {
+    id: 8,
+    imageUrl:
+      'https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    title: 'Breakthrough in Renewable Energy Storage Could Accelerate Green Transition',
+    readTime: '6 min read',
+    category: 'Science',
+    date: 'October 28, 2023',
+    slug: '/news/renewable-energy-breakthrough',
+    views: 1250,
+    comments: 45,
+    description:
+      'Exploring the latest advancements in renewable energy storage technology and their potential impact on accelerating the transition to green energy.',
+  },
 ]

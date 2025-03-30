@@ -18,6 +18,8 @@ const Politics = () => {
     <div className="relative px-8 py-5 flex flex-col gap-8">
       <FullWidthAlternateTitle title="Politics" />
       <div className="flex gap-6 px-6">
+
+        
         <div className="w-3/5">{newsData.length > 0 && <BasicNewsTitleAndImage />}</div>
         <div className="w-2/5 flex flex-col gap-8">
           {newsData.slice(1).map((item, index) => (
