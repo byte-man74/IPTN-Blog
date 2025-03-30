@@ -18,7 +18,6 @@ const FullWidthAlternateTitle: React.FC<FullWidthAlternateTitleProps> = ({ title
         className="font-black tracking-widest text-transparent mt-[-10px] whitespace-nowrap overflow-hidden"
         style={{
           WebkitTextStroke: "2px black",
-
           fontFamily: "Arial Black, sans-serif",
         }}
       >
