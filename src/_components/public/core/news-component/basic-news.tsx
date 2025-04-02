@@ -20,7 +20,7 @@ const BasicNews: React.FC<BasicNewsComponentProps> = ({ newsContent }) => {
   const { title, readTime, category, date, slug, imageUrl } = newsContent ?? {};
 
   return (
-    <div className="flex gap-0 bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="flex gap-0 h-full bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Image section */}
       <div className="w-1/3 relative">
         <AppImage
@@ -31,7 +31,7 @@ const BasicNews: React.FC<BasicNewsComponentProps> = ({ newsContent }) => {
       </div>
 
       {/* Content section */}
-      <div className="w-2/3 p-4 flex flex-col justify-between">
+      <div className="w-2/3 p-4 flex flex-col justify-center">
         {/* Date indicator with black overlay */}
         {date && (
           <div className="flex items-center gap-2 mb-3">

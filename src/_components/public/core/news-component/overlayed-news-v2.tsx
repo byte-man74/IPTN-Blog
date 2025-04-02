@@ -25,11 +25,11 @@ const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
   } = newsItem ?? {};
 
   return (
-    <AppLink href={slug} className="relative w-full h-[30rem] overflow-hidden group">
+    <AppLink href={slug} className="relative w-full min-h-[30rem] h-full overflow-hidden group">
       <div className="">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <AppImage src={imageUrl} alt={title} priority className="object-cover" />
+          <AppImage src={imageUrl} alt={title} priority className="object-cover w-full h-full" />
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         </div>
