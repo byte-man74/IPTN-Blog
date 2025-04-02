@@ -12,7 +12,6 @@ interface OverlayedNewsImageProps {
 /**
  * OverlayedNewsImage component displays a news item with an overlayed background image and metadata.
  * @param {OverlayedNewsImageProps} props - The props for the component.
- * @returns {JSX.Element} The rendered OverlayedNewsImage component.
  */
 const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
   const {

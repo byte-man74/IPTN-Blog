@@ -16,6 +16,15 @@
     height: 100% !important;
   }
 
+.masonry-grid_column {
+    padding-left: 4px; /* gutter size */
+    background-clip: padding-box;
+  }
+
+  .grid-item {
+    margin-bottom: 10px;
+  }
+  
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #e4e4e4;

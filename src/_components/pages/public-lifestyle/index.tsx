@@ -2,6 +2,7 @@ import NewsScreenFullWidthHero from '@/_components/public/core/news-component/ne
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { longCarouselBasicNewsData } from '@/lib/constants/pre-data'
 import React from 'react'
+import MasonryNewsGrid from './sub-sections/masonry'
 
 export const LifestylePageContent = () => {
   return (
@@ -15,6 +16,7 @@ export const LifestylePageContent = () => {
           items={longCarouselBasicNewsData}
           carouselItem={{ itemType: 'overlay-v2' }}
         />
+        <MasonryNewsGrid  />
       </div>
     </>
   )
