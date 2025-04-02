@@ -16,8 +16,8 @@ export const LifestylePageContent = () => {
           items={longCarouselBasicNewsData}
           carouselItem={{ itemType: 'overlay-v2' }}
         />
-        <MasonryNewsGrid  />
       </div>
+        <MasonryNewsGrid />
     </>
   )
 }

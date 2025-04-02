@@ -14,20 +14,24 @@ const MasonryNewsGrid = () => {
   }
 
   return (
-    <div className='mt-8 flex flex-col gap-6'>
-      <FullWidthAlternateTitle title="Fashion" />
-      <Masonry
-        breakpointCols={breakpointColumns}
-        className="flex w-full gap-x-2"
-        style={{
-            rowGap: 30
-        }}
-        columnClassName="masonry-grid_column"
-      >
-        {longCarouselBasicNewsData.map((newsItem, index) => (
-          <MasonryNewsElement newsItem={newsItem} key={index} />
-        ))}
-      </Masonry>
+    <div className="mt-8 flex flex-col gap-8 pb-8">
+      <div className="px-8">
+        <FullWidthAlternateTitle title="Fashion" />
+      </div>
+      <div className="px-10">
+        <Masonry
+          breakpointCols={breakpointColumns}
+          className="flex w-full gap-x-2"
+          style={{
+            rowGap: 30,
+          }}
+          columnClassName="masonry-grid_column"
+        >
+          {longCarouselBasicNewsData.map((newsItem, index) => (
+            <MasonryNewsElement newsItem={newsItem} key={index} />
+          ))}
+        </Masonry>
+      </div>
     </div>
   )
 }
