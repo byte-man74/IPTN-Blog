@@ -41,7 +41,7 @@ export default function NewsFullScreen({
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
             <div className="rounded bg-gray-800/70 px-3 py-1 text-sm text-white">{readTime ?? 'N/A'}</div>
-            <div className="rounded bg-green-700 px-3 py-1 text-sm text-white">{category ?? 'General'}</div>
+            <div className="rounded bg-primaryGreen px-3 py-1 text-sm text-white">{category ?? 'General'}</div>
             <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
               <Eye size={16} />
               <span>{views ?? 0}</span>
@@ -56,7 +56,7 @@ export default function NewsFullScreen({
         <div className="py-4">
           <div className="mb-3 flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-700 text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primaryGreen text-white">
                 <User size={16} />
               </div>
               <span className="text-sm font-medium">Admin</span>

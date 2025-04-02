@@ -6,14 +6,15 @@ import FullWidthAlternateTitle from '@/_components/public/core/section-title/ful
 import 'react-multi-carousel/lib/styles.css'
 import { NewsItemType } from '@/types/public'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import NewsWithDescription from './core/news-component/news-with-description'
+import NewsWithDescription from '@/_components/public/core/news-component/news-with-description'
 import Carousel from 'react-multi-carousel'
-import OverlayedNewsImage from './core/news-component/overlayed-news-image'
-import BasicNewsWithTagV2 from './core/news-component/basic-news-with-tag-v2'
+import OverlayedNewsImage from '@/_components/public/core/news-component/overlayed-news-image'
+import BasicNewsWithTagV2 from '@/_components/public/core/news-component/basic-news-with-tag-v2'
+import OverlayedNewsImageV2 from '@/_components/public/core/news-component/overlayed-news-v2'
 
 
 interface CarouselItemComponentType {
-    itemType: "news-overlay" | "news-with-description" | "basic-news-with-tag-v2"
+    itemType: "news-overlay" | "news-with-description" | "basic-news-with-tag-v2" | "overlay-v2"
 }
 interface NewsCategoryCarouselProps {
     title?: string
@@ -37,20 +38,40 @@ interface NewsCategoryCarouselProps {
  * @param {CarouselItemComponentType} [props.carouselItem] - The type of carousel item to render.
  */
 export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: "news-with-description" } }: NewsCategoryCarouselProps) => {
+  /**
+   * Get the number of items to display based on the item type.
+   * @param {string} itemType - The type of the carousel item.
+   * @returns {number} The number of items to display.
+   */
+  const getNumberOfItems = (itemType: string) => {
+    switch (itemType) {
+      case "basic-news-with-tag-v2":
+        return { desktop: 2, tablet: 3, mobile: 1 };
+    case "overlay-v2":
+        return { desktop: 2, tablet: 3, mobile: 1 };
+      case "news-overlay":
+      case "news-with-description":
+      default:
+        return { desktop: 4, tablet: 3, mobile: 1 };
+    }
+  };
+
+  const numberOfItems = getNumberOfItems(carouselItem.itemType);
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: carouselItem.itemType == "basic-news-with-tag-v2" ? 2 : 4,
+      items: numberOfItems.desktop,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 3,
+      items: numberOfItems.tablet,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1,
+      items: numberOfItems.mobile,
     },
-  }
+  };
 
   /**
    * CustomButtonGroup component for carousel navigation.
@@ -91,6 +112,9 @@ export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: 
     case "basic-news-with-tag-v2":
         ItemComponent = BasicNewsWithTagV2;
         break;
+    case "overlay-v2":
+        ItemComponent = OverlayedNewsImageV2;
+        break
     default:
       ItemComponent = NewsWithDescription;
   }
