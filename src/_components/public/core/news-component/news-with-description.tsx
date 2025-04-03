@@ -37,7 +37,7 @@ const NewsWithDescription: React.FC<{ newsItem: NewsItemType, maxDescriptionLeng
     <AppLink href={slug ?? '#'}>
       <div className={`w-full max-w-3xl overflow-hidden border border-gray-200 bg-white shadow-md ${allowMargin ? 'mx-4' : ''}`}>
         <div className="relative h-60 w-full overflow-hidden">
-          <AppImage src={imageUrl} alt={title ?? "News image"} className='w-full' />
+          <AppImage src={imageUrl} alt={title ?? "News image"} className='w-full h-[16rem] object-cover' />
           <div className="absolute inset-0 bg-black opacity-50"></div> {/* Overlay added */}
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
             <div className="bg-gray-800/70 px-3 py-1 text-sm text-white">{readTime}</div>

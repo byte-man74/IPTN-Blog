@@ -12,10 +12,10 @@ import React from 'react'
 export const NewsHero = () => {
   return (
     // header section
-    <div className="relative flex px-8 gap-4 h-full items-stretch bg-[#E4E4E4] w-full pb-4">
+    <div className="relative flex px-8 gap-4 h-full items-stretch w-full pb-4">
       <div className="w-1/2 h-full relative">
         <FullWidthAlternateTitle title="Featured news" />
-        <div className="mb-8 w-full"></div>
+        <div className="mb-8 w-full" />
         <NewsCarousel newsItems={carouselBasicNewsData ?? []} />
       </div>
 

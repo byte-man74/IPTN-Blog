@@ -7,13 +7,14 @@ import { NewsItemType } from '@/types/public';
 
 interface DarkerBasicNewsWithTagProps {
   newsContent: NewsItemType;
+  backgroundColor?: string
 }
 
-const DarkerBasicNewsWithTag: React.FC<DarkerBasicNewsWithTagProps> = ({ newsContent }) => {
+const DarkerBasicNewsWithTag: React.FC<DarkerBasicNewsWithTagProps> = ({ newsContent, backgroundColor }) => {
   const { title, readTime, category, date, slug } = newsContent ?? {};
 
   return (
-    <div className="max-w-3xl mx-auto bg-[#D9D9D9] px-4 py-10 shadow-md hover:shadow-lg transition-shadow duration-300 border-primaryGreen">
+    <div style={{backgroundColor: backgroundColor ? backgroundColor : "#D9D9D9"}} className={`max-w-3xl mx-auto bg-[#D9D9D9] px-4 py-10 shadow-md hover:shadow-lg transition-shadow duration-300 border-primaryGreen`}>
       <div className="space-y-6">
         <AppLink href={slug ?? '#'}>
           <h3 className="text-basic-header font-semibold leading-tight text-primaryDark hover:text-primaryGreen transition-colors duration-200">

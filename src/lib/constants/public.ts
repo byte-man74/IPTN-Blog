@@ -64,19 +64,24 @@ export const HeroNavigationItems = [
     count: 3,
   },
   {
-    id: 'sports',
-    name: 'Sports',
-    url: '/sports',
-  },
-  {
-    id: 'business',
-    name: 'Business',
-    url: '/business',
+    id: 'articles',
+    name: 'Articles',
+    url: '/articles',
   },
   {
     id: 'lifestyle',
     name: 'Lifestyle',
     url: '/lifestyle',
+  },
+  {
+    id: 'about-us',
+    name: 'About Us',
+    url: '/about-us',
+  },
+  {
+    id: 'contact-us',
+    name: 'Contact Us',
+    url: '/contact-us',
   },
 ]
 
