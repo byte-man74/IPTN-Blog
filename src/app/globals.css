@@ -8,10 +8,10 @@
   --primaryGreen: #116427;
   --primaryDark: #1e1e1e;
   --secondaryBackground: #e0e0e0;
-  --textColor: #d8d8d8;
+  --textColor: #1e1e1e;
 }
 
-/* this wasnt working from the docs recommnedation */
+/* this wasnt working from the docs recommendation */
 .react-multi-carousel-track {
     height: 100% !important;
   }
@@ -24,7 +24,7 @@
   .grid-item {
     margin-bottom: 10px;
   }
-  
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #e4e4e4;
