@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { Home, FileText, MessageSquare, Users, Settings, BarChart2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, FileText, MessageSquare, Settings, BarChart2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
 import { AppLogo } from '@/_components/global/app-logo'
@@ -44,12 +44,6 @@ export const SideNav = () => {
       label: 'Categories',
       icon: MessageSquare,
       matchPath: (path: string) => path.startsWith('/admin/categories')
-    },
-    {
-      href: '/admin/users',
-      label: 'Users',
-      icon: Users,
-      matchPath: (path: string) => path.startsWith('/admin/users')
     },
     {
       href: '/admin/analytics',

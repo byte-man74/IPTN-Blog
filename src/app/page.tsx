@@ -17,7 +17,6 @@ export default function Home() {
         <HeroTags />
         <NewsBanner title="Breaking News" />
       </>
-
       <HomePageContent />
     </div>
   )

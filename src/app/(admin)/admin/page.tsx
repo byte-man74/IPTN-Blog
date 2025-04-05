@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {  FileText, MessageSquare, Users, Settings, Edit } from 'lucide-react'
+import { FileText, MessageSquare, Users, Settings, Edit, ArrowRight } from 'lucide-react'
 
 /**
  * Admin Dashboard Page
@@ -10,7 +10,6 @@ import {  FileText, MessageSquare, Users, Settings, Edit } from 'lucide-react'
  * and navigation to other admin areas.
  */
 export default function AdminDashboard() {
-  // Simulated data - in a real app, this would come from an API
   const blogStats = {
     totalPosts: 42,
     publishedPosts: 38,
@@ -19,7 +18,6 @@ export default function AdminDashboard() {
     totalComments: 256
   }
 
-  // Always perform nullish check for data that would come from API
   const stats = blogStats ?? {
     totalPosts: 0,
     publishedPosts: 0,
@@ -129,8 +127,8 @@ export default function AdminDashboard() {
                 <h3 className="text-gray-900 text-lg font-medium mb-2">Manage Posts</h3>
                 <p className="text-gray-600">Edit, delete, or update your blog posts</p>
                 <div className="mt-4">
-                  <Link href="/admin/posts" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors">
-                    Go to posts →
+                  <Link href="/admin/posts" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors flex items-center">
+                    Go to posts <ArrowRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
               </div>
@@ -142,8 +140,8 @@ export default function AdminDashboard() {
                 <h3 className="text-gray-900 text-lg font-medium mb-2">Manage Comments</h3>
                 <p className="text-gray-600">Approve, reject, or respond to comments</p>
                 <div className="mt-4">
-                  <Link href="/admin/comments" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors">
-                    Go to comments →
+                  <Link href="/admin/comments" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors flex items-center">
+                    Go to comments <ArrowRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
               </div>
@@ -155,8 +153,8 @@ export default function AdminDashboard() {
                 <h3 className="text-gray-900 text-lg font-medium mb-2">Site Settings</h3>
                 <p className="text-gray-600">Update your blog settings and appearance</p>
                 <div className="mt-4">
-                  <Link href="/admin/settings" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors">
-                    Go to settings →
+                  <Link href="/admin/settings" className="text-primaryGreen font-medium text-sm hover:text-primaryGreen/80 group-hover:underline transition-colors flex items-center">
+                    Go to settings <ArrowRight className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
               </div>
@@ -220,9 +218,7 @@ export default function AdminDashboard() {
               <div className="px-6 py-3 bg-gray-50 border-t border-gray-200">
                 <Link href="/admin/comments" className="text-sm text-gray-700 hover:text-gray-900 font-medium flex items-center justify-center md:justify-start">
                   View all comments
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                  <ArrowRight className="h-4 w-4 ml-1" />
                 </Link>
               </div>
             </div>
