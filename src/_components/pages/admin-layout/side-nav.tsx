@@ -1,7 +1,15 @@
-"use client"
+'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Home, FileText, MessageSquare, Settings, BarChart2, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Home,
+  FileText,
+  MessageSquare,
+  Settings,
+  BarChart2,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
 import { AppLogo } from '@/_components/global/app-logo'
@@ -31,32 +39,32 @@ export const SideNav = () => {
       href: '/admin',
       label: 'Dashboard',
       icon: Home,
-      matchPath: (path: string) => path === '/admin'
+      matchPath: (path: string) => path === '/admin',
     },
     {
       href: '/admin/posts',
       label: 'Posts',
       icon: FileText,
-      matchPath: (path: string) => path.startsWith('/admin/posts')
+      matchPath: (path: string) => path.startsWith('/admin/posts'),
     },
     {
       href: '/admin/categories',
       label: 'Categories',
       icon: MessageSquare,
-      matchPath: (path: string) => path.startsWith('/admin/categories')
+      matchPath: (path: string) => path.startsWith('/admin/categories'),
     },
     {
       href: '/admin/analytics',
       label: 'Analytics',
       icon: BarChart2,
-      matchPath: (path: string) => path.startsWith('/admin/analytics')
+      matchPath: (path: string) => path.startsWith('/admin/analytics'),
     },
     {
       href: '/admin/settings',
       label: 'Settings',
       icon: Settings,
-      matchPath: (path: string) => path.startsWith('/admin/settings')
-    }
+      matchPath: (path: string) => path.startsWith('/admin/settings'),
+    },
   ]
 
   // Load collapse state from localStorage on component mount
@@ -77,13 +85,15 @@ export const SideNav = () => {
 
   return (
     <div className="hidden md:flex md:flex-shrink-0 relative">
-      <div className={`flex flex-col border-r border-gray-700 bg-[#1E1E1E] shadow-lg transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      <div
+        className={`flex flex-col border-r border-gray-700 bg-[#1E1E1E] shadow-lg transition-all duration-300 ease-in-out ${isCollapsed ? 'w-16' : 'w-64'}`}
+      >
         {/* Collapse button positioned at the top of the sidebar */}
         <div className="pt-5 px-2 flex justify-end">
           <button
             onClick={toggleSidebar}
             className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-primaryGreen focus:ring-opacity-50 bg-black hover:bg-[#1E1E1E] p-2 rounded-md transition-all duration-200"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? (
               <ChevronRight className="h-5 w-5" />
@@ -96,7 +106,7 @@ export const SideNav = () => {
         <div className="h-0 flex-1 flex flex-col pt-4 pb-6 overflow-y-auto">
           <div className={`flex justify-center mb-6 ${isCollapsed ? 'px-1' : 'px-4'}`}>
             <AppLogo
-              variant='white'
+              variant="white"
               width={isCollapsed ? 240 : 120}
               height={40}
               className={`transition-all duration-300 ${isCollapsed ? 'scale-90' : ''}`}
@@ -117,11 +127,11 @@ export const SideNav = () => {
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
-                  <Icon className={`${isCollapsed ? 'mx-auto' : 'mr-3'} h-5 w-5 ${
-                    isActive
-                      ? 'text-white'
-                      : 'text-gray-400 group-hover:text-white'
-                  }`} />
+                  <Icon
+                    className={`${isCollapsed ? 'mx-auto' : 'mr-3'} h-5 w-5 ${
+                      isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                    }`}
+                  />
                   {!isCollapsed && <span className="truncate">{item.label}</span>}
                 </AppLink>
               )
