@@ -18,6 +18,8 @@ interface AppLogoProps {
   href?: string
   /** Optional link target */
   target?: string
+  /** Optional variant of the logo (dark or white) */
+  variant?: 'dark' | 'white'
 }
 
 /**
@@ -27,6 +29,7 @@ interface AppLogoProps {
  * - Displays the logo image with proper alt text
  * - Can be wrapped in a link if href is provided
  * - Supports customizable dimensions and styling
+ * - Supports dark (default) and white variants of the logo
  *
  * @param {AppLogoProps} props - The component props
  * @returns {JSX.Element} Rendered logo component
@@ -38,10 +41,16 @@ export const AppLogo = ({
   className = 'z-10',
   href,
   target,
+  variant = 'dark',
 }: AppLogoProps) => {
+  // Determine which logo variant to use
+  const logoSrc = variant === 'white'
+    ? "/assets/iptn-black.webp"
+    : "/assets/iptn-logo.svg"
+
   const logoImage = (
     <AppImage
-      src="/assets/iptn-logo.svg"
+      src={logoSrc}
       alt={alt ?? 'Company Logo'}
       width={width}
       height={height}
