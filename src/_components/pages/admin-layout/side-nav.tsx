@@ -92,7 +92,7 @@ export const SideNav = () => {
         <div className="pt-5 px-2 flex justify-end">
           <button
             onClick={toggleSidebar}
-            className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-primaryGreen focus:ring-opacity-50 bg-black hover:bg-[#1E1E1E] p-2 rounded-md transition-all duration-200"
+            className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-primaryGreen focus:ring-opacity-50 bg-black hover:bg-[#1E1E1E] p-2  transition-all duration-200"
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? (
@@ -121,7 +121,7 @@ export const SideNav = () => {
                 <AppLink
                   key={item.href}
                   href={item.href}
-                  className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  className={`group flex items-center px-3 py-2.5 text-sm font-medium  transition-all duration-200 ${
                     isActive
                       ? 'bg-primaryGreen text-white shadow-md'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
