@@ -84,7 +84,7 @@ export const AdminAnalyticsComponent = () => {
                 href="https://mixpanel.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium text-white bg-primaryGreen hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >
                 View on Mixpanel
                 <ExternalLink className="ml-1.5 h-3 w-3" />
@@ -192,7 +192,7 @@ export const AdminAnalyticsComponent = () => {
                       href="https://mixpanel.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm text-white bg-primaryGreen hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       View on Mixpanel
                       <ExternalLink className="ml-1.5 h-4 w-4" />

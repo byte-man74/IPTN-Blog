@@ -1,5 +1,7 @@
+
+
 import React from 'react'
-import { Plus, Trash2, Pencil } from 'lucide-react'
+import { Plus, Trash2, Pencil, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export const AdminCategoriesComponent = () => {
   // Simulated data - in a real app, this would come from an API
@@ -49,7 +51,7 @@ export const AdminCategoriesComponent = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
-          <button className="bg-primaryGreen hover:bg-primaryGreen/90 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow">
+          <button className="bg-primaryGreen hover:bg-primaryGreen/90 text-white px-4 py-2 transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow">
             <Plus className="h-4 w-4 mr-2" />
             Add Category
           </button>
@@ -153,38 +155,14 @@ export const AdminCategoriesComponent = () => {
                 >
                   <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span className="sr-only">Previous</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <ChevronLeft className="h-5 w-5" />
                   </button>
                   <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primaryGreen text-sm font-medium text-white hover:bg-primaryGreen/90">
                     1
                   </button>
                   <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span className="sr-only">Next</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <ChevronRight className="h-5 w-5" />
                   </button>
                 </nav>
               </div>
