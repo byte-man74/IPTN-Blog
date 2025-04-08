@@ -1,5 +1,10 @@
 import { UserRepository } from '@/app/(server)/modules/user/user.repository'
-import { CreateUserDTO, UserDTO } from '@/app/(server)/modules/user/user.types'
+import {
+  AuthorizeUserDTO,
+  CreateUserDTO,
+  UpdateUserActivationDTO,
+  UserDTO,
+} from '@/app/(server)/modules/user/user.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { hashPassword, validatePassword } from '@/lib/utils/auth'
@@ -7,7 +12,12 @@ import { hashPassword, validatePassword } from '@/lib/utils/auth'
 export interface IUserService {
   createUser(userData: CreateUserDTO): Promise<UserDTO | null | ApiCustomError>
   getUserByEmail(email: string): Promise<UserDTO | null | ApiCustomError>
-  validateUserCredentials(email: string, password: string): Promise<UserDTO | null | ApiCustomError>
+  validateUserCredentials(
+    authorizationData: AuthorizeUserDTO
+  ): Promise<UserDTO | null | ApiCustomError>
+  updateUserActivationStatus(
+    activationData: UpdateUserActivationDTO
+  ): Promise<UserDTO | null | ApiCustomError>
 }
 
 export class UserService implements IUserService {
@@ -25,27 +35,53 @@ export class UserService implements IUserService {
   }
 
   async getUserByEmail(email: string): Promise<UserDTO | null | ApiCustomError> {
-    return await this.repository.getUserInformation(email)
+    return tryCatchHandler(async () => {
+      const user = await this.repository.getUserInformation(email)
+
+      if (!user) {
+        return new ApiCustomError('Not Found', 404, 'User not found')
+      }
+
+      return user
+    })
   }
 
   async validateUserCredentials(
-    email: string,
-    password: string
+    authorizationData: AuthorizeUserDTO
   ): Promise<UserDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
-      const userSecuredInformation = await this.repository.getUserPassword(email)
+      const userSecuredInformation = await this.repository.getUserPassword(authorizationData.email)
 
       if (!userSecuredInformation || userSecuredInformation instanceof ApiCustomError) {
         return null
       }
 
-      const passwordMatch = await validatePassword(password, userSecuredInformation.password)
+      const passwordMatch = await validatePassword(
+        authorizationData.password,
+        userSecuredInformation.password
+      )
 
       if (!passwordMatch) {
-        return null
+        return new ApiCustomError('Unauthorized', 401, 'Invalid credentials')
       }
 
-      return await this.getUserByEmail(email)
+      return await this.getUserByEmail(authorizationData.email)
+    })
+  }
+
+  async updateUserActivationStatus(
+    activationData: UpdateUserActivationDTO
+  ): Promise<UserDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      const user = await this.repository.getUserInformation(activationData.email)
+
+      if (!user || user instanceof ApiCustomError) {
+        return new ApiCustomError('Not Found', 404, 'User not found')
+      }
+
+      return await this.repository.updateUser(user.id, {
+        isActive: activationData.isActive,
+      })
     })
   }
 }

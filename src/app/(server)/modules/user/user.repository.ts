@@ -21,6 +21,7 @@ export class UserRepository {
           lastName: user.lastName,
           isAdmin: user.isAdmin,
           password: user.password,
+          isActive: true
         },
       })
     })
@@ -39,6 +40,7 @@ export class UserRepository {
           lastName: true,
           email: true,
           isAdmin: true,
+          isActive: true
         },
       })
     })
@@ -59,4 +61,27 @@ export class UserRepository {
       })
     })
   }
+
+//will handle stuffs like making users an admin.. etc
+  async updateUser(userId: string, userData: Partial<CreateUserDTO>): Promise<UserDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          ...userData,
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          isAdmin: true,
+          isActive: true
+        },
+      })
+    })
+  }
+
 }
