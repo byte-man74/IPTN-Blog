@@ -11,7 +11,7 @@ datasource db {
 // Models --
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   email     String   @unique
   firstName String
   lastName  String
@@ -29,7 +29,7 @@ model User {
 }
 
 model News {
-  id             Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   title          String
   summary        String?
   slug           String   @unique
@@ -37,7 +37,7 @@ model News {
   createdAt      DateTime @default(now())
   lastUpdated    DateTime @updatedAt
   contentEncoded String?  @db.Text
-  authorId       Int
+  authorId       String
   published      Boolean  @default(false)
 
   author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -82,7 +82,7 @@ model Tag {
 
 model Analytics {
   id        Int      @id @default(autoincrement())
-  newsId    Int      @unique
+  newsId    String   @unique
   likes     Int      @default(0)
   views     Int      @default(0)
   shares    Int      @default(0)
@@ -101,8 +101,8 @@ model Comment {
   content     String   @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  userId      Int?
-  newsId      Int
+  userId      String?
+  newsId      String
   isAnonymous Boolean  @default(false)
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -124,7 +124,7 @@ model Seo {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  newsId Int?  @unique
+  newsId String?  @unique
   news   News? @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   @@index([id])
