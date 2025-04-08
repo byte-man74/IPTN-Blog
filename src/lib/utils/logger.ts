@@ -1,31 +1,28 @@
-// /lib/logger.ts
 import pino from 'pino'
 
 // Determine environment (dev or prod)
 const isProd = process.env.NODE_ENV === 'production'
 
-// Production logger config
-const prodLogger = pino({
-  level: 'info',  // Info level or higher for production
-  transport: {
-    target: 'pino/file',  // Optionally log to a file in production
-    options: {
-      destination: './logs/production.log',  // Log file path
-    }
-  }
+// Create logger with appropriate configuration
+const logger = pino({
+  level: isProd ? 'info' : 'debug',
+  formatters: {
+    level: (label) => {
+      const emoji =
+        label === 'error'
+          ? '❌'
+          : label === 'warn'
+            ? '⚠️'
+            : label === 'info'
+              ? 'ℹ️'
+              : label === 'debug'
+                ? '🐛'
+                : '📝'
+      return { level: `${emoji} ${label.toUpperCase()}` }
+    },
+  },
+  timestamp: () => `,"time":"${new Date().toISOString()}"`,
 })
 
-// Development logger config
-const devLogger = pino({
-  level: 'debug',  // More verbose in dev
-  transport: {
-    target: 'pino-pretty',  // Pretty format for console output
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard',
-    }
-  }
-})
-
-// Export based on the environment
-export const logger = isProd ? prodLogger : devLogger
+// Export the logger
+export { logger }

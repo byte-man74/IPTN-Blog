@@ -7,6 +7,7 @@ export const tryCatchHandler = async <T>(
 ): Promise<T | ApiCustomError> => {
   try {
     return await fn();
+
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       logger.error({ error }, `Prisma known request error: ${error.message}`);
@@ -23,7 +24,6 @@ export const tryCatchHandler = async <T>(
         details: error,
       });
     }
-
     logger.error({ error }, "An unexpected error occurred");
     return new ApiCustomError("An error occurred", 500, {
       originalError: error,

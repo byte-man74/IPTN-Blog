@@ -8,6 +8,8 @@ import {
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { hashPassword, validatePassword } from '@/lib/utils/auth'
+import { cleanEmail } from '@/lib/utils/parser'
+import { isValidEmail } from '@/lib/utils/validator'
 
 export interface IUserService {
   createUser(userData: CreateUserDTO): Promise<UserDTO | null | ApiCustomError>
@@ -29,6 +31,11 @@ export class UserService implements IUserService {
 
   async createUser(userData: CreateUserDTO): Promise<UserDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
+      // Clean and validate email
+      userData.email = cleanEmail(userData.email)
+
+
+      // Hash password and create user
       userData.password = await hashPassword(userData.password)
       return await this.repository.createUser(userData)
     })
@@ -36,7 +43,9 @@ export class UserService implements IUserService {
 
   async getUserByEmail(email: string): Promise<UserDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
-      const user = await this.repository.getUserInformation(email)
+      // Clean email before querying
+      const cleanedEmail = cleanEmail(email)
+      const user = await this.repository.getUserInformation(cleanedEmail)
 
       if (!user) {
         return new ApiCustomError('Not Found', 404, 'User not found')
@@ -50,6 +59,12 @@ export class UserService implements IUserService {
     authorizationData: AuthorizeUserDTO
   ): Promise<UserDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
+      // Clean email before validations
+      authorizationData.email = cleanEmail(authorizationData.email)
+      if (!isValidEmail(authorizationData.email)) {
+        return new ApiCustomError('Bad Request', 400, 'Invalid email format')
+      }
+
       const userSecuredInformation = await this.repository.getUserPassword(authorizationData.email)
 
       if (!userSecuredInformation || userSecuredInformation instanceof ApiCustomError) {
@@ -73,6 +88,12 @@ export class UserService implements IUserService {
     activationData: UpdateUserActivationDTO
   ): Promise<UserDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
+      // Clean email before updating
+      activationData.email = cleanEmail(activationData.email)
+      if (!isValidEmail(activationData.email)) {
+        return new ApiCustomError('Bad Request', 400, 'Invalid email format')
+      }
+
       const user = await this.repository.getUserInformation(activationData.email)
 
       if (!user || user instanceof ApiCustomError) {

@@ -6,7 +6,7 @@ export const UserSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   isAdmin: z.boolean().default(false),
-  isActive: z.boolean(),
+  isActive: z.boolean().optional(),
 });
 
 export const SecuredUserSchema = z.object({
@@ -17,7 +17,24 @@ export const SecuredUserSchema = z.object({
 export const CreateUserSchema = UserSchema.omit({
   id: true,
 }).extend({
-  password: z.string(),
+  password: z.string().refine(
+    (password) => {
+      const minLength = 6;
+      // Require at least 2 of the following conditions
+      let conditionsMet = 0;
+
+      if (password.length >= minLength) conditionsMet++;
+      if (/[A-Z]/.test(password)) conditionsMet++;
+      if (/[a-z]/.test(password)) conditionsMet++;
+      if (/\d/.test(password)) conditionsMet++;
+      if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) conditionsMet++;
+
+      return conditionsMet >= 3;
+    },
+    {
+      message: "Password must be at least 6 characters and satisfy at least 2 of the following: uppercase, lowercase, number, or special character"
+    }
+  ),
 });
 
 
