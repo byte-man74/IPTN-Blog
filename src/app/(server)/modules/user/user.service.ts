@@ -1,5 +1,5 @@
-import { UserRepository } from '@/app/(api)/modules/user/user.repository'
-import { CreateUserDTO, UserDTO } from '@/app/(api)/modules/user/user.types'
+import { UserRepository } from '@/app/(server)/modules/user/user.repository'
+import { CreateUserDTO, UserDTO } from '@/app/(server)/modules/user/user.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { hashPassword, validatePassword } from '@/lib/utils/auth'
@@ -7,10 +7,7 @@ import { hashPassword, validatePassword } from '@/lib/utils/auth'
 export interface IUserService {
   createUser(userData: CreateUserDTO): Promise<UserDTO | null | ApiCustomError>
   getUserByEmail(email: string): Promise<UserDTO | null | ApiCustomError>
-  validateUserCredentials(
-    email: string,
-    password: string
-  ): Promise<UserDTO | null | ApiCustomError>
+  validateUserCredentials(email: string, password: string): Promise<UserDTO | null | ApiCustomError>
 }
 
 export class UserService implements IUserService {

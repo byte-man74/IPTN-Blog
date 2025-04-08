@@ -5,7 +5,7 @@ import {
   CreateUserDTO,
   SecuredUserInformationDTO,
   UserDTO,
-} from '@/app/(api)/modules/user/user.types'
+} from '@/app/(server)/modules/user/user.types'
 
 const prisma = new PrismaClient()
 
@@ -45,9 +45,7 @@ export class UserRepository {
   }
 
   //will probably use this for authentication
-  async getUserPassword(
-    email: string
-  ): Promise<SecuredUserInformationDTO | null | ApiCustomError> {
+  async getUserPassword(email: string): Promise<SecuredUserInformationDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
       return await this.user.findFirst({
         where: {
