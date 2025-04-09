@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { NextAuthProvider } from '@/providers/session-provider'
+import ReactQueryProvider from '@/providers/query-client-provider'
+
 import './globals.css'
 
 /**
@@ -49,11 +52,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
+
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="mx-auto max-w-[140rem]">
-          {children ?? <div>Loading...</div>}
-        </div>
+          <NextAuthProvider>
+            <ReactQueryProvider>
+              <div className="mx-auto max-w-[140rem]">
+                {children ?? <div>Loading...</div>}
+              </div>
+            </ReactQueryProvider>
+          </NextAuthProvider>
       </body>
     </html>
   )

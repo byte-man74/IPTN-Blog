@@ -1,23 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verify } from "jsonwebtoken";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+export async function middleware(req: NextRequest) {
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-
-  if (!token) {
+  if (!session) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  try {
-    verify(token, process.env.JWT_SECRET!);
-    return NextResponse.next();
-  } catch {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  return NextResponse.next();
 }
-
 
 //catch protected route
 

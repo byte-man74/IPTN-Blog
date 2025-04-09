@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UserService } from '@/app/(server)/modules/user/user.service';
 import { AuthorizeUserSchema } from '@/app/(server)/modules/user/user.types';
 import ApiCustomError from '@/types/api-custom-error';
-import { sign } from 'jsonwebtoken';
-import { cookies } from 'next/headers';
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,22 +45,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // create and set JWT cookie
-    const token = sign(
-      { userId: result.id, email: result.email }, // you can include any user info you want
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
-
-    (await cookies()).set({
-      name: 'token',
-      value: token,
-      httpOnly: true,
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
 
     return NextResponse.json(
       { message: 'Authentication successful', user: result },
