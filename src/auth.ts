@@ -1,11 +1,11 @@
-import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import NextAuth, { type DefaultSession } from "next-auth";
-import { prisma } from "./third-party/prisma";
+import Google from 'next-auth/providers/google'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import NextAuth, { type DefaultSession } from 'next-auth'
+import { prisma } from './lib/third-party/prisma'
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
-    user: User & DefaultSession["user"];
+    user: User & DefaultSession['user']
   }
 }
 
@@ -22,26 +22,30 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           lastName: profile.family_name,
           email: profile.email,
           image: profile.picture,
-        };
+        }
       },
     }),
   ],
   secret: process.env.AUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   adapter: PrismaAdapter(prisma),
   callbacks: {
-
-    session({ session, user }) {
+    async session({ session, user }) {
       return {
         ...session,
         user: {
           ...session.user,
           id: user.id,
+          isAdmin: user.isAdmin,
+          isActive: user.isActive,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          picture: user.image,
         },
-      };
+      }
     },
   },
-  debug: process.env.NODE_ENV === "development",
-});
+  debug: process.env.NODE_ENV === 'development',
+})

@@ -31,6 +31,7 @@ export const SideNav = () => {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const { data: session } = useSession()
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   // Always perform nullish check for data coming from hook
   const currentPath = pathname ?? ''
@@ -92,7 +93,9 @@ export const SideNav = () => {
     await signOut({ redirect: true, callbackUrl: '/login' })
   }
 
-  console.log("session", session)
+  const toggleLogoutConfirm = () => {
+    setShowLogoutConfirm(!showLogoutConfirm)
+  }
 
   return (
     <div className="hidden md:flex md:flex-shrink-0 relative">
@@ -152,44 +155,70 @@ export const SideNav = () => {
           {/* User info and logout section */}
           <div className="mt-auto px-2">
             {session?.user && (
-              <div className={`mb-3 px-4 py-3 rounded-md bg-[#2A2A2A] ${isCollapsed ? 'text-center' : ''}`}>
-                <div className="flex items-center">
-                  <div className={`flex-shrink-0 rounded-full overflow-hidden ${isCollapsed ? 'mx-auto' : 'mr-3'}`} style={{ width: '36px', height: '36px' }}>
-                    {session.user.image ? (
-                      <Image 
-                        src={session.user.image} 
-                        alt="Profile" 
-                        width={36} 
-                        height={36} 
-                        className="rounded-full"
-                      />
-                    ) : (
-                      <div className="bg-primaryGreen/20 p-2 rounded-full">
-                        <User className="h-5 w-5 text-primaryGreen" />
+              <div className="relative">
+                <button
+                  onClick={toggleLogoutConfirm}
+                  className={`w-full mb-3 px-4 py-3 rounded-md bg-[#2A2A2A] hover:bg-[#333333] transition-colors ${isCollapsed ? 'text-center' : ''}`}
+                >
+                  <div className="flex items-center">
+                    <div className={`flex-shrink-0 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>
+                      {session.user.image ? (
+                        <div className="rounded-full border-2 border-primaryGreen p-0.5">
+                          <Image
+                            src={session.user.image}
+                            alt="Profile"
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="bg-gradient-to-br from-primaryGreen to-green-600 p-2 rounded-full shadow-md">
+                          <User className="h-5 w-5 text-white" />
+                        </div>
+                      )}
+                    </div>
+                    {!isCollapsed && (
+                      <div className="text-sm text-gray-200 text-left">
+                        <div className="font-bold text-white">
+                          {session.user.firstName} {session.user.lastName}
+                        </div>
+                        <div className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</div>
+                        {session.user.isAdmin && (
+                          <div className="mt-1">
+                            <span className="bg-primaryGreen/20 text-primaryGreen text-xs px-2 py-0.5 rounded-full font-medium">
+                              Admin
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                  {!isCollapsed && (
-                    <div className="text-sm text-gray-200 truncate">
-                      <div className="font-semibold">
-                        {session.user.firstName} {session.user.lastName}
-                      </div>
-                      <div className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</div>
+                </button>
+
+                {/* Logout confirmation popup */}
+                {showLogoutConfirm && (
+                  <div className="absolute bottom-full mb-2 left-0 right-0 bg-[#2A2A2A] rounded-lg shadow-lg border border-gray-700 p-3 z-10">
+                    <p className="text-sm text-gray-200 mb-3">Are you sure you want to logout?</p>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={handleLogout}
+                        className="flex-1 py-1.5 px-3 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors flex items-center justify-center"
+                      >
+                        <LogOut className="h-4 w-4 mr-1.5" />
+                        Logout
+                      </button>
+                      <button
+                        onClick={toggleLogoutConfirm}
+                        className="flex-1 py-1.5 px-3 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded transition-colors"
+                      >
+                        Cancel
+                      </button>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
-
-            <button
-              onClick={handleLogout}
-              className={`w-full group flex items-center px-4 py-3 text-sm font-medium rounded-md bg-[#2A2A2A] hover:bg-green-700/90 text-gray-200 hover:text-white transition-all duration-200 ${
-                isCollapsed ? 'justify-center' : ''
-              }`}
-            >
-              <LogOut className={`h-5 w-5 ${isCollapsed ? '' : 'mr-3'} ${isCollapsed ? 'text-gray-300' : 'text-red-400 group-hover:text-white'}`} />
-              {!isCollapsed && <span className="font-medium">Logout</span>}
-            </button>
           </div>
         </div>
       </div>

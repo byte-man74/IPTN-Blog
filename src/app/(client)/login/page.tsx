@@ -23,7 +23,7 @@ export default function Login() {
     try {
       await signIn('google', { callbackUrl: '/admin' })
     } catch (error) {
-        
+
       console.error('Google sign in error:', error)
       setFormError('root', {
         type: 'manual',
