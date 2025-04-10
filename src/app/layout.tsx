@@ -4,6 +4,7 @@ import { NextAuthProvider } from '@/providers/session-provider'
 import ReactQueryProvider from '@/providers/query-client-provider'
 
 import './globals.css'
+import { Toaster } from 'react-hot-toast'
 
 /**
  * Font configuration for the application
@@ -24,7 +25,8 @@ const geistMono = Geist_Mono({
  */
 export const metadata: Metadata = {
   title: 'Blog Platform | Share Your Ideas With The World',
-  description: 'A modern blogging platform for writers, thinkers, and creators to share their ideas and connect with readers worldwide.',
+  description:
+    'A modern blogging platform for writers, thinkers, and creators to share their ideas and connect with readers worldwide.',
   keywords: ['blog', 'writing', 'articles', 'content creation'],
   authors: [{ name: 'Blog Platform Team' }],
   creator: 'Blog Platform',
@@ -52,16 +54,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <NextAuthProvider>
-            <ReactQueryProvider>
-              <div className="mx-auto max-w-[140rem]">
-                {children ?? <div>Loading...</div>}
-              </div>
-            </ReactQueryProvider>
-          </NextAuthProvider>
+        <NextAuthProvider>
+          <ReactQueryProvider>
+            <Toaster position="top-center" reverseOrder={false} />
+            <div className="mx-auto max-w-[140rem]">{children ?? <div>Loading...</div>}</div>
+          </ReactQueryProvider>
+        </NextAuthProvider>
       </body>
     </html>
   )

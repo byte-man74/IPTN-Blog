@@ -9,10 +9,14 @@ import {
   BarChart2,
   ChevronLeft,
   ChevronRight,
+  LogOut,
+  User,
 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
 import { AppLogo } from '@/_components/global/app-logo'
+import { useSession, signOut } from 'next-auth/react'
+import Image from 'next/image'
 
 /**
  * SideNav Component
@@ -26,6 +30,7 @@ import { AppLogo } from '@/_components/global/app-logo'
 export const SideNav = () => {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const { data: session } = useSession()
 
   // Always perform nullish check for data coming from hook
   const currentPath = pathname ?? ''
@@ -83,6 +88,12 @@ export const SideNav = () => {
     localStorage.setItem('sideNavCollapsed', String(newState))
   }
 
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: '/login' })
+  }
+
+  console.log("session", session)
+
   return (
     <div className="hidden md:flex md:flex-shrink-0 relative">
       <div
@@ -137,6 +148,49 @@ export const SideNav = () => {
               )
             })}
           </nav>
+
+          {/* User info and logout section */}
+          <div className="mt-auto px-2">
+            {session?.user && (
+              <div className={`mb-3 px-4 py-3 rounded-md bg-[#2A2A2A] ${isCollapsed ? 'text-center' : ''}`}>
+                <div className="flex items-center">
+                  <div className={`flex-shrink-0 rounded-full overflow-hidden ${isCollapsed ? 'mx-auto' : 'mr-3'}`} style={{ width: '36px', height: '36px' }}>
+                    {session.user.image ? (
+                      <Image 
+                        src={session.user.image} 
+                        alt="Profile" 
+                        width={36} 
+                        height={36} 
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div className="bg-primaryGreen/20 p-2 rounded-full">
+                        <User className="h-5 w-5 text-primaryGreen" />
+                      </div>
+                    )}
+                  </div>
+                  {!isCollapsed && (
+                    <div className="text-sm text-gray-200 truncate">
+                      <div className="font-semibold">
+                        {session.user.firstName} {session.user.lastName}
+                      </div>
+                      <div className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handleLogout}
+              className={`w-full group flex items-center px-4 py-3 text-sm font-medium rounded-md bg-[#2A2A2A] hover:bg-green-700/90 text-gray-200 hover:text-white transition-all duration-200 ${
+                isCollapsed ? 'justify-center' : ''
+              }`}
+            >
+              <LogOut className={`h-5 w-5 ${isCollapsed ? '' : 'mr-3'} ${isCollapsed ? 'text-gray-300' : 'text-red-400 group-hover:text-white'}`} />
+              {!isCollapsed && <span className="font-medium">Logout</span>}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ declare module 'next-auth' {
     lastName?: string | null
     isAdmin?: boolean
     isActive?: boolean
+    image?: string
   }
 
   interface JWT {
