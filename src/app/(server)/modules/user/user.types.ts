@@ -5,6 +5,7 @@ export const UserSchema = z.object({
   email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
+  image: z.string().nullable(),
   isAdmin: z.boolean().default(false),
   isActive: z.boolean().optional(),
 });
@@ -12,7 +13,6 @@ export const UserSchema = z.object({
 export const SecuredUserSchema = z.object({
     id: z.string(),
     email: z.string(),
-    password: z.string()
 })
 export const CreateUserSchema = UserSchema.omit({
   id: true,

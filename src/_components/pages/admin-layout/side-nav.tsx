@@ -158,10 +158,10 @@ export const SideNav = () => {
               <div className="relative">
                 <button
                   onClick={toggleLogoutConfirm}
-                  className={`w-full mb-3 px-4 py-3 rounded-md bg-[#2A2A2A] hover:bg-[#333333] transition-colors ${isCollapsed ? 'text-center' : ''}`}
+                  className={`w-full mb-3 px-4 py-3 rounded-md bg-[#2A2A2A] hover:bg-[#333333] transition-colors flex justify-center items-end ${isCollapsed ? 'text-center' : ''}`}
                 >
                   <div className="flex items-center">
-                    <div className={`flex-shrink-0 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>
+                    <div className={`flex-shrink-0  ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>
                       {session.user.image ? (
                         <div className="rounded-full border-2 border-primaryGreen p-0.5">
                           <Image

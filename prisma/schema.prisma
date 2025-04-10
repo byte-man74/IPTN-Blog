@@ -81,6 +81,7 @@ model News {
   summary        String?
   slug           String   @unique
   pubDate        DateTime
+  coverImage     String?
   createdAt      DateTime @default(now())
   lastUpdated    DateTime @updatedAt
   contentEncoded String?  @db.Text

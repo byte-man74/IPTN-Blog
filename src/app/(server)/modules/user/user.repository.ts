@@ -20,13 +20,13 @@ export class UserRepository {
           firstName: user.firstName,
           lastName: user.lastName,
           isAdmin: user.isAdmin,
-          password: user.password,
           isActive: true,
         },
         select: {
           id: true,
           email: true,
           firstName: true,
+          image: true,
           lastName: true,
           isAdmin: true,
           isActive: true,
@@ -47,6 +47,7 @@ export class UserRepository {
           firstName: true,
           lastName: true,
           email: true,
+          image: true,
           isAdmin: true,
           isActive: true,
         },
@@ -64,7 +65,6 @@ export class UserRepository {
         select: {
           id: true,
           email: true,
-          password: true,
         },
       })
     })
@@ -86,6 +86,7 @@ export class UserRepository {
         select: {
           id: true,
           firstName: true,
+          image: true,
           lastName: true,
           email: true,
           isAdmin: true,

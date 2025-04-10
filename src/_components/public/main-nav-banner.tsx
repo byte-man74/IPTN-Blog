@@ -10,7 +10,6 @@ import AdvertismentBox from '@/_components/public/core/advertisment'
  * Adapts to different screen sizes with appropriate spacing, sizing, and layout adjustments.
  * Features smooth transitions between breakpoints and optimized visual hierarchy.
  *
- * @returns {JSX.Element} The rendered MainNavBanner component
  */
 const MainNavBanner = () => {
   return (

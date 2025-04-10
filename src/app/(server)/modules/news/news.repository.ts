@@ -1,0 +1,289 @@
+import { PrismaClient } from '@prisma/client'
+import {
+  CreateNewsCategoryDTO,
+  CreateNewsDTO,
+  CreateTagDTO,
+  FullNewsDTO,
+  NewsCategoryDTO,
+  NewsDTO,
+  NewsFilterDTO,
+  TagDTO,
+} from '@/app/(server)/modules/news/news.types'
+import ApiCustomError from '@/types/api-custom-error'
+import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
+import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
+
+
+const prisma = new PrismaClient()
+export class NewsRepository {
+  private readonly news = prisma.news
+  private readonly category = prisma.category
+  private readonly tag = prisma.tag
+
+  async createNews(news: CreateNewsDTO): Promise<NewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.news.create({
+        data: {
+          title: news.title,
+          summary: news.summary ?? getNewsSummary(news.contentEncoded as ""),
+          slug: news.slug ?? slugifyContent(news.title),
+          pubDate: news.pubDate,
+          contentEncoded: news.contentEncoded,
+          authorId: news.authorId,
+          published: news.published,
+          categories: news.categoryIds
+            ? {
+                connect: news.categoryIds.map((id) => ({ id })),
+              }
+            : undefined,
+          tags: news.tagIds
+            ? {
+                connect: news.tagIds.map((id) => ({ id })),
+              }
+            : undefined,
+        },
+        include: {
+          categories: true,
+          tags: true,
+        },
+      })
+    })
+  }
+
+
+  async editNews(slug: string, news: Partial<CreateNewsDTO>): Promise<NewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const updateData: any = { ...news };
+
+      // Generate slug if title is being updated and no slug is provided
+      if (news.title && !news.slug) {
+        updateData.slug = slugifyContent(news.title);
+      }
+
+      // Generate summary if content is being updated and no summary is provided
+      if (news.contentEncoded && !news.summary) {
+        updateData.summary = getNewsSummary(news.contentEncoded);
+      }
+
+      // Handle category connections if provided
+      if (news.categoryIds) {
+        updateData.categories = {
+          set: [], // Clear existing connections
+          connect: news.categoryIds.map((id) => ({ id })),
+        };
+      }
+
+      // Handle tag connections if provided
+      if (news.tagIds) {
+        updateData.tags = {
+          set: [], // Clear existing connections
+          connect: news.tagIds.map((id) => ({ id })),
+        };
+      }
+
+      return await this.news.update({
+        where: { slug },
+        data: updateData,
+        include: {
+          categories: true,
+          tags: true,
+        },
+      });
+    });
+  }
+
+
+  // Get a single news item by ID
+  async getNewsBySlug(slug: string): Promise<FullNewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.news.findUnique({
+        where: { slug },
+        include: {
+          categories: true,
+          tags: true,
+          comments: true,
+          seo: true
+        },
+      });
+    });
+  }
+
+
+  //generic api to grab news and filter by key metric
+  async getNewsWithFilters(filters: NewsFilterDTO): Promise<NewsDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const where: any = {}
+
+      if (filters.authorId) {
+        where.authorId = filters.authorId
+      }
+
+      if (filters.published !== undefined) {
+        where.published = filters.published
+      }
+
+      if (filters.startDate && filters.endDate) {
+        where.pubDate = {
+          gte: filters.startDate,
+          lte: filters.endDate,
+        }
+      } else if (filters.startDate) {
+        where.pubDate = {
+          gte: filters.startDate,
+        }
+      } else if (filters.endDate) {
+        where.pubDate = {
+          lte: filters.endDate,
+        }
+      }
+
+      if (filters.searchTerm) {
+        where.OR = [
+          { title: { contains: filters.searchTerm, mode: 'insensitive' } },
+          { summary: { contains: filters.searchTerm, mode: 'insensitive' } },
+          { contentEncoded: { contains: filters.searchTerm, mode: 'insensitive' } },
+        ]
+      }
+
+      return await this.news.findMany({
+        where,
+        include: {
+          categories: filters.categoryIds ? true : false,
+          tags: filters.tagIds ? true : false,
+        },
+        orderBy: {
+          pubDate: 'desc',
+        },
+      })
+    })
+  }
+
+  //this should be really quick
+  async createNewsCategory(
+    category: CreateNewsCategoryDTO
+  ): Promise<NewsCategoryDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.category.create({
+        data: {
+          name: category.name,
+          slug: category.slug ?? slugifyContent(category.name),
+          description: category.description,
+        },
+      })
+    })
+  }
+
+  //this should be really quick
+  async createTag(tag: CreateTagDTO): Promise<TagDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.tag.create({
+        data: {
+          name: slugifyContent(tag.name),
+        },
+      })
+    })
+  }
+
+
+  // assign or remove tags from news
+  async assignTagsToNews(
+    slug: string,
+    tagIds: number[],
+    options: { remove?: boolean } = {}
+  ): Promise<NewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      if (options.remove) {
+        // Remove specified tags
+        return await this.news.update({
+          where: { slug: slug},
+          data: {
+            tags: {
+              disconnect: tagIds.map((id) => ({ id })),
+            },
+          },
+          include: {
+            tags: true,
+            categories: true,
+          },
+        })
+      } else {
+        // Add specified tags
+        return await this.news.update({
+          where: { slug: slug },
+          data: {
+            tags: {
+              connect: tagIds.map((id) => ({ id })),
+            },
+          },
+          include: {
+            tags: true,
+            categories: true,
+          },
+        })
+      }
+    })
+  }
+
+  // assign or remove categories from news
+  async assignCategoriesToNews(
+    slug: string,
+    categoryIds: number[],
+    options: { remove?: boolean } = {}
+  ): Promise<NewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      if (options.remove) {
+        return await this.news.update({
+          where: { slug: slug },
+          data: {
+            categories: {
+              disconnect: categoryIds.map((id) => ({ id })),
+            },
+          },
+          include: {
+            tags: true,
+            categories: true,
+          },
+        })
+      } else {
+        // Add specified categories
+        return await this.news.update({
+          where: { slug: slug },
+          data: {
+            categories: {
+              connect: categoryIds.map((id) => ({ id })),
+            },
+          },
+          include: {
+            tags: true,
+            categories: true,
+          },
+        })
+      }
+    })
+  }
+
+
+async deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      // First find the news to ensure it exists
+      const newsExists = await this.news.findUnique({
+        where: { slug },
+      });
+
+      if (!newsExists) {
+        throw new ApiCustomError('News not found', 404);
+      }
+
+      // Delete the news
+      return await this.news.delete({
+        where: { slug },
+        include: {
+          categories: true,
+          tags: true,
+        },
+      });
+    });
+  }
+}
