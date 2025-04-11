@@ -19,8 +19,13 @@ import {
   Undo,
   Redo,
   Type,
+  Video as VideoIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useState } from 'react'
+import { uploadFileToCloudinaryClientUsage } from '@/lib/third-party/cloudinary/manageCloudinaryUpload'
+import Youtube from '@tiptap/extension-youtube'
+
 
 interface RichTextEditorProps {
   content: string
@@ -35,6 +40,8 @@ export function RichTextEditor({
   placeholder = 'Start writing your content...',
   className,
 }: RichTextEditorProps) {
+  const [isUploading, setIsUploading] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -47,6 +54,13 @@ export function RichTextEditor({
       Image.configure({
         HTMLAttributes: {
           class: 'rounded-lg max-w-full h-auto',
+        },
+      }),
+      Youtube.configure({
+        width: 640,
+        height: 480,
+        HTMLAttributes: {
+          class: 'rounded-lg w-full max-w-full aspect-video',
         },
       }),
       Placeholder.configure({
@@ -65,17 +79,41 @@ export function RichTextEditor({
     return null
   }
 
-  const addImage = () => {
-    const url = window.prompt('Enter image URL')
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
-    }
-  }
+  const handleImageUpload = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          setIsUploading(true);
+          const imageUrl = await uploadFileToCloudinaryClientUsage(file, 'editor-uploads');
+          if (imageUrl) {
+            editor.chain().focus().setImage({ src: imageUrl }).run();
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('Failed to upload image. Please try again.');
+        } finally {
+          setIsUploading(false);
+        }
+      }
+    };
+    input.click();
+  };
 
   const addLink = () => {
     const url = window.prompt('Enter URL')
     if (url) {
       editor.chain().focus().setLink({ href: url }).run()
+    }
+  }
+
+  const addVideo = () => {
+    const url = window.prompt('Enter YouTube URL')
+    if (url) {
+      editor.chain().focus().setYoutubeVideo({ src: url }).run()
     }
   }
 
@@ -150,8 +188,23 @@ export function RichTextEditor({
         <Button variant="ghost" size="sm" onClick={addLink}>
           <LinkIcon className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="sm" onClick={addImage}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleImageUpload}
+          disabled={isUploading}
+          title="Upload image from your device"
+        >
           <ImageIcon className="h-4 w-4" />
+          {isUploading && <span className="ml-1 text-xs">Uploading...</span>}
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={addVideo}
+          title="Add YouTube video"
+        >
+          <VideoIcon className="h-4 w-4" />
         </Button>
         <Button
           variant="ghost"
@@ -181,6 +234,10 @@ export function RichTextEditor({
           color: #adb5bd;
           pointer-events: none;
           height: 0;
+        }
+        .ProseMirror:focus {
+          outline: 2px solid #00A651;
+          outline-offset: -2px;
         }
       `}</style>
     </div>
