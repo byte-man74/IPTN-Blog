@@ -5,8 +5,7 @@ import ReactQueryProvider from '@/providers/query-client-provider'
 import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
-import { Toaster } from '@/components/ui/toaster';
-
+import { Toaster } from '@/components/ui/toaster'
 
 /**
  * Font configuration for the application
@@ -15,11 +14,13 @@ import { Toaster } from '@/components/ui/toaster';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 /**
@@ -56,8 +57,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="antialiased">
         <NextAuthProvider>
           <ReactQueryProvider>
             <ErrorProvider error={null}>

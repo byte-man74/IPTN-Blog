@@ -7,21 +7,27 @@
   --primaryDark: #1e1e1e;
   --secondaryBackground: #e0e0e0;
   --textColor: #1e1e1e;
+  --font-geist-sans:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-geist-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
 }
 
 /* this wasnt working from the docs recommendation */
 .react-multi-carousel-track {
-    height: 100% !important;
-  }
+  height: 100% !important;
+}
 
 .masonry-grid_column {
-    padding-left: 4px; /* gutter size */
-    background-clip: padding-box;
-  }
+  padding-left: 4px; /* gutter size */
+  background-clip: padding-box;
+}
 
-  .grid-item {
-    margin-bottom: 10px;
-  }
+.grid-item {
+  margin-bottom: 10px;
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -31,8 +37,6 @@
     --textColor: #d8d8d8;
   }
 }
-
-
 
 @layer base {
   :root {
@@ -89,8 +93,6 @@
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {

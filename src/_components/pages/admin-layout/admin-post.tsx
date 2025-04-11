@@ -43,10 +43,7 @@ const AdminPostMainComponent = () => {
     setPage(1)
   }
 
-  const handleSortChange = () => {
-    // This would be implemented when backend supports sorting
-    setPage(1)
-  }
+
 
   const toggleFilters = () => {
     setShowFilters(!showFilters)
@@ -136,14 +133,6 @@ const AdminPostMainComponent = () => {
                   <option value="">All Authors</option>
                   {/* This would ideally be populated from an API */}
                 </select>
-                <select
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primaryGreen focus:border-primaryGreen bg-white"
-                  onChange={handleSortChange}
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="most-viewed">Most Viewed</option>
-                </select>
               </div>
               <button
                 onClick={clearFilters}
@@ -192,6 +181,12 @@ const AdminPostMainComponent = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
+                      Views
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Last Updated
                     </th>
                     <th
@@ -205,7 +200,7 @@ const AdminPostMainComponent = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {posts.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                         No posts found
                       </td>
                     </tr>
@@ -238,6 +233,9 @@ const AdminPostMainComponent = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {post.pubDate ? new Date(post.pubDate).toLocaleDateString() : 'Not published'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span className="font-medium">{post?.analytics?.views || 0}</span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {post.lastUpdated ? new Date(post.lastUpdated).toLocaleDateString() : 'N/A'}

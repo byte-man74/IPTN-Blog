@@ -1,6 +1,6 @@
 export const routes = {
   news: {
-    list: '/newsd',
+    list: '/news',
     detail: (slug: string) => `/news/${slug}`,
     create: '/api/news',
     update: (id: string) => `/news/${id}`,
