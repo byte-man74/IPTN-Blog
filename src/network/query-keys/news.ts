@@ -1,4 +1,6 @@
 
 export const NewsQueryKey = {
-    NEWS: "NEWS"
+    NEWS: "NEWS",
+    CATEGORIES: "CATEGORIES",
+    TAGS: "TAGS"
 }

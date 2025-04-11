@@ -1,12 +1,18 @@
 'use client'
 
 import React, { useState } from 'react'
-import { ArrowLeft, Edit, Filter } from 'lucide-react'
+import { ArrowLeft, Edit, Filter, X } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
-import { useFetchNews } from '@/network/http-service/news'
+import { useFetchCategories, useFetchNews, useFetchTags } from '@/network/http-service/news'
 import { NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
 import { SkeletonLoader } from '@/_components/pages/admin-layout/admin-post-skeleton'
 import { Pagination } from '@/_components/pages/admin-layout/admin-pagination'
+import { Badge } from '@/components/ui/badge'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { Check } from 'lucide-react'
 
 const AdminPostMainComponent = () => {
   const [page, setPage] = useState(1)
@@ -14,11 +20,15 @@ const AdminPostMainComponent = () => {
   const [filters, setFilters] = useState<NewsFilterDTO>({
     published: null,
     searchTerm: null,
+    categoryIds: [],
+    tagIds: [],
   })
   const limit = 20
 
   // Fetch news with pagination and filters
   const { data: newsData, isLoading, error } = useFetchNews(filters, page, limit)
+  const { data: categoryData, isLoading: categoriesIsLoading } = useFetchCategories()
+  const { data: tagsData, isLoading: tagsIsLoading } = useFetchTags()
 
   const posts = newsData?.data || []
   const meta = newsData?.meta
@@ -43,7 +53,45 @@ const AdminPostMainComponent = () => {
     setPage(1)
   }
 
+  const handleCategorySelect = (categoryId: number) => {
+    setFilters((prev) => {
+      const currentCategoryIds = prev.categoryIds || []
+      const newCategoryIds = currentCategoryIds.includes(categoryId)
+        ? currentCategoryIds.filter((id) => id !== categoryId)
+        : [...currentCategoryIds, categoryId]
+      
+      return { ...prev, categoryIds: newCategoryIds }
+    })
+    setPage(1)
+  }
 
+  const handleTagSelect = (tagId: number) => {
+    setFilters((prev) => {
+      const currentTagIds = prev.tagIds || []
+      const newTagIds = currentTagIds.includes(tagId)
+        ? currentTagIds.filter((id) => id !== tagId)
+        : [...currentTagIds, tagId]
+      
+      return { ...prev, tagIds: newTagIds }
+    })
+    setPage(1)
+  }
+
+  const removeCategory = (categoryId: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      categoryIds: (prev.categoryIds || []).filter((id) => id !== categoryId),
+    }))
+    setPage(1)
+  }
+
+  const removeTag = (tagId: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      tagIds: (prev.tagIds || []).filter((id) => id !== tagId),
+    }))
+    setPage(1)
+  }
 
   const toggleFilters = () => {
     setShowFilters(!showFilters)
@@ -53,6 +101,8 @@ const AdminPostMainComponent = () => {
     setFilters({
       published: null,
       searchTerm: null,
+      categoryIds: [],
+      tagIds: [],
     })
     setPage(1)
   }
@@ -108,7 +158,7 @@ const AdminPostMainComponent = () => {
         {/* Advanced Filters - Toggleable */}
         {showFilters && (
           <div className="bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200">
-            <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex flex-col md:flex-row md:items-start gap-4">
               <div className="flex flex-col md:flex-row gap-2 flex-1">
                 <select
                   className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primaryGreen focus:border-primaryGreen bg-white"
@@ -133,6 +183,70 @@ const AdminPostMainComponent = () => {
                   <option value="">All Authors</option>
                   {/* This would ideally be populated from an API */}
                 </select>
+                
+                {/* Categories Dropdown */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="justify-between">
+                      Categories
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search categories..." />
+                      <CommandEmpty>No categories found.</CommandEmpty>
+                      <CommandGroup>
+                        {!categoriesIsLoading && categoryData?.map((category) => (
+                          <CommandItem
+                            key={category.id}
+                            value={category.name}
+                            onSelect={() => handleCategorySelect(category.id)}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                filters.categoryIds?.includes(category.id) ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {category.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                
+                {/* Tags Dropdown */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="justify-between">
+                      Tags
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search tags..." />
+                      <CommandEmpty>No tags found.</CommandEmpty>
+                      <CommandGroup>
+                        {!tagsIsLoading && tagsData?.map((tag) => (
+                          <CommandItem
+                            key={tag.id}
+                            value={tag.name}
+                            onSelect={() => handleTagSelect(tag.id)}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                filters.tagIds?.includes(tag.id) ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {tag.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
               <button
                 onClick={clearFilters}
@@ -140,6 +254,47 @@ const AdminPostMainComponent = () => {
               >
                 Clear Filters
               </button>
+            </div>
+            
+            {/* Selected filters display */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {filters.categoryIds && filters.categoryIds.length > 0 && categoryData && (
+                <>
+                  {filters.categoryIds.map((categoryId) => {
+                    const category = categoryData.find(c => c.id === categoryId);
+                    return category ? (
+                      <Badge key={`cat-${categoryId}`} variant="secondary" className="px-2 py-1">
+                        {category.name}
+                        <button 
+                          onClick={() => removeCategory(categoryId)}
+                          className="ml-1 hover:text-red-500"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ) : null;
+                  })}
+                </>
+              )}
+              
+              {filters.tagIds && filters.tagIds.length > 0 && tagsData && (
+                <>
+                  {filters.tagIds.map((tagId) => {
+                    const tag = tagsData.find(t => t.id === tagId);
+                    return tag ? (
+                      <Badge key={`tag-${tagId}`} variant="outline" className="px-2 py-1">
+                        {tag.name}
+                        <button 
+                          onClick={() => removeTag(tagId)}
+                          className="ml-1 hover:text-red-500"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ) : null;
+                  })}
+                </>
+              )}
             </div>
           </div>
         )}

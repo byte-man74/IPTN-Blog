@@ -4,6 +4,26 @@ import { CreateNewsCategorySchema } from '@/app/(server)/modules/news/news.types
 import ApiCustomError from '@/types/api-custom-error'
 import { isValidJson } from '@/lib/utils/validator'
 
+// GET /api/news/categories - Get all news categories
+export async function GET() {
+  try {
+    const newsService = new NewsService()
+    const result = await newsService.fetchCategories()
+
+    if (result instanceof ApiCustomError) {
+      return NextResponse.json({ error: result.message }, { status: result.status })
+    }
+
+    if (!result) {
+      return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 })
+    }
+
+    return NextResponse.json(result)
+  } catch {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
 // POST /api/news/categories - Create a news category
 export async function POST(request: NextRequest) {
   try {
@@ -42,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(result, { status: 201 })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

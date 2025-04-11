@@ -123,16 +123,20 @@ export class NewsRepository {
     filters: NewsFilterDTO,
     page: number = 1,
     limit: number = 20
-  ): Promise<{ data: NewsDTO[]; meta: PageNumberPagination & PageNumberCounters } | null | ApiCustomError> {
+  ): Promise<
+    { data: NewsDTO[]; meta: PageNumberPagination & PageNumberCounters } | null | ApiCustomError
+  > {
     return tryCatchHandler(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const where: any = {}
+
+      console.log("evil ayo", filters.categoryIds)
 
       if (filters.authorId) {
         where.authorId = filters.authorId
       }
 
-      if (filters.published) {
+      if (filters.published !== null && filters.published !== undefined) {
         where.published = filters.published
       }
 
@@ -159,11 +163,29 @@ export class NewsRepository {
         ]
       }
 
+      // Filter by categories if provided
+      if (filters.categoryIds && filters.categoryIds.length > 0) {
+        where.categories = {
+          some: {
+            id: { in: filters.categoryIds }
+          }
+        }
+      }
+
+      // Filter by tags if provided
+      if (filters.tagIds && filters.tagIds.length > 0) {
+        where.tags = {
+          some: {
+            id: { in: filters.tagIds }
+          }
+        }
+      }
+
       const news = this.news.paginate({
         where,
         include: {
-          categories: filters.categoryIds ? true : false,
-          tags: filters.tagIds ? true : false,
+          categories: true,
+          tags: true,
           analytics: {
             select: {
               views: true,
@@ -315,6 +337,32 @@ export class NewsRepository {
         include: {
           categories: true,
           tags: true,
+        },
+      })
+    })
+  }
+
+  //fetch categories
+  async fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.category.findMany({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+        },
+      })
+    })
+  }
+
+  //fetch tags
+  async fetchTags(): Promise<TagDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.tag.findMany({
+        select: {
+          id: true,
+          name: true,
         },
       })
     })

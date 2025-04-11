@@ -1,4 +1,9 @@
-import { NewsDTO, NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
+import {
+  NewsDTO,
+  NewsFilterDTO,
+  NewsCategoryDTO,
+  TagDTO,
+} from '@/app/(server)/modules/news/news.types'
 import {
   useAppQuery,
   useAppMutation,
@@ -8,14 +13,12 @@ import { routes } from '@/network/route'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 import { NewsQueryKey } from '@/network/query-keys/news'
 
-
-
 export function useFetchNews(params?: NewsFilterDTO, page?: number, limit?: number) {
   const queryParams = params
     ? {
         ...params,
-        categoryIds: params.categoryIds?.join(','),
-        tagIds: params.tagIds?.join(','),
+        categoryIds: params.categoryIds?.length ? params.categoryIds.join(',') : undefined,
+        tagIds: params.tagIds?.length ? params.tagIds.join(',') : undefined,
         startDate: params.startDate?.toISOString(),
         endDate: params.endDate?.toISOString(),
         page,
@@ -30,6 +33,20 @@ export function useFetchNews(params?: NewsFilterDTO, page?: number, limit?: numb
     queryKey: [NewsQueryKey.NEWS, params, page, limit],
     apiRoute: routes.news.list,
     params: queryParams,
+  })
+}
+
+export function useFetchCategories() {
+  return useAppQuery<NewsCategoryDTO[]>({
+    queryKey: [NewsQueryKey.CATEGORIES],
+    apiRoute: routes.news.categories,
+  })
+}
+
+export function useFetchTags() {
+  return useAppQuery<TagDTO[]>({
+    queryKey: [NewsQueryKey.TAGS],
+    apiRoute: routes.news.tags,
   })
 }
 

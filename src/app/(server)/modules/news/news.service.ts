@@ -7,6 +7,8 @@ import {
   CreateNewsCategoryDTO,
   CreateTagDTO,
   FullNewsDTO,
+  NewsCategoryDTO,
+  TagDTO,
 } from '@/app/(server)/modules/news/news.types'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 
@@ -32,6 +34,8 @@ export interface INewsService {
     options?: { remove?: boolean }
   ): Promise<NewsDTO | null | ApiCustomError>
   deleteNews(id: string): Promise<NewsDTO | null | ApiCustomError>
+  fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError>
+  fetchTags(): Promise<TagDTO[] | null | ApiCustomError>
 }
 
 export class NewsService implements INewsService {
@@ -103,5 +107,13 @@ export class NewsService implements INewsService {
 
   async getNewsBySlug(slug: string): Promise<FullNewsDTO | null | ApiCustomError> {
     return await this.repository.getNewsBySlug(slug)
+  }
+
+  async fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError> {
+    return await this.repository.fetchCategories()
+  }
+
+  async fetchTags(): Promise<TagDTO[] | null | ApiCustomError> {
+    return await this.repository.fetchTags()
   }
 }
