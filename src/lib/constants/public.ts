@@ -103,3 +103,31 @@ export const PopularTags = [
   { id: 5, name: 'Entertainment', url: '/category/entertainment' },
   { id: 6, name: 'Sports', url: '/category/sports' },
 ]
+
+
+
+export interface OldData {
+    id: string
+    title: string
+    slug: string
+    date: Date
+    content: string
+    categories: string[]
+    tags: string[]
+    status: string
+    cover_image: string
+  }
+
+export const data: OldData[] = [
+    {
+      id: '1',
+      title: 'Sample News Article',
+      slug: 'sample-news-article',
+      date: new Date('2023-01-01'),
+      content: 'This is a sample news article content.',
+      categories: ['Technology', 'News'],
+      tags: ['sample', 'mock'],
+      status: 'published',
+      cover_image: '/images/sample-cover.jpg'
+    }
+  ]

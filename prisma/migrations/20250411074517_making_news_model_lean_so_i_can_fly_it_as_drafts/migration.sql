@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "News" ALTER COLUMN "pubDate" DROP NOT NULL;

@@ -74,21 +74,20 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
 model News {
-  id         String   @id @default(cuid())
+  id             String   @id @default(cuid())
   title          String
   summary        String?
   slug           String   @unique
-  pubDate        DateTime
+  pubDate        DateTime?
   coverImage     String?
   createdAt      DateTime @default(now())
   lastUpdated    DateTime @updatedAt
   contentEncoded String?  @db.Text
-  authorId       String
+  authorId       String?
   published      Boolean  @default(false)
 
-  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author     User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
   categories Category[] @relation("NewsCategories")
   tags       Tag[]      @relation("NewsTags")
   analytics  Analytics?

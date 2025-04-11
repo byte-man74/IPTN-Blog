@@ -17,6 +17,7 @@ import { usePathname } from 'next/navigation'
 import { AppLogo } from '@/_components/global/app-logo'
 import { useSession, signOut } from 'next-auth/react'
 import { AppImage } from '@/_components/global/app-image'
+import { AdminRoutes } from '@/lib/routes/admin'
 
 /**
  * SideNav Component
@@ -42,34 +43,34 @@ export const SideNav = () => {
    */
   const navItems = [
     {
-      href: '/admin',
+      href: `${AdminRoutes.home}`,
       label: 'Dashboard',
       icon: Home,
-      matchPath: (path: string) => path === '/admin',
+      matchPath: (path: string) => path === `${AdminRoutes.home}`,
     },
     {
-      href: '/admin/posts',
+      href: `${AdminRoutes.news}`,
       label: 'Posts',
       icon: FileText,
-      matchPath: (path: string) => path.startsWith('/admin/posts'),
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.news}`),
     },
     {
-      href: '/admin/categories',
+      href: `${AdminRoutes.categories}`,
       label: 'Categories',
       icon: MessageSquare,
-      matchPath: (path: string) => path.startsWith('/admin/categories'),
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.categories}`),
     },
     {
-      href: '/admin/analytics',
+      href: `${AdminRoutes.analytics}/`,
       label: 'Analytics',
       icon: BarChart2,
-      matchPath: (path: string) => path.startsWith('/admin/analytics'),
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.analytics}`),
     },
     {
-      href: '/admin/settings',
+      href: `${AdminRoutes.settings}`,
       label: 'Settings',
       icon: Settings,
-      matchPath: (path: string) => path.startsWith('/admin/settings'),
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.settings}`),
     },
   ]
 

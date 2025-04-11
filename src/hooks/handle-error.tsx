@@ -11,7 +11,6 @@ export function useErrorHandling<T extends object>(useHook: () => T) {
     const result = useHook()
 
     useEffect(() => {
-      console.log('evil hajara')
       if ('error' in result && result.error) {
         const error = result.error
 

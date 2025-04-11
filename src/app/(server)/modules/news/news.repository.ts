@@ -38,6 +38,7 @@ export class NewsRepository {
           pubDate: news.pubDate,
           contentEncoded: news.contentEncoded,
           authorId: news.authorId,
+          coverImage: news.coverImage,
           published: news.published,
           categories: news.categoryIds
             ? {
@@ -130,8 +131,6 @@ export class NewsRepository {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const where: any = {}
 
-      console.log("evil ayo", filters.categoryIds)
-
       if (filters.authorId) {
         where.authorId = filters.authorId
       }
@@ -167,8 +166,8 @@ export class NewsRepository {
       if (filters.categoryIds && filters.categoryIds.length > 0) {
         where.categories = {
           some: {
-            id: { in: filters.categoryIds }
-          }
+            id: { in: filters.categoryIds },
+          },
         }
       }
 
@@ -176,8 +175,8 @@ export class NewsRepository {
       if (filters.tagIds && filters.tagIds.length > 0) {
         where.tags = {
           some: {
-            id: { in: filters.tagIds }
-          }
+            id: { in: filters.tagIds },
+          },
         }
       }
 

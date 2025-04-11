@@ -3,16 +3,23 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Edit, Filter, X } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
-import { useFetchCategories, useFetchNews, useFetchTags } from '@/network/http-service/news'
+import { useFetchCategories, useFetchNews, useFetchTags } from '@/network/http-service/news.hooks'
 import { NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
 import { SkeletonLoader } from '@/_components/pages/admin-layout/admin-post-skeleton'
 import { Pagination } from '@/_components/pages/admin-layout/admin-pagination'
 import { Badge } from '@/components/ui/badge'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Check } from 'lucide-react'
+import { AdminRoutes } from '../../../lib/routes/admin'
 
 const AdminPostMainComponent = () => {
   const [page, setPage] = useState(1)
@@ -59,7 +66,7 @@ const AdminPostMainComponent = () => {
       const newCategoryIds = currentCategoryIds.includes(categoryId)
         ? currentCategoryIds.filter((id) => id !== categoryId)
         : [...currentCategoryIds, categoryId]
-      
+
       return { ...prev, categoryIds: newCategoryIds }
     })
     setPage(1)
@@ -71,7 +78,7 @@ const AdminPostMainComponent = () => {
       const newTagIds = currentTagIds.includes(tagId)
         ? currentTagIds.filter((id) => id !== tagId)
         : [...currentTagIds, tagId]
-      
+
       return { ...prev, tagIds: newTagIds }
     })
     setPage(1)
@@ -114,7 +121,7 @@ const AdminPostMainComponent = () => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
           <div>
             <AppLink
-              href="/admin"
+              href={AdminRoutes.home}
               className="inline-flex items-center text-sm text-gray-600 hover:text-primaryGreen mb-2"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
@@ -131,8 +138,8 @@ const AdminPostMainComponent = () => {
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </button>
             <AppLink
-              href="/admin/posts/new"
-              className="bg-primaryGreen hover:bg-primaryGreen/90 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow"
+              href={AdminRoutes.createNews}
+              className="bg-black hover:bg-primaryGreen/90 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow"
             >
               <Edit className="h-4 w-4 mr-2" />
               Create New Post
@@ -183,7 +190,7 @@ const AdminPostMainComponent = () => {
                   <option value="">All Authors</option>
                   {/* This would ideally be populated from an API */}
                 </select>
-                
+
                 {/* Categories Dropdown */}
                 <Popover>
                   <PopoverTrigger asChild>
@@ -191,31 +198,34 @@ const AdminPostMainComponent = () => {
                       Categories
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
+                  <PopoverContent className="w-[300px] p-0">
                     <Command>
                       <CommandInput placeholder="Search categories..." />
                       <CommandEmpty>No categories found.</CommandEmpty>
-                      <CommandGroup>
-                        {!categoriesIsLoading && categoryData?.map((category) => (
-                          <CommandItem
-                            key={category.id}
-                            value={category.name}
-                            onSelect={() => handleCategorySelect(category.id)}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                filters.categoryIds?.includes(category.id) ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {category.name}
-                          </CommandItem>
-                        ))}
+                      <CommandGroup className="max-h-[200px] overflow-y-auto">
+                        {!categoriesIsLoading &&
+                          categoryData?.map((category) => (
+                            <CommandItem
+                              key={category.id}
+                              value={category.name}
+                              onSelect={() => handleCategorySelect(category.id)}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  filters.categoryIds?.includes(category.id)
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {category.name}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </Command>
                   </PopoverContent>
                 </Popover>
-                
+
                 {/* Tags Dropdown */}
                 <Popover>
                   <PopoverTrigger asChild>
@@ -227,22 +237,23 @@ const AdminPostMainComponent = () => {
                     <Command>
                       <CommandInput placeholder="Search tags..." />
                       <CommandEmpty>No tags found.</CommandEmpty>
-                      <CommandGroup>
-                        {!tagsIsLoading && tagsData?.map((tag) => (
-                          <CommandItem
-                            key={tag.id}
-                            value={tag.name}
-                            onSelect={() => handleTagSelect(tag.id)}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                filters.tagIds?.includes(tag.id) ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {tag.name}
-                          </CommandItem>
-                        ))}
+                      <CommandGroup className="max-h-[200px] overflow-y-auto">
+                        {!tagsIsLoading &&
+                          tagsData?.map((tag) => (
+                            <CommandItem
+                              key={tag.id}
+                              value={tag.name}
+                              onSelect={() => handleTagSelect(tag.id)}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  filters.tagIds?.includes(tag.id) ? 'opacity-100' : 'opacity-0'
+                                )}
+                              />
+                              {tag.name}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </Command>
                   </PopoverContent>
@@ -255,43 +266,43 @@ const AdminPostMainComponent = () => {
                 Clear Filters
               </button>
             </div>
-            
+
             {/* Selected filters display */}
             <div className="mt-4 flex flex-wrap gap-2">
               {filters.categoryIds && filters.categoryIds.length > 0 && categoryData && (
                 <>
                   {filters.categoryIds.map((categoryId) => {
-                    const category = categoryData.find(c => c.id === categoryId);
+                    const category = categoryData.find((c) => c.id === categoryId)
                     return category ? (
                       <Badge key={`cat-${categoryId}`} variant="secondary" className="px-2 py-1">
                         {category.name}
-                        <button 
+                        <button
                           onClick={() => removeCategory(categoryId)}
                           className="ml-1 hover:text-red-500"
                         >
                           <X className="h-3 w-3" />
                         </button>
                       </Badge>
-                    ) : null;
+                    ) : null
                   })}
                 </>
               )}
-              
+
               {filters.tagIds && filters.tagIds.length > 0 && tagsData && (
                 <>
                   {filters.tagIds.map((tagId) => {
-                    const tag = tagsData.find(t => t.id === tagId);
+                    const tag = tagsData.find((t) => t.id === tagId)
                     return tag ? (
                       <Badge key={`tag-${tagId}`} variant="outline" className="px-2 py-1">
                         {tag.name}
-                        <button 
+                        <button
                           onClick={() => removeTag(tagId)}
                           className="ml-1 hover:text-red-500"
                         >
                           <X className="h-3 w-3" />
                         </button>
                       </Badge>
-                    ) : null;
+                    ) : null
                   })}
                 </>
               )}
@@ -365,12 +376,23 @@ const AdminPostMainComponent = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div>
-                              <div className="text-sm font-medium text-gray-900">{post.title}</div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {post.title.length > 40
+                                  ? `${post.title.substring(0, 40)}...`
+                                  : post.title}
+                              </div>
                               <div className="text-sm text-gray-500 truncate max-w-xs">
-                                {post.summary || 'No summary available'}
+                                {post.summary
+                                  ? post.summary.length > 60
+                                    ? `${post.summary.substring(0, 60)}...`
+                                    : post.summary
+                                  : 'No summary available'}
                               </div>
                               <div className="text-xs text-gray-400">
-                                Slug: {post.slug}
+                                Slug:{' '}
+                                {post.slug.length > 30
+                                  ? `${post.slug.substring(0, 30)}...`
+                                  : post.slug}
                               </div>
                             </div>
                           </div>
@@ -387,13 +409,17 @@ const AdminPostMainComponent = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {post.pubDate ? new Date(post.pubDate).toLocaleDateString() : 'Not published'}
+                          {post.pubDate
+                            ? new Date(post.pubDate).toLocaleDateString()
+                            : 'Not published'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <span className="font-medium">{post?.analytics?.views || 0}</span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {post.lastUpdated ? new Date(post.lastUpdated).toLocaleDateString() : 'N/A'}
+                          {post.lastUpdated
+                            ? new Date(post.lastUpdated).toLocaleDateString()
+                            : 'N/A'}
                           <div className="text-xs text-gray-400">
                             Created: {new Date(post.createdAt).toLocaleDateString()}
                           </div>

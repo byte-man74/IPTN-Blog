@@ -6,7 +6,6 @@ import {
 } from '@/app/(server)/modules/news/news.types'
 import {
   useAppQuery,
-  useAppMutation,
   useAppQueryWithPaginationAndParams,
 } from '../client.constructor'
 import { routes } from '@/network/route'
