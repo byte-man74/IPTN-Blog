@@ -16,7 +16,7 @@ import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
 import { AppLogo } from '@/_components/global/app-logo'
 import { useSession, signOut } from 'next-auth/react'
-import Image from 'next/image'
+import { AppImage } from '@/_components/global/app-image'
 
 /**
  * SideNav Component
@@ -164,7 +164,7 @@ export const SideNav = () => {
                     <div className={`flex-shrink-0  ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>
                       {session.user.image ? (
                         <div className="rounded-full border-2 border-primaryGreen p-0.5">
-                          <Image
+                          <AppImage
                             src={session.user.image}
                             alt="Profile"
                             width={40}

@@ -3,12 +3,21 @@ import { NewsService } from '@/app/(server)/modules/news/news.service'
 import { CreateNewsSchema, NewsFilterSchema } from '@/app/(server)/modules/news/news.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { isValidJson } from '@/lib/utils/validator'
+import { QUERY_PARAMS_TITLES } from '@/lib/constants/api-filters'
 
 // GET /api/news - Get news with filters
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const filters: Record<string, unknown> = {}
+
+    // Parse compulsory filter
+    const page = searchParams.get(QUERY_PARAMS_TITLES.PAGE)
+      ? parseInt(searchParams.get(QUERY_PARAMS_TITLES.PAGE)!)
+      : 1
+    const limit = searchParams.get(QUERY_PARAMS_TITLES.LIMIT)
+      ? parseInt(searchParams.get(QUERY_PARAMS_TITLES.LIMIT)!)
+      : 20
 
     // Parse filter parameters from query string
     if (searchParams.has('authorId')) {
@@ -50,7 +59,7 @@ export async function GET(request: NextRequest) {
     }
 
     const newsService = new NewsService()
-    const result = await newsService.getNewsWithFilters(validationResult.data)
+    const result = await newsService.getNewsWithFilters(validationResult.data, page, limit)
 
     if (result instanceof ApiCustomError) {
       return NextResponse.json({ error: result.message }, { status: result.status })

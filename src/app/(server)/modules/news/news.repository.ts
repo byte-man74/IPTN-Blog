@@ -12,9 +12,17 @@ import {
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
+import { paginate } from 'prisma-extension-pagination'
+import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 
+const prisma = new PrismaClient().$extends({
+  model: {
+    news: {
+      paginate,
+    },
+  },
+})
 
-const prisma = new PrismaClient()
 export class NewsRepository {
   private readonly news = prisma.news
   private readonly category = prisma.category
@@ -25,7 +33,7 @@ export class NewsRepository {
       return await this.news.create({
         data: {
           title: news.title,
-          summary: news.summary ?? getNewsSummary(news.contentEncoded as ""),
+          summary: news.summary ?? getNewsSummary(news.contentEncoded as ''),
           slug: news.slug ?? slugifyContent(news.title),
           pubDate: news.pubDate,
           contentEncoded: news.contentEncoded,
@@ -50,20 +58,22 @@ export class NewsRepository {
     })
   }
 
-
-  async editNews(slug: string, news: Partial<CreateNewsDTO>): Promise<NewsDTO | null | ApiCustomError> {
+  async editNews(
+    slug: string,
+    news: Partial<CreateNewsDTO>
+  ): Promise<NewsDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const updateData: any = { ...news };
+      const updateData: any = { ...news }
 
       // Generate slug if title is being updated and no slug is provided
       if (news.title && !news.slug) {
-        updateData.slug = slugifyContent(news.title);
+        updateData.slug = slugifyContent(news.title)
       }
 
       // Generate summary if content is being updated and no summary is provided
       if (news.contentEncoded && !news.summary) {
-        updateData.summary = getNewsSummary(news.contentEncoded);
+        updateData.summary = getNewsSummary(news.contentEncoded)
       }
 
       // Handle category connections if provided
@@ -71,7 +81,7 @@ export class NewsRepository {
         updateData.categories = {
           set: [], // Clear existing connections
           connect: news.categoryIds.map((id) => ({ id })),
-        };
+        }
       }
 
       // Handle tag connections if provided
@@ -79,7 +89,7 @@ export class NewsRepository {
         updateData.tags = {
           set: [], // Clear existing connections
           connect: news.tagIds.map((id) => ({ id })),
-        };
+        }
       }
 
       return await this.news.update({
@@ -89,10 +99,9 @@ export class NewsRepository {
           categories: true,
           tags: true,
         },
-      });
-    });
+      })
+    })
   }
-
 
   // Get a single news item by ID
   async getNewsBySlug(slug: string): Promise<FullNewsDTO | null | ApiCustomError> {
@@ -103,15 +112,18 @@ export class NewsRepository {
           categories: true,
           tags: true,
           comments: true,
-          seo: true
+          seo: true,
         },
-      });
-    });
+      })
+    })
   }
 
-
   //generic api to grab news and filter by key metric
-  async getNewsWithFilters(filters: NewsFilterDTO): Promise<NewsDTO[] | null | ApiCustomError> {
+  async getNewsWithFilters(
+    filters: NewsFilterDTO,
+    page: number = 1,
+    limit: number = 20
+  ): Promise<{ data: NewsDTO[]; meta: PageNumberPagination & PageNumberCounters } | null | ApiCustomError> {
     return tryCatchHandler(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const where: any = {}
@@ -120,7 +132,7 @@ export class NewsRepository {
         where.authorId = filters.authorId
       }
 
-      if (filters.published !== undefined) {
+      if (filters.published) {
         where.published = filters.published
       }
 
@@ -147,16 +159,39 @@ export class NewsRepository {
         ]
       }
 
-      return await this.news.findMany({
+      const news = this.news.paginate({
         where,
         include: {
           categories: filters.categoryIds ? true : false,
           tags: filters.tagIds ? true : false,
+          analytics: {
+            select: {
+              views: true,
+            },
+          },
         },
         orderBy: {
           pubDate: 'desc',
         },
       })
+
+      const paginatedResults = await news.withPages({
+        limit: limit,
+        page,
+        includePageCount: true,
+      })
+
+      if (!paginatedResults?.[0]) {
+        return {
+          data: [],
+          meta: paginatedResults[1],
+        }
+      }
+
+      return {
+        data: paginatedResults[0],
+        meta: paginatedResults[1],
+      }
     })
   }
 
@@ -186,7 +221,6 @@ export class NewsRepository {
     })
   }
 
-
   // assign or remove tags from news
   async assignTagsToNews(
     slug: string,
@@ -197,7 +231,7 @@ export class NewsRepository {
       if (options.remove) {
         // Remove specified tags
         return await this.news.update({
-          where: { slug: slug},
+          where: { slug: slug },
           data: {
             tags: {
               disconnect: tagIds.map((id) => ({ id })),
@@ -264,16 +298,15 @@ export class NewsRepository {
     })
   }
 
-
-async deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError> {
+  async deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
       // First find the news to ensure it exists
       const newsExists = await this.news.findUnique({
         where: { slug },
-      });
+      })
 
       if (!newsExists) {
-        throw new ApiCustomError('News not found', 404);
+        throw new ApiCustomError('News not found', 404)
       }
 
       // Delete the news
@@ -283,7 +316,7 @@ async deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError> {
           categories: true,
           tags: true,
         },
-      });
-    });
+      })
+    })
   }
 }

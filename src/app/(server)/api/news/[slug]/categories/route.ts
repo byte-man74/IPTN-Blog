@@ -5,7 +5,7 @@ import { isValidJson } from '@/lib/utils/validator'
 import { z } from 'zod'
 
 // Schema for category assignment request
-const CategoryAssignmentSchema = z.object({
+export const CategoryAssignmentSchema = z.object({
   categoryIds: z.array(z.number()),
   remove: z.boolean().optional(),
 })

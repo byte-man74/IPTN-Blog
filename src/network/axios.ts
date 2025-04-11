@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { API_URL } from '../src/environment-config'
+import { API_URL } from '../environment-config'
 
 // Create axios instance with base configuration
 const axiosInstance = axios.create({

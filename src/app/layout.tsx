@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { NextAuthProvider } from '@/providers/session-provider'
 import ReactQueryProvider from '@/providers/query-client-provider'
-
+import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
-import { Toaster } from 'react-hot-toast'
+import { ErrorProvider } from '@/providers/error-provider'
+import { Toaster } from '@/components/ui/toaster';
+
 
 /**
  * Font configuration for the application
@@ -58,8 +60,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextAuthProvider>
           <ReactQueryProvider>
-            <Toaster position="top-center" reverseOrder={false} />
-            <div className="mx-auto max-w-[140rem]">{children ?? <div>Loading...</div>}</div>
+            <ErrorProvider error={null}>
+              <Toaster />
+              <NextTopLoader showSpinner={false} color="#875929" />
+              <div className="mx-auto max-w-[140rem]">{children ?? <div>Loading...</div>}</div>
+            </ErrorProvider>
           </ReactQueryProvider>
         </NextAuthProvider>
       </body>

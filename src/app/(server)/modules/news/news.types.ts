@@ -12,6 +12,10 @@ export const SimplifiedNewsSchema = z.object({
   lastUpdated: z.date(),
   authorId: z.string(),
   published: z.boolean().default(false),
+  analytics: z.object({
+    views: z.number().default(0),
+  }).nullable().optional(),
+
 })
 
 
@@ -64,17 +68,16 @@ export const CreateNewsSchema = z.object({
 export const UpdateNewsSchema = CreateNewsSchema.partial().extend({
   id: z.string(),
 })
-
 // Schema for filtering news
 export const NewsFilterSchema = z.object({
-  id: z.string().optional(),
-  authorId: z.string().optional(),
-  published: z.boolean().optional(),
-  categoryIds: z.array(z.number()).optional(),
-  tagIds: z.array(z.number()).optional(),
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
-  searchTerm: z.string().optional(),
+  id: z.string().nullable().optional(),
+  authorId: z.string().nullable().optional(),
+  published: z.boolean().nullable().optional(),
+  categoryIds: z.array(z.number()).nullable().optional(),
+  tagIds: z.array(z.number()).nullable().optional(),
+  startDate: z.date().nullable().optional(),
+  endDate: z.date().nullable().optional(),
+  searchTerm: z.string().nullable().optional(),
 })
 
 export const NewsCategorySchema = z.object({

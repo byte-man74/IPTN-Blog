@@ -1,9 +1,9 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ShieldAlert, ChevronLeft, Home } from 'lucide-react'
+import { AppLink } from '@/_components/global/app-link'
 
 /**
  * Unauthorized Page
@@ -43,13 +43,13 @@ export default function UnauthorizedPage() {
                 <ChevronLeft className="h-4 w-4" />
                 Go Back
               </button>
-              <Link
+              <AppLink
                 href="/"
                 className="py-2.5 px-5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center justify-center gap-2 font-medium"
               >
                 <Home className="h-4 w-4" />
                 Return to Home
-              </Link>
+              </AppLink>
             </div>
           </div>
         </div>
