@@ -8,6 +8,7 @@ import {
   NewsDTO,
   NewsFilterDTO,
   TagDTO,
+  UpdateNewsDTO,
 } from '@/app/(server)/modules/news/news.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
@@ -61,8 +62,8 @@ export class NewsRepository {
 
   async editNews(
     slug: string,
-    news: Partial<CreateNewsDTO>
-  ): Promise<NewsDTO | null | ApiCustomError> {
+    news: Partial<UpdateNewsDTO>
+  ): Promise<FullNewsDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updateData: any = { ...news }
@@ -78,19 +79,23 @@ export class NewsRepository {
       }
 
       // Handle category connections if provided
-      if (news.categoryIds) {
+      if ('categoryIds' in news) {
         updateData.categories = {
-          set: [], // Clear existing connections
-          connect: news.categoryIds.map((id) => ({ id })),
+          set: [],
+          connect: news.categoryIds?.map((id) => ({ id })) || [],
         }
+        // Remove categoryIds from updateData as it's not a direct field
+        delete updateData.categoryIds;
       }
 
       // Handle tag connections if provided
-      if (news.tagIds) {
+      if ('tagIds' in news) {
         updateData.tags = {
-          set: [], // Clear existing connections
-          connect: news.tagIds.map((id) => ({ id })),
+          set: [], 
+          connect: news.tagIds?.map((id) => ({ id })) || [],
         }
+        // Remove tagIds from updateData as it's not a direct field
+        delete updateData.tagIds;
       }
 
       return await this.news.update({

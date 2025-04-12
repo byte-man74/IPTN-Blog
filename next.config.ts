@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: '**',
       },
+      {
+        protocol: "https",
+        hostname: "www.ipledge2nigeria.net",
+        pathname: '**',
+      },
     ],
   },
 }

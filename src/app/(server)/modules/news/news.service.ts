@@ -9,6 +9,7 @@ import {
   FullNewsDTO,
   NewsCategoryDTO,
   TagDTO,
+  UpdateNewsDTO,
 } from '@/app/(server)/modules/news/news.types'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 import { slugifyContent } from './news.utils'
@@ -19,7 +20,7 @@ import { data } from '@/lib/constants/public'
 
 export interface INewsService {
   createNews(news: CreateNewsDTO): Promise<NewsDTO | null | ApiCustomError>
-  editNews(id: string, news: Partial<CreateNewsDTO>): Promise<NewsDTO | null | ApiCustomError>
+  editNews(id: string, news: Partial<UpdateNewsDTO>): Promise<NewsDTO | null | ApiCustomError>
   getNewsWithFilters(
     filters: NewsFilterDTO,
     page: number,
@@ -61,7 +62,7 @@ export class NewsService implements INewsService {
   //unpublish or save as draft, publish too.
   async editNews(
     slug: string,
-    news: Partial<CreateNewsDTO>
+    news: Partial<UpdateNewsDTO>
   ): Promise<FullNewsDTO | null | ApiCustomError> {
     //TODO: later handle analytics from here if unpublished
     return await this.repository.editNews(slug, news)

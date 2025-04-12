@@ -13,7 +13,7 @@ export default {
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        primaryGreen: '#00A651',
+        primaryGreen: '#116427',
         secondaryBg: 'var(--secondaryBackground)',
         textColor: 'var(--textColor)',
         primaryDark: 'var(--primaryDark)',

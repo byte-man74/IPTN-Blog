@@ -13,7 +13,7 @@ const HeroTags = () => {
   const tags = PopularTags ?? [];
 
   return (
-    <div className="w-full sticky top-[4rem] z-50 bg-background hidden sm:block">
+    <div className="w-full sticky top-[4rem] z-50 bg-background hidden sm:block bg-[#E4E4E4]">
         <div className="flex flex-wrap items-center gap-8 h-16">
           <div className="h-full flex w-[12rem] items-center justify-end bg-gray-200 px-6">
             <span className="font-semibold">Popular Tags</span>

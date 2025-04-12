@@ -139,7 +139,7 @@ const AdminPostMainComponent = () => {
             </button>
             <AppLink
               href={AdminRoutes.createNews}
-              className="bg-black hover:bg-primaryGreen/90 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow"
+              className="bg-black hover:bg-primaryGreen/90 text-white px-4 py-2 transition-all duration-200 font-medium flex items-center shadow-sm hover:shadow"
             >
               <Edit className="h-4 w-4 mr-2" />
               Create New Post
@@ -427,7 +427,7 @@ const AdminPostMainComponent = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
                             <AppLink
-                              href={`/admin/posts/edit/${post.slug}`}
+                              href={AdminRoutes.updateNews(post.slug)}
                               className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded"
                             >
                               Edit

@@ -3,6 +3,7 @@ import {
   NewsFilterDTO,
   NewsCategoryDTO,
   TagDTO,
+  FullNewsDTO,
 } from '@/app/(server)/modules/news/news.types'
 import {
   useAppQuery,
@@ -49,12 +50,12 @@ export function useFetchTags() {
   })
 }
 
-// export function useFetchNewsDetail(slug: string) {
-//   return useAppQuery<NewsItem>({
-//     queryKey: ['news', slug],
-//     apiRoute: routes.news.detail(slug),
-//   });
-// }
+export function useFetchNewsDetail(slug: string) {
+  return useAppQuery<FullNewsDTO>({
+    queryKey: [NewsQueryKey.NEWS_DETAILS, slug],
+    apiRoute: routes.news.detail(slug),
+  });
+}
 
 // export function useCreateNews() {
 //   return useAppMutation<NewsItem, Error, Partial<NewsItem>>({
