@@ -421,7 +421,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <div className="container mx-auto py-6 px-6 space-y-6">
+    <div className="container mx-auto py-6 px-6 space-y-6 relative">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <AppLink href={AdminRoutes.news}>
@@ -484,8 +484,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                     {...register('summary')}
                   />
                 </div>
-
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <Label htmlFor="content">Content</Label>
                   <Controller
                     name="content"
@@ -495,6 +494,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                         content={field.value}
                         onChange={field.onChange}
                         key={contentLoaded ? 'content-loaded' : 'content-loading'}
+                        className='relative z-0'
                       />
                     )}
                   />
