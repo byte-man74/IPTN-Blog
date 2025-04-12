@@ -36,7 +36,7 @@ export class SeoService implements ISeoService {
       const base64Image = Buffer.from(buffer).toString('base64')
       const dataURI = `data:image/png;base64,${base64Image}`
       const result = await uploadFileToCloudinary(dataURI, 'og-images')
-      return result?.url ?? null
+      return result?.thumbnailUrl ?? null
     } catch {
       return null
     }
