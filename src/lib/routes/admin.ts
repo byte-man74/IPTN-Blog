@@ -3,6 +3,7 @@ export const AdminRoutes = {
     categories: "/admin/categories",
     createNews: "/admin/news/create",
     updateNews: (slug: string) => `/admin/news/update/${slug}`,
+    previewNews: (slug: string) => `/admin/news/preview/${slug}`,
     news: "/admin/news",
     ads: "/admin/ads",
     previewPost: (slug: string) => `/admin/news/preview/${slug}`,

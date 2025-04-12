@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         hostname: "www.ipledge2nigeria.net",
         pathname: '**',
       },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        pathname: '**',
+      },
     ],
   },
 }

@@ -1,4 +1,7 @@
-import React from 'react'
+"use client"
+
+
+import React, { useState } from 'react'
 import Image from 'next/image'
 
 /**
@@ -23,6 +26,8 @@ interface AppImageProps {
   objectPosition?: string
   /** Optional opacity value (0-1) */
   opacity?: number
+  /** Optional placeholder image to show on error */
+  fallbackSrc?: string
 }
 
 /**
@@ -33,6 +38,7 @@ interface AppImageProps {
  * - Optimized loading with optional priority
  * - Flexible styling options
  * - Configurable opacity
+ * - Error handling with fallback to placeholder
  *
  * @param {AppImageProps} props - The component props
  * @returns {JSX.Element} Rendered image component
@@ -47,10 +53,17 @@ export const AppImage = ({
   objectFit = 'cover',
   objectPosition = 'center',
   opacity = 1,
+  fallbackSrc = 'https://placehold.co/600x400',
 }: AppImageProps) => {
+  const [imgSrc, setImgSrc] = useState<string>(src || fallbackSrc)
+
+  const handleError = () => {
+    setImgSrc(fallbackSrc)
+  }
+
   return (
     <Image
-      src={src ?? '/placeholder.jpg'}
+      src={imgSrc}
       alt={alt ?? ''}
       width={width}
       height={height}
@@ -61,6 +74,7 @@ export const AppImage = ({
         opacity,
       }}
       className={className || ''}
+      onError={handleError}
     />
   )
 }

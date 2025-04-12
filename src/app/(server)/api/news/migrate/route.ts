@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { NewsService } from '@/app/(server)/modules/news/news.service'
 
 // export const dynamic = 'force-dynamic'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const newsService = new NewsService()
     const result = await newsService.updateOldData()

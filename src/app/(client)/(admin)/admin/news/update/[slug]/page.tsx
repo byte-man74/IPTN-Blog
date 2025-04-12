@@ -3,8 +3,8 @@ import { ModifyPostComponent } from '@/_components/pages/admin-layout/admin-modi
 
 
 
-const UpdateNews = ({ params }: { params: { slug: string } }) => {
-  const { slug } = params
+const UpdateNews = async ({ params }: { params: { slug: string } }) => {
+  const { slug } = await params
 
   return (
     <ModifyPostComponent slug={slug} />

@@ -167,7 +167,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   useEffect(() => {
     if (tags) {
       const filtered = tagSearchTerm
-        ? tags.filter(tag => tag.name.toLowerCase().includes(tagSearchTerm.toLowerCase()))
+        ? tags.filter((tag) => tag.name.toLowerCase().includes(tagSearchTerm.toLowerCase()))
         : tags
       setVisibleTags(filtered)
     }
@@ -223,48 +223,51 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
 
   // Debounced save function
   const saveProgress = useCallback(() => {
-    const debouncedSave = debounce(async (data: FormValues, categories: number[], tags: number[]) => {
-      if (!newsItem?.slug) return
+    const debouncedSave = debounce(
+      async (data: FormValues, categories: number[], tags: number[]) => {
+        if (!newsItem?.slug) return
 
-      setAutoSaveStatus('saving')
-      try {
-        await updateNews({
-          data: {
+        setAutoSaveStatus('saving')
+        try {
+          await updateNews({
+            data: {
+              title: data.title,
+              summary: data.summary,
+              contentEncoded: data.content,
+              published: data.isPublished,
+              coverImage: data.featuredImageUrl,
+              categoryIds: categories,
+              tagIds: tags,
+            },
+          })
+
+          // Update previous form state after successful save
+          setPreviousFormState({
             title: data.title,
             summary: data.summary,
-            contentEncoded: data.content,
-            published: data.isPublished,
-            coverImage: data.featuredImageUrl,
+            content: data.content,
+            isPublished: data.isPublished,
+            featuredImageUrl: data.featuredImageUrl,
             categoryIds: categories,
             tagIds: tags,
-          },
-        })
+          })
 
-        // Update previous form state after successful save
-        setPreviousFormState({
-          title: data.title,
-          summary: data.summary,
-          content: data.content,
-          isPublished: data.isPublished,
-          featuredImageUrl: data.featuredImageUrl,
-          categoryIds: categories,
-          tagIds: tags,
-        })
-
-        setAutoSaveStatus('saved')
-        // Reset status after 3 seconds
-        setTimeout(() => {
+          setAutoSaveStatus('saved')
+          // Reset status after 3 seconds
+          setTimeout(() => {
+            setAutoSaveStatus('idle')
+          }, 3000)
+        } catch (error) {
+          toast({
+            title: 'Error auto-saving',
+            description: String(error),
+            variant: 'destructive',
+          })
           setAutoSaveStatus('idle')
-        }, 3000)
-      } catch (error) {
-        toast({
-          title: 'Error auto-saving',
-          description: String(error),
-          variant: 'destructive',
-        })
-        setAutoSaveStatus('idle')
-      }
-    }, 3000)
+        }
+      },
+      3000
+    )
 
     return debouncedSave
   }, [newsItem?.slug, updateNews])
@@ -311,7 +314,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     contentLoaded,
     saveProgress,
     watch,
-    previousFormState
+    previousFormState,
   ])
 
   // Helper function to compare arrays
@@ -436,7 +439,10 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
         </div>
         <div className="flex gap-2">
           {title && (
-            <AppLink href={`/posts/preview/${generateSlug(title)}`} target="_blank">
+            <AppLink
+              href={AdminRoutes.previewNews(newsItem?.slug ?? generateSlug(newsItem?.title ?? ''))}
+              target="_blank"
+            >
               <Button type="button" variant="outline" className="flex items-center gap-2">
                 <Eye className="h-4 w-4" />
                 Preview
