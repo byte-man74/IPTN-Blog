@@ -20,6 +20,16 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Check } from 'lucide-react'
 import { AdminRoutes } from '../../../lib/routes/admin'
+import { useDeleteNews } from '@/network/http-service/news.mutations'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { toast } from '@/hooks/use-toast'
 
 const AdminPostMainComponent = () => {
   const [page, setPage] = useState(1)
@@ -30,12 +40,15 @@ const AdminPostMainComponent = () => {
     categoryIds: [],
     tagIds: [],
   })
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [postToDelete, setPostToDelete] = useState<{ slug: string; title: string } | null>(null)
   const limit = 20
 
   // Fetch news with pagination and filters
   const { data: newsData, isLoading, error } = useFetchNews(filters, page, limit)
   const { data: categoryData, isLoading: categoriesIsLoading } = useFetchCategories()
   const { data: tagsData, isLoading: tagsIsLoading } = useFetchTags()
+  const { mutateAsync: deleteNews, isPending: isDeleting } = useDeleteNews(postToDelete?.slug ?? "")
 
   const posts = newsData?.data || []
   const meta = newsData?.meta
@@ -112,6 +125,31 @@ const AdminPostMainComponent = () => {
       tagIds: [],
     })
     setPage(1)
+  }
+
+  const openDeleteDialog = (post: { slug: string; title: string }) => {
+    setPostToDelete(post)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeletePost = async () => {
+    if (!postToDelete) return
+
+    try {
+      await deleteNews({data: postToDelete.slug})
+      toast({
+        title: 'Post deleted',
+        description: `"${postToDelete.title}" has been successfully deleted.`,
+      })
+      setDeleteDialogOpen(false)
+      setPostToDelete(null)
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete the post. Please try again.',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (
@@ -439,7 +477,10 @@ const AdminPostMainComponent = () => {
                             >
                               View
                             </AppLink>
-                            <button className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded">
+                            <button
+                              className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded"
+                              onClick={() => openDeleteDialog({ slug: post.slug, title: post.title })}
+                            >
                               Delete
                             </button>
                           </div>
@@ -464,6 +505,30 @@ const AdminPostMainComponent = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Post</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot;{postToDelete?.title}&quot;? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex space-x-2 justify-end">
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeletePost}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }

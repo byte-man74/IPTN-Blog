@@ -44,7 +44,7 @@ export function useUpdateNews(slug: string) {
 export function useDeleteNews(slug: string) {
   const queryClient = useQueryClient()
 
-  return useAppMutation<void, unknown, void>({
+  return useAppMutation<void, unknown, string>({
     apiRoute: routes.news.delete(slug),
     method: 'DELETE',
     onSuccess: () => {
