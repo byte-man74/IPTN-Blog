@@ -74,7 +74,7 @@ export const AppImage = ({
   if (hasError) {
     return (
       <div
-        className={`grid ${className || ''}`}
+        className={`grid relative z-1 ${className || ''}`}
         style={{
           width: '100%',
           height: '100%',

@@ -8,6 +8,10 @@ import { FullNewsDTO } from '@/app/(server)/modules/news/news.types'
 import { logger } from '@/lib/utils/logger'
 import { NewsQueryKey } from '@/network/query-keys/news'
 import { notFound } from 'next/navigation'
+import MainNavBanner from '@/_components/public/main-nav-banner'
+import GlobalSocialBanner from '@/_components/public/social-banner'
+import ArticleNav from '@/app/(client)/(public)/articles/article-nav'
+import { auth } from '@/auth'
 
 type NewsArticleProps = {
   params: { slug: string }
@@ -27,19 +31,18 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
       }
     }
 
-    
     return {
       title: newsData.title || 'News Article',
       description: newsData.summary || 'Read our latest news article',
       openGraph: {
         title: newsData.title,
-        description: newsData.summary ?? "",
+        description: newsData.summary ?? '',
         images: newsData.seo?.openGraphImage ? [{ url: newsData.seo?.openGraphImage }] : [],
       },
       twitter: {
         card: 'summary_large_image',
         title: newsData.title,
-        description: newsData.summary ?? "",
+        description: newsData.summary ?? '',
         images: newsData.seo?.twitterImage ? [newsData.seo.twitterImage] : [],
       },
     }
@@ -63,26 +66,27 @@ function generateStructuredData(newsData: FullNewsDTO) {
     dateModified: newsData.lastUpdated,
     author: {
       '@type': 'Person',
-      name: 'Editorial Team'
+      name: 'Editorial Team',
     },
     publisher: {
       '@type': 'Organization',
       name: 'IPTN',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://example.com/logo.png'
-      }
+        url: 'https://example.com/logo.png',
+      },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${process.env.NEXT_PUBLIC_SITE_URL}/news/${newsData.slug}`
-    }
+      '@id': `${process.env.NEXT_PUBLIC_SITE_URL}/news/${newsData.slug}`,
+    },
   }
 }
 
 export default async function NewsArticle({ params }: NewsArticleProps) {
   const { slug } = await params
   const queryClient = new QueryClient()
+  const session = await auth()
 
   try {
     await queryClient.prefetchQuery({
@@ -98,28 +102,32 @@ export default async function NewsArticle({ params }: NewsArticleProps) {
           logger.error('Error fetching news data:', error)
           throw error
         }
-      }
+      },
     })
 
     const dehydratedState = dehydrate(queryClient)
     const newsData = queryClient.getQueryData<FullNewsDTO>([NewsQueryKey.NEWS_DETAILS, slug])
-
-    if (!newsData) {
+    if (!newsData || (!newsData.published && !(session?.user?.isAdmin && session?.user?.isActive))) {
       notFound()
     }
 
     return (
-      <div className="relative flex justify-center">
+      <div className="relative flex flex-col items-center bg-[#E4E4E4]">
         {newsData && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify(generateStructuredData(newsData))
+              __html: JSON.stringify(generateStructuredData(newsData)),
             }}
           />
         )}
         <HydrationBoundary state={dehydratedState}>
-          <ViewNews slug={slug} />
+          <GlobalSocialBanner />
+          <MainNavBanner />
+          <div className="relative w-full flex flex-col items-center">
+            <ArticleNav />
+            <ViewNews slug={slug} />s
+          </div>
         </HydrationBoundary>
       </div>
     )
