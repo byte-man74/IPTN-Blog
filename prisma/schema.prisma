@@ -162,18 +162,16 @@ model Comment {
 }
 
 model Seo {
-  id             Int      @id @default(autoincrement())
-  title          String
-  description    String?  @db.Text
-  keywords       String?
-  openGraphImage String?
-  canonicalUrl   String?
+  id             String  @id @default(cuid())
+  newsId         String  @unique
+  openGraphImage String? @db.Text
+  twitterImage   String? @db.Text
+  metaTitle      String? @db.Text
+  metaDescription String? @db.Text
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  newsId String?  @unique
-  news   News? @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
-  @@index([id])
   @@index([newsId])
 }
