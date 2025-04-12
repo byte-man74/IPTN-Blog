@@ -134,9 +134,9 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
 
                 {/* Headline */}
                 <AppLink href={item?.slug ?? "#"}>
-                  <h1 className="text-white text-lg sm:text-xl md:text-2xl font-bold leading-tight">
+                  <h2 className="text-white text-lg sm:text-xl md:text-2xl font-bold leading-tight">
                     {item?.title ?? "News title"}
-                  </h1>
+                  </h2>
                 </AppLink>
               </div>
             </div>

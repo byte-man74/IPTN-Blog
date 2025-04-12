@@ -43,6 +43,7 @@
     "lucide-react": "^0.487.0",
     "next": "15.1.7",
     "next-auth": "^5.0.0-beta.19",
+    "next-cloudinary": "^6.16.0",
     "nextjs-toploader": "^3.8.16",
     "pino": "^9.6.0",
     "prisma-extension-pagination": "^0.7.5",

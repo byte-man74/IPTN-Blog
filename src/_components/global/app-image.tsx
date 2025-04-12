@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { ImageOff } from 'lucide-react'
+import { CldImage } from 'next-cloudinary'
 
 /**
  * Interface for AppImage component props
@@ -28,6 +29,8 @@ interface AppImageProps {
   opacity?: number
   /** Optional placeholder image to show on error */
   fallbackSrc?: string
+  /** Optional flag to use Cloudinary image component */
+  optimizeImage?: boolean
 }
 
 /**
@@ -39,6 +42,7 @@ interface AppImageProps {
  * - Flexible styling options
  * - Configurable opacity
  * - Error handling with fallback to placeholder grid
+ * - Optional Cloudinary image optimization
  *
  * @param {AppImageProps} props - The component props
  * @returns {JSX.Element} Rendered image component
@@ -54,6 +58,7 @@ export const AppImage = ({
   objectPosition = 'center',
   opacity = 1,
   fallbackSrc = '',
+  optimizeImage = false,
 }: AppImageProps) => {
   const [imgSrc, setImgSrc] = useState<string>(src || fallbackSrc)
   const [hasError, setHasError] = useState<boolean>(false)
@@ -82,6 +87,25 @@ export const AppImage = ({
           <span>{alt || 'Image'}</span>
         </div>
       </div>
+    )
+  }
+
+  if (optimizeImage) {
+    return (
+      <CldImage
+        src={imgSrc}
+        alt={alt ?? ''}
+        width={width}
+        height={height}
+        priority={priority}
+        style={{
+          objectFit,
+          objectPosition,
+          opacity,
+        }}
+        className={className || ''}
+        onError={handleError}
+      />
     )
   }
 

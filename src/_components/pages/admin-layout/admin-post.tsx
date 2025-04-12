@@ -277,7 +277,7 @@ const AdminPostMainComponent = () => {
                       <CommandEmpty>No tags found.</CommandEmpty>
                       <CommandGroup className="max-h-[200px] overflow-y-auto">
                         {!tagsIsLoading &&
-                          tagsData?.map((tag) => (
+                          tagsData?.slice(0, 50).map((tag) => (
                             <CommandItem
                               key={tag.id}
                               value={tag.name}
