@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { ArrowLeft, Save, Plus, Check, X, Eye } from 'lucide-react'
+import { ArrowLeft, Save, Plus, Check, X, Eye, Share } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +39,8 @@ import { uploadFileToCloudinaryClientUsage } from '@/lib/third-party/cloudinary/
 import { debounce } from 'lodash'
 import { useUpdateNews } from '@/network/http-service/news.mutations'
 import { toast } from '@/hooks/use-toast'
+import { SocialMediaPreview } from './admin-post-preview'
+
 
 // Dynamically import the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(
@@ -48,6 +50,8 @@ const RichTextEditor = dynamic(
     loading: () => <div className="h-64 w-full border rounded-md bg-muted animate-pulse" />,
   }
 )
+
+
 
 // Cloudinary Image Uploader Component
 const CloudinaryImageUploader = ({
@@ -153,6 +157,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     categoryIds: number[]
     tagIds: number[]
   } | null>(null)
+  const [previewSheetOpen, setPreviewSheetOpen] = useState(false)
 
   const { data: categories, isLoading: categoriesLoading } = useFetchCategories()
   const { data: tags, isLoading: tagsLoading } = useFetchTags()
@@ -357,6 +362,16 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     setTagDialogOpen(false)
   }
 
+  const handleSaveClick = () => {
+    if (watch('isPublished')) {
+      // If publishing, show the preview sheet first
+      setPreviewSheetOpen(true)
+    } else {
+      // If saving as draft, just submit the form
+      handleSubmit(onSubmit)()
+    }
+  }
+
   const onSubmit = async (data: FormValues) => {
     if (!newsItem?.id) return
 
@@ -386,8 +401,11 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
 
       toast({
         title: 'Success',
-        description: 'Post saved successfully',
+        description: data.isPublished ? 'Post published successfully' : 'Draft saved successfully',
       })
+
+      // Close the preview sheet if it was open
+      setPreviewSheetOpen(false)
     } catch (error) {
       toast({
         title: 'Error saving post',
@@ -450,12 +468,21 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
             </AppLink>
           )}
           <Button
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSaveClick}
             className="flex items-center gap-2 rounded-none"
             disabled={isUpdating}
           >
-            <Save className="h-4 w-4" />
-            {watch('isPublished') ? 'Publish' : 'Save Draft'}
+            {watch('isPublished') ? (
+              <>
+                <Share className="h-4 w-4" />
+                Publish
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Save Draft
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -707,6 +734,17 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
           </Card>
         </div>
       </div>
+
+      {/* Social Media Preview Sheet */}
+      <SocialMediaPreview
+        open={previewSheetOpen}
+        onOpenChange={setPreviewSheetOpen}
+        title={title}
+        summary={summary}
+        imageUrl={featuredImageUrl}
+        onConfirm={handleSubmit(onSubmit)}
+        isLoading={isUpdating}
+      />
     </div>
   )
 }

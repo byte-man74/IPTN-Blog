@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import DropCursor from '@tiptap/extension-dropcursor'
 import { Button } from '@/components/ui/button'
 import {
   Bold,
@@ -70,6 +71,10 @@ export function RichTextEditor({
         placeholder,
         showOnlyWhenEditable: true,
         emptyEditorClass: 'is-editor-empty',
+      }),
+      DropCursor.configure({
+        color: '#00a651',
+        width: 2,
       }),
     ],
     content,
