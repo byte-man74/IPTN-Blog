@@ -57,23 +57,3 @@ export function useFetchNewsDetail(slug: string) {
   });
 }
 
-// export function useCreateNews() {
-//   return useAppMutation<NewsItem, Error, Partial<NewsItem>>({
-//     apiRoute: routes.news.create,
-//     method: 'POST',
-//   });
-// }
-
-// export function useUpdateNews(id: string) {
-//   return useAppMutation<NewsItem, Error, Partial<NewsItem>>({
-//     apiRoute: routes.news.update(id),
-//     method: 'PUT',
-//   });
-// }
-
-// export function useDeleteNews(id: string) {
-//   return useAppMutation<void, Error, void>({
-//     apiRoute: routes.news.delete(id),
-//     method: 'DELETE',
-//   });
-// }

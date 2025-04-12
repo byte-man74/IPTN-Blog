@@ -16,7 +16,7 @@ import {
 } from '@/network/http-service/news.hooks'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { AppImage } from '@/_components/global/app-image'
+
 import {
   Command,
   CommandEmpty,
@@ -25,22 +25,21 @@ import {
   CommandItem,
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import { useForm, Controller } from 'react-hook-form'
 import { TagDTO } from '@/app/(server)/modules/news/news.types'
 import { AdminRoutes } from '@/lib/routes/admin'
-import { uploadFileToCloudinaryClientUsage } from '@/lib/third-party/cloudinary/manageCloudinaryUpload'
 import { debounce } from 'lodash'
-import { useUpdateNews } from '@/network/http-service/news.mutations'
+import {
+  useUpdateNews,
+  useCreateCategory,
+  useCreateTag,
+} from '@/network/http-service/news.mutations'
 import { toast } from '@/hooks/use-toast'
 import { SocialMediaPreview } from './admin-post-preview'
-
+import { CloudinaryImageUploader } from './admin-image-uploader'
+import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { CreateCategoryDialog } from './admin-create-category'
+import { CreateTagDialog } from './admin-create-tag'
 
 // Dynamically import the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(
@@ -50,58 +49,6 @@ const RichTextEditor = dynamic(
     loading: () => <div className="h-64 w-full border rounded-md bg-muted animate-pulse" />,
   }
 )
-
-
-
-// Cloudinary Image Uploader Component
-const CloudinaryImageUploader = ({
-  onImageUploaded,
-  currentImage,
-}: {
-  onImageUploaded: (imageUrl: string, file: File) => void
-  currentImage: string | null
-}) => {
-  const [uploading, setUploading] = useState(false)
-
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      setUploading(true)
-
-      try {
-        const imageUrl = await uploadFileToCloudinaryClientUsage(file, 'news')
-        onImageUploaded(imageUrl, file)
-      } catch (error) {
-        toast({
-          title: 'Error uploading image',
-          description: String(error),
-          variant: 'destructive',
-        })
-      } finally {
-        setUploading(false)
-      }
-    }
-  }
-
-  return (
-    <div className="space-y-2">
-      <Label>Featured Image</Label>
-      <div className="mt-1">
-        {currentImage && (
-          <div className="mb-2">
-            <AppImage
-              src={currentImage}
-              alt="Preview"
-              className="h-40 w-full object-cover rounded-md"
-            />
-          </div>
-        )}
-        <Input type="file" accept="image/*" onChange={handleImageChange} disabled={uploading} />
-        {uploading && <p className="text-sm text-muted-foreground mt-1">Uploading...</p>}
-      </div>
-    </div>
-  )
-}
 
 type FormValues = {
   title: string
@@ -115,6 +62,8 @@ type FormValues = {
 export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   const { data: newsItem, isLoading: newsLoading } = useFetchNewsDetail(slug)
   const { mutateAsync: updateNews, isPending: isUpdating } = useUpdateNews(slug)
+  const { mutateAsync: createCategory } = useCreateCategory()
+  const { mutateAsync: createTag } = useCreateTag()
 
   const {
     register,
@@ -139,8 +88,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [categorySearchTerm, setCategorySearchTerm] = useState('')
   const [tagSearchTerm, setTagSearchTerm] = useState('')
-  const [newCategoryName, setNewCategoryName] = useState('')
-  const [newTagName, setNewTagName] = useState('')
   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false)
   const [tagDialogOpen, setTagDialogOpen] = useState(false)
   const [categoryPopoverOpen, setCategoryPopoverOpen] = useState(false)
@@ -348,18 +295,38 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     )
   }
 
-  const handleCreateCategory = () => {
-    // TODO: Implement API call to create category
-    console.log('Creating new category:', newCategoryName)
-    setNewCategoryName('')
-    setCategoryDialogOpen(false)
+  const handleCreateCategory = async (name: string) => {
+    try {
+      const newCategory = await createCategory({ data: { name } })
+      setSelectedCategories((prev) => [...prev, newCategory.id])
+      toast({
+        title: 'Success',
+        description: `Category "${name}" created successfully`,
+      })
+    } catch (error) {
+      toast({
+        title: 'Error creating category',
+        description: String(error),
+        variant: 'destructive',
+      })
+    }
   }
 
-  const handleCreateTag = () => {
-    // TODO: Implement API call to create tag
-    console.log('Creating new tag:', newTagName)
-    setNewTagName('')
-    setTagDialogOpen(false)
+  const handleCreateTag = async (name: string) => {
+    try {
+      const newTag = await createTag({ data: { name } })
+      setSelectedTags((prev) => [...prev, newTag.id])
+      toast({
+        title: 'Success',
+        description: `Tag "${name}" created successfully`,
+      })
+    } catch (error) {
+      toast({
+        title: 'Error creating tag',
+        description: String(error),
+        variant: 'destructive',
+      })
+    }
   }
 
   const handleSaveClick = () => {
@@ -521,7 +488,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                         content={field.value}
                         onChange={field.onChange}
                         key={contentLoaded ? 'content-loaded' : 'content-loading'}
-                        className='relative z-0'
+                        className="relative z-0"
                       />
                     )}
                   />
@@ -561,29 +528,12 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>Categories</Label>
-                    <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
-                      <DialogTrigger asChild>
+                    <Dialog>
+                      <DialogTrigger asChild onClick={() => setCategoryDialogOpen(true)}>
                         <Button variant="outline" size="sm">
                           <Plus className="h-4 w-4 mr-1" /> New
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Category</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="newCategory">Category Name</Label>
-                            <Input
-                              id="newCategory"
-                              value={newCategoryName}
-                              onChange={(e) => setNewCategoryName(e.target.value)}
-                              placeholder="Enter category name"
-                            />
-                          </div>
-                          <Button onClick={handleCreateCategory}>Create Category</Button>
-                        </div>
-                      </DialogContent>
                     </Dialog>
                   </div>
 
@@ -648,29 +598,12 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>Tags</Label>
-                    <Dialog open={tagDialogOpen} onOpenChange={setTagDialogOpen}>
-                      <DialogTrigger asChild>
+                    <Dialog>
+                      <DialogTrigger asChild onClick={() => setTagDialogOpen(true)}>
                         <Button variant="outline" size="sm">
                           <Plus className="h-4 w-4 mr-1" /> New
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Tag</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="newTag">Tag Name</Label>
-                            <Input
-                              id="newTag"
-                              value={newTagName}
-                              onChange={(e) => setNewTagName(e.target.value)}
-                              placeholder="Enter tag name"
-                            />
-                          </div>
-                          <Button onClick={handleCreateTag}>Create Tag</Button>
-                        </div>
-                      </DialogContent>
                     </Dialog>
                   </div>
 
@@ -734,6 +667,20 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
           </Card>
         </div>
       </div>
+
+      {/* Create Category Dialog */}
+      <CreateCategoryDialog
+        open={categoryDialogOpen}
+        onOpenChange={setCategoryDialogOpen}
+        onCreateCategory={handleCreateCategory}
+      />
+
+      {/* Create Tag Dialog */}
+      <CreateTagDialog
+        open={tagDialogOpen}
+        onOpenChange={setTagDialogOpen}
+        onCreateTag={handleCreateTag}
+      />
 
       {/* Social Media Preview Sheet */}
       <SocialMediaPreview
