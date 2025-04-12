@@ -79,12 +79,6 @@ export const PreviewPostComponent = ({ slug }: PreviewPostComponentProps) => {
                 Back to Edit
               </Button>
             </AppLink>
-            <AppLink href={AdminRoutes.news}>
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to News
-              </Button>
-            </AppLink>
           </div>
         </div>
 

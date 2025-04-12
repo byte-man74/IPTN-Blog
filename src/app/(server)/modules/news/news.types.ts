@@ -42,12 +42,8 @@ export const FullNewsSchema = z.object({
       name: z.string(),
     })).optional(),
     seo: z.object({
-      id: z.number(),
-      title: z.string(),
-      description: z.string().nullable().optional(),
-      keywords: z.string().nullable().optional(),
       openGraphImage: z.string().nullable().optional(),
-      canonicalUrl: z.string().nullable().optional()
+      twitterImage: z.string().nullable().optional(),
     }).nullable().optional()
   })
 
@@ -63,6 +59,10 @@ export const CreateNewsSchema = z.object({
   published: z.boolean().default(false),
   categoryIds: z.array(z.number()).optional(),
   tagIds: z.array(z.number()).optional(),
+  seo: z.object({
+    openGraphImage: z.string().nullable().optional(),
+    twitterImage: z.string().nullable().optional(),
+  }).nullable().optional(),
 })
 
 // Schema for updating news

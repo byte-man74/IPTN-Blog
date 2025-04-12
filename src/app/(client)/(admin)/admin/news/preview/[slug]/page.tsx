@@ -4,7 +4,7 @@ import React from 'react'
 
 
 
-const UpdateNews =async ({ params }: { params: { slug: string } }) => {
+const PreviewNews =async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params
 
   return (
@@ -12,4 +12,4 @@ const UpdateNews =async ({ params }: { params: { slug: string } }) => {
   )
 }
 
-export default UpdateNews
+export default PreviewNews

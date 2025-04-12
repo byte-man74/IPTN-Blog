@@ -85,17 +85,17 @@ export class NewsRepository {
           connect: news.categoryIds?.map((id) => ({ id })) || [],
         }
         // Remove categoryIds from updateData as it's not a direct field
-        delete updateData.categoryIds;
+        delete updateData.categoryIds
       }
 
       // Handle tag connections if provided
       if ('tagIds' in news) {
         updateData.tags = {
-          set: [], 
+          set: [],
           connect: news.tagIds?.map((id) => ({ id })) || [],
         }
         // Remove tagIds from updateData as it's not a direct field
-        delete updateData.tagIds;
+        delete updateData.tagIds
       }
 
       return await this.news.update({
@@ -104,6 +104,7 @@ export class NewsRepository {
         include: {
           categories: true,
           tags: true,
+          seo: true
         },
       })
     })
@@ -118,7 +119,7 @@ export class NewsRepository {
           categories: true,
           tags: true,
           comments: true,
-          seo: true,
+          seo: true
         },
       })
     })
@@ -370,5 +371,26 @@ export class NewsRepository {
         },
       })
     })
+  }
+
+  async shouldRegenerateSeoImages(
+    slug: string,
+    updatedNews: Partial<UpdateNewsDTO>
+  ): Promise<boolean> {
+    // Only fetch the necessary fields (title and coverImage) to check if they've changed
+    const originalNews = await this.news.findUnique({
+      where: { slug },
+      select: {
+        title: true,
+        coverImage: true,
+      },
+    });
+
+    if (!originalNews) return true;
+
+    return !!(
+      (updatedNews.title && updatedNews.title !== originalNews.title) ||
+      (updatedNews.coverImage && updatedNews.coverImage !== originalNews.coverImage)
+    );
   }
 }

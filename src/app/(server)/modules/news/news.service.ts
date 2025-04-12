@@ -12,11 +12,8 @@ import {
   UpdateNewsDTO,
 } from '@/app/(server)/modules/news/news.types'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
-import { slugifyContent } from './news.utils'
-import { data } from '@/lib/constants/public'
-// // eslint-disable-next-line @typescript-eslint/no-require-imports
-// const data: OldData[] = await require('./../../../../../script/blog_posts.json');
-
+import { SeoService } from '@/app/(server)/modules/seo/seo.service'
+import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 
 export interface INewsService {
   createNews(news: CreateNewsDTO): Promise<NewsDTO | null | ApiCustomError>
@@ -48,14 +45,18 @@ export interface INewsService {
 
 export class NewsService implements INewsService {
   private readonly repository: NewsRepository
+  private readonly seoService: SeoService
 
   constructor() {
     this.repository = new NewsRepository()
+    this.seoService = new SeoService()
   }
 
   async createNews(news: CreateNewsDTO): Promise<NewsDTO | null | ApiCustomError> {
-    //TODO: later handle analytics from here.
-    return await this.repository.createNews(news)
+    return tryCatchHandler(async () => {
+      const createdNews = await this.repository.createNews(news)
+      return createdNews
+    })
   }
 
   //this would handle stuff like edit news
@@ -64,8 +65,37 @@ export class NewsService implements INewsService {
     slug: string,
     news: Partial<UpdateNewsDTO>
   ): Promise<FullNewsDTO | null | ApiCustomError> {
-    //TODO: later handle analytics from here if unpublished
-    return await this.repository.editNews(slug, news)
+    return tryCatchHandler(async () => {
+      // Check if we need to regenerate SEO images before updating
+      const shouldRegenerate = await this.repository.shouldRegenerateSeoImages(slug, news)
+      console.log("fake life", shouldRegenerate)
+
+
+      const updatedNews = await this.repository.editNews(slug, news)
+
+      // Regenerate SEO images if needed
+      if (
+        shouldRegenerate &&
+        updatedNews &&
+        !(updatedNews instanceof ApiCustomError) &&
+        updatedNews.id
+      ) {
+        const seoImages = await this.seoService.generateSeoImages(
+          updatedNews.title,
+          updatedNews.coverImage
+        )
+
+
+        console.log("atlantis", seoImages)
+
+        if (seoImages && !(seoImages instanceof ApiCustomError)) {
+            console.log("created image", seoImages.openGraphImage)
+          await this.seoService.createOrUpdateSeo(updatedNews.id, seoImages)
+        }
+      }
+
+      return updatedNews
+    })
   }
 
   async getNewsWithFilters(
@@ -93,7 +123,6 @@ export class NewsService implements INewsService {
    * @param slug
    * @param tagIds
    * @param options
-   * @returns
    */
   async assignTagsToNews(
     slug: string,
@@ -116,7 +145,10 @@ export class NewsService implements INewsService {
   }
 
   async getNewsBySlug(slug: string): Promise<FullNewsDTO | null | ApiCustomError> {
-    return await this.repository.getNewsBySlug(slug)
+    return tryCatchHandler(async () => {
+      const news = await this.repository.getNewsBySlug(slug)
+      return news
+    })
   }
 
   async fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError> {
@@ -125,95 +157,5 @@ export class NewsService implements INewsService {
 
   async fetchTags(): Promise<TagDTO[] | null | ApiCustomError> {
     return await this.repository.fetchTags()
-  }
-
-  async updateOldData(): Promise<string> {
-    console.log('Starting to update old data...');
-    console.log(`Loaded ${data.length} items from blog_posts.json`);
-
-    const savedCategories: { [key: string]: number } = {}
-    const savedTags: { [key: string]: number } = {}
-
-    for (const dataItem of data) {
-      console.log(`Processing item: ${dataItem.title}`);
-      // Process each item from blog_post.json
-      // Save categories
-      for (const category of dataItem.categories) {
-        if (!savedCategories[category]) {
-          console.log(`Creating new category: ${category}`);
-          const newlyCreatedCategory = await this.repository.createNewsCategory({
-            name: category,
-            slug: category.toLowerCase().replace(/\s+/g, '-'),
-          })
-
-          if (newlyCreatedCategory && !('error' in newlyCreatedCategory)) {
-            savedCategories[category] = (newlyCreatedCategory as NewsCategoryDTO).id
-            console.log(`Category created with ID: ${savedCategories[category]}`);
-          } else {
-            console.log('Failed to create category:', newlyCreatedCategory);
-          }
-        }
-      }
-
-      // Save tags
-      for (const tag of dataItem.tags) {
-        if (!savedTags[tag]) {
-          console.log(`Creating new tag: ${tag}`);
-          const newlyCreatedTag = await this.repository.createTag({
-            name: tag,
-            slug: tag.toLowerCase().replace(/\s+/g, '-'),
-          })
-
-          if (newlyCreatedTag && !('error' in newlyCreatedTag)) {
-            savedTags[tag] = (newlyCreatedTag as TagDTO).id
-            console.log(`Tag created with ID: ${savedTags[tag]}`);
-          } else {
-            console.log('Failed to create tag:', newlyCreatedTag);
-          }
-        }
-      }
-
-      // Create the news item
-      console.log(`Creating news item: ${dataItem.title}`);
-      const newsData: CreateNewsDTO = {
-        title: dataItem.title,
-        pubDate: new Date(dataItem.date),
-        published: dataItem.status === 'publish',
-        summary: dataItem.title,
-        slug: dataItem.slug ?? slugifyContent(dataItem.title),
-        contentEncoded: dataItem.content,
-        coverImage: dataItem.cover_image
-      }
-
-      const createdNews = await this.repository.createNews(newsData)
-
-      if (createdNews && !('error' in createdNews)) {
-        console.log(`News created with slug: ${(createdNews as NewsDTO).slug}`);
-
-        // Assign categories to news
-        const categoryIds = dataItem.categories
-          .map((category) => savedCategories[category])
-          .filter((id) => id !== undefined)
-
-        if (categoryIds.length > 0) {
-          console.log(`Assigning ${categoryIds.length} categories to news`);
-          await this.repository.assignCategoriesToNews((createdNews as NewsDTO).slug, categoryIds)
-        }
-
-        // Assign tags to news
-        const tagIds = dataItem.tags.map((tag) => savedTags[tag]).filter((id) => id !== undefined)
-
-        if (tagIds.length > 0) {
-          console.log(`Assigning ${tagIds.length} tags to news`);
-          await this.repository.assignTagsToNews((createdNews as NewsDTO).slug, tagIds)
-        }
-      } else {
-        console.log('Failed to create news item:', createdNews);
-      }
-
-      console.log(`Finished processing: ${dataItem.title}`);
-    }
-
-    return "Data migration completed successfully"
   }
 }

@@ -39,10 +39,6 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Handle successful responses
-    if (response?.data) {
-      return response.data
-    }
     return response
   },
   (error: AxiosError) => {

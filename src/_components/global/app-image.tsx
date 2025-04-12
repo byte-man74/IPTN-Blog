@@ -1,8 +1,8 @@
-"use client"
-
+'use client'
 
 import React, { useState } from 'react'
 import Image from 'next/image'
+import { ImageOff } from 'lucide-react'
 
 /**
  * Interface for AppImage component props
@@ -38,7 +38,7 @@ interface AppImageProps {
  * - Optimized loading with optional priority
  * - Flexible styling options
  * - Configurable opacity
- * - Error handling with fallback to placeholder
+ * - Error handling with fallback to placeholder grid
  *
  * @param {AppImageProps} props - The component props
  * @returns {JSX.Element} Rendered image component
@@ -53,12 +53,36 @@ export const AppImage = ({
   objectFit = 'cover',
   objectPosition = 'center',
   opacity = 1,
-  fallbackSrc = 'https://placehold.co/600x400',
+  fallbackSrc = '',
 }: AppImageProps) => {
   const [imgSrc, setImgSrc] = useState<string>(src || fallbackSrc)
+  const [hasError, setHasError] = useState<boolean>(false)
 
   const handleError = () => {
-    setImgSrc(fallbackSrc)
+    if (fallbackSrc) {
+      setImgSrc(fallbackSrc)
+    } else {
+      setHasError(true)
+    }
+  }
+
+  if (hasError) {
+    return (
+      <div
+        className={`grid ${className || ''}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#f0f0f0',
+          placeItems: 'center'
+        }}
+      >
+        <div className="flex flex-col items-center gap-2">
+          <ImageOff size={32} />
+          <span>{alt || 'Image'}</span>
+        </div>
+      </div>
+    )
   }
 
   return (

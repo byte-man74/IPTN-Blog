@@ -17,11 +17,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       allowDangerousEmailAccountLinking: true,
       async profile(profile) {
         return {
-          id: profile.id,
-          firstName: profile.given_name,
-          lastName: profile.family_name,
-          email: profile.email,
-          image: profile.picture,
+          id: profile?.id,
+          firstName: profile?.given_name ?? "",
+          lastName: profile?.family_name ?? "",
+          email: profile?.email,
+          image: profile?.picture,
         }
       },
     }),
@@ -37,12 +37,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         ...session,
         user: {
           ...session.user,
-          id: user.id,
-          isAdmin: user.isAdmin,
-          isActive: user.isActive,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          picture: user.image,
+          id: user?.id,
+          isAdmin: user?.isAdmin ?? false,
+          isActive: user?.isActive ?? false,
+          firstName: user?.firstName ?? "",
+          lastName: user?.lastName ?? "",
+          picture: user?.image,
         },
       }
     },
