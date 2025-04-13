@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react'
 import {
   Home,
   FileText,
-  MessageSquare,
-  Settings,
   ChevronLeft,
   ChevronRight,
   LogOut,
   User,
+  BarChart2,
+  Cog,
 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
@@ -54,21 +54,21 @@ export const SideNav = () => {
       matchPath: (path: string) => path.startsWith(`${AdminRoutes.news}`),
     },
     {
-      href: `${AdminRoutes.categories}`,
-      label: 'Categories',
-      icon: MessageSquare,
-      matchPath: (path: string) => path.startsWith(`${AdminRoutes.categories}`),
+      href: `${AdminRoutes.configuration}`,
+      label: 'Configuration',
+      icon: Cog,
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.configuration}`),
     },
-    // {
-    //   href: `${AdminRoutes.analytics}/`,
-    //   label: 'Analytics',
-    //   icon: BarChart2,
-    //   matchPath: (path: string) => path.startsWith(`${AdminRoutes.analytics}`),
-    // },
+    {
+      href: `${AdminRoutes.adsManager}`,
+      label: 'Ads Manager',
+      icon: BarChart2,
+      matchPath: (path: string) => path.startsWith(`${AdminRoutes.adsManager}`),
+    },
     {
       href: `${AdminRoutes.settings}`,
-      label: 'Settings',
-      icon: Settings,
+      label: 'User management',
+      icon: User,
       matchPath: (path: string) => path.startsWith(`${AdminRoutes.settings}`),
     },
   ]

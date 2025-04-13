@@ -1,5 +1,6 @@
+import { AdminSiteConfigComponent } from '@/_components/pages/admin-layout/admin-site-config'
 import React from 'react'
-import { AdminCategoriesComponent } from '@/_components/pages/admin-layout/admin-categories'
+
 
 /**
  * Admin Categories Page
@@ -9,5 +10,5 @@ import { AdminCategoriesComponent } from '@/_components/pages/admin-layout/admin
  * Categories are essential for organizing blog posts and improving content discoverability.
  */
 export default function AdminCategories() {
-  return <AdminCategoriesComponent />
+  return <AdminSiteConfigComponent />
 }

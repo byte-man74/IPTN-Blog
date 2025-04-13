@@ -7,6 +7,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 // Models --
 
 model User {
@@ -17,12 +18,11 @@ model User {
   image         String?
   emailVerified DateTime?
   isAdmin       Boolean   @default(false)
-  isActive      Boolean   @default(false) // Default inactive as requested
+  isActive      Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-
   news          News[]
   comments      Comment[]
 
@@ -44,11 +44,9 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -60,9 +58,9 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   @@index([userId])
 }
 
@@ -75,24 +73,23 @@ model VerificationToken {
 }
 
 model News {
-  id             String   @id @default(cuid())
+  id             String     @id @default(cuid())
   title          String
   summary        String?
-  slug           String   @unique
+  slug           String     @unique
   pubDate        DateTime?
   coverImage     String?
-  createdAt      DateTime @default(now())
-  lastUpdated    DateTime @updatedAt
-  contentEncoded String?  @db.Text
+  createdAt      DateTime   @default(now())
+  lastUpdated    DateTime   @updatedAt
+  contentEncoded String?    @db.Text
   authorId       String?
-  published      Boolean  @default(false)
-
-  author     User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  categories Category[] @relation("NewsCategories")
-  tags       Tag[]      @relation("NewsTags")
-  analytics  Analytics?
-  comments   Comment[]
-  seo        Seo?
+  published      Boolean    @default(false)
+  author         User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  categories     Category[] @relation("NewsCategories")
+  tags           Tag[]      @relation("NewsTags")
+  analytics      Analytics?
+  comments       Comment[]
+  seo            Seo?
 
   @@index([id])
   @@index([authorId])
@@ -102,13 +99,15 @@ model News {
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  slug        String   @unique
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  news        News[]   @relation("NewsCategories")
+  id                  Int               @id @default(autoincrement())
+  slug                String            @unique
+  name                String
+  description         String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  news                News[]            @relation("NewsCategories")
+  navBarKeyCategories SiteConfiguration[] @relation("NavBarKeyCategories")
+  navBarSubCategories SiteConfiguration[] @relation("NavBarSubCategories")
 
   @@index([id])
   @@index([slug])
@@ -120,24 +119,31 @@ model Tag {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  news News[] @relation("NewsTags")
+  news      News[]   @relation("NewsTags")
 
   @@index([id])
   @@index([name])
 }
 
-model Analytics {
-  id        Int      @id @default(autoincrement())
-  newsId    String   @unique
-  readDuration String?
-  likes     Int      @default(0)
-  views     Int      @default(0)
-  shares    Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+
+model SiteConfiguration {
+  id                  Int               @id @default(autoincrement())
+  navBarKeyCategories Category[]        @relation("NavBarKeyCategories")
+  navBarSubCategories Category[]        @relation("NavBarSubCategories")
+}
+
+model Analytics {
+  id           Int      @id @default(autoincrement())
+  newsId       String   @unique
+  readDuration String?
+  likes        Int      @default(0)
+  views        Int      @default(0)
+  shares       Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  news         News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   @@index([id])
   @@index([newsId])
@@ -152,9 +158,8 @@ model Comment {
   userId      String?
   newsId      String
   isAnonymous Boolean  @default(false)
-
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-  news News  @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  news        News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   @@index([id])
   @@index([newsId])
@@ -163,16 +168,15 @@ model Comment {
 }
 
 model Seo {
-  id             String  @id @default(cuid())
-  newsId         String  @unique
-  openGraphImage String? @db.Text
-  twitterImage   String? @db.Text
-  metaTitle      String? @db.Text
-  metaDescription String? @db.Text
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  id              String   @id @default(cuid())
+  newsId          String   @unique
+  openGraphImage  String?  @db.Text
+  twitterImage    String?  @db.Text
+  metaTitle       String?  @db.Text
+  metaDescription String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  news            News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   @@index([newsId])
 }

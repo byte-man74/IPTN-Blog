@@ -8,7 +8,6 @@ export const routes = {
     categories: '/news/categories',
     tags: '/news/tags',
     analytics: (id: string) => `/news/internal/${id}/analytics`,
-
   },
   users: {
     list: '/users',
@@ -19,5 +18,10 @@ export const routes = {
   analytics: {
     summary: '/analytics/summary',
     popular: '/analytics/popular',
+  },
+  siteConfig: {
+    get: '/site-config',
+    initialize: '/site-config/initialize',
+    navigation: '/site-config/navigation',
   },
 }
