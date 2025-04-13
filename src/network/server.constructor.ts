@@ -1,3 +1,4 @@
+import { logger } from "@/lib/utils/logger";
 import axiosInstance from "./axios";
 
 
@@ -23,7 +24,7 @@ export const createServerAxiosInstance = async (
 
     return response;
   } catch (error) {
-    console.error('Server GET request failed:', error);
+    logger.error('Server GET request failed:', error);
     throw error;
   }
 };

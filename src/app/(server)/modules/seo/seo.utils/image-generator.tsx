@@ -2,6 +2,7 @@
 import { ImageResponse } from 'next/og'
 import React from 'react'
 import ApiCustomError from '@/types/api-custom-error'
+import { logger } from '@/lib/utils/logger'
 
 const siteName = 'Iptn Blog'
 const logoUrl = '/assets/iptn-logo.svg'
@@ -187,7 +188,7 @@ export async function generateOgImage({
       }
     )
   } catch (error) {
-    console.error('OG Image generation error:', error)
+    logger.error('OG Image generation error:', error)
     throw new ApiCustomError('Failed to generate blog image', 500)
   }
 }
@@ -349,7 +350,7 @@ export async function generateTwitterImage({
       }
     )
   } catch (error) {
-    console.error('Twitter Image generation error:', error)
+    logger.error('Twitter Image generation error:', error)
     throw new ApiCustomError('Failed to generate Twitter image', 500)
   }
 }

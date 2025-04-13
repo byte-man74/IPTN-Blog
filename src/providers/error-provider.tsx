@@ -40,7 +40,6 @@ export function ErrorProvider({
 
     let description = 'An unexpected error occurred';
     if (error instanceof ApiCustomError) {
-        console.log("hello man", error.details)
       const responseData = error.details;
       const statusCode = error.status;
 

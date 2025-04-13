@@ -1,3 +1,5 @@
+import { logger } from "./lib/utils/logger";
+
 const dev = {
     API_URL: process.env.NEXT_PUBLIC_API_URL_DEV,
   };
@@ -19,6 +21,6 @@ const dev = {
 
   export const env = getEnv();
 
-  console.log('env API_URL', String(env.API_URL ?? '').replace(/[a-zA-Z]/g, '-'));
+  logger.info('env API_URL', String(env.API_URL ?? '').replace(/[a-zA-Z]/g, '-'));
 
   export const API_URL = env.API_URL;

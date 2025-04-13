@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger'
 import { NewsRepository } from './news.repository'
 import { CreateNewsDTO, NewsCategoryDTO, NewsDTO, TagDTO } from './news.types'
 import { slugifyContent } from './news.utils'
@@ -24,19 +25,19 @@ export class NewsScripts {
   }
 
   async updateOldData(data: OldDataItem[]): Promise<string> {
-    console.log('Starting to update old data...')
-    console.log(`Loaded ${data.length} items from blog_posts.json`)
+    logger.info('Starting to update old data...')
+    logger.info(`Loaded ${data.length} items from blog_posts.json`)
 
     const savedCategories: { [key: string]: number } = {}
     const savedTags: { [key: string]: number } = {}
 
     for (const dataItem of data) {
-      console.log(`Processing item: ${dataItem.title}`)
+      logger.info(`Processing item: ${dataItem.title}`)
       // Process each item from blog_post.json
       // Save categories
       for (const category of dataItem.categories) {
         if (!savedCategories[category]) {
-          console.log(`Creating new category: ${category}`)
+          logger.info(`Creating new category: ${category}`)
           const newlyCreatedCategory = await this.repository.createNewsCategory({
             name: category,
             slug: category.toLowerCase().replace(/\s+/g, '-'),
@@ -44,9 +45,9 @@ export class NewsScripts {
 
           if (newlyCreatedCategory && !('error' in newlyCreatedCategory)) {
             savedCategories[category] = (newlyCreatedCategory as NewsCategoryDTO).id
-            console.log(`Category created with ID: ${savedCategories[category]}`)
+            logger.info(`Category created with ID: ${savedCategories[category]}`)
           } else {
-            console.log('Failed to create category:', newlyCreatedCategory)
+            logger.info('Failed to create category:', newlyCreatedCategory)
           }
         }
       }
@@ -54,7 +55,7 @@ export class NewsScripts {
       // Save tags
       for (const tag of dataItem.tags) {
         if (!savedTags[tag]) {
-          console.log(`Creating new tag: ${tag}`)
+          logger.info(`Creating new tag: ${tag}`)
           const newlyCreatedTag = await this.repository.createTag({
             name: tag,
             slug: tag.toLowerCase().replace(/\s+/g, '-'),
@@ -62,15 +63,15 @@ export class NewsScripts {
 
           if (newlyCreatedTag && !('error' in newlyCreatedTag)) {
             savedTags[tag] = (newlyCreatedTag as TagDTO).id
-            console.log(`Tag created with ID: ${savedTags[tag]}`)
+            logger.info(`Tag created with ID: ${savedTags[tag]}`)
           } else {
-            console.log('Failed to create tag:', newlyCreatedTag)
+            logger.info('Failed to create tag:', newlyCreatedTag)
           }
         }
       }
 
       // Create the news item
-      console.log(`Creating news item: ${dataItem.title}`)
+      logger.info(`Creating news item: ${dataItem.title}`)
       const newsData: CreateNewsDTO = {
         title: dataItem.title,
         pubDate: new Date(dataItem.date),
@@ -84,7 +85,7 @@ export class NewsScripts {
       const createdNews = await this.repository.createNews(newsData)
 
       if (createdNews && !('error' in createdNews)) {
-        console.log(`News created with slug: ${(createdNews as NewsDTO).slug}`)
+        logger.info(`News created with slug: ${(createdNews as NewsDTO).slug}`)
 
         // Assign categories to news
         const categoryIds = dataItem.categories
@@ -92,7 +93,7 @@ export class NewsScripts {
           .filter((id: number | undefined) => id !== undefined)
 
         if (categoryIds.length > 0) {
-          console.log(`Assigning ${categoryIds.length} categories to news`)
+          logger.info(`Assigning ${categoryIds.length} categories to news`)
           await this.repository.assignCategoriesToNews((createdNews as NewsDTO).slug, categoryIds)
         }
 
@@ -102,14 +103,14 @@ export class NewsScripts {
           .filter((id: number | undefined) => id !== undefined)
 
         if (tagIds.length > 0) {
-          console.log(`Assigning ${tagIds.length} tags to news`)
+          logger.info(`Assigning ${tagIds.length} tags to news`)
           await this.repository.assignTagsToNews((createdNews as NewsDTO).slug, tagIds)
         }
       } else {
-        console.log('Failed to create news item:', createdNews)
+        logger.info('Failed to create news item:', createdNews)
       }
 
-      console.log(`Finished processing: ${dataItem.title}`)
+      logger.info(`Finished processing: ${dataItem.title}`)
     }
 
     return 'Data migration completed successfully'

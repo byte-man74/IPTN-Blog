@@ -1,5 +1,5 @@
 import ApiCustomError from '@/types/api-custom-error'
-import { FullNewsDTO} from '@/app/(server)/modules/news/news.types'
+import { FullNewsDTO } from '@/app/(server)/modules/news/news.types'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { AnalyticsDTO } from '@/app/(server)/modules/analytics/analytics.types'
 import { AnalyticsRepository } from '@/app/(server)/modules/analytics/analytics.repository'
@@ -10,6 +10,10 @@ interface IAnalyticsService {
     news: FullNewsDTO,
     shouldRecalculateDuration: boolean
   ): Promise<AnalyticsDTO | ApiCustomError | null>
+  incrementMetric(
+    newsId: string,
+    metricType: 'views' | 'likes' | 'shares'
+  ): Promise<ApiCustomError | null>
 }
 
 export class AnalyticsService implements IAnalyticsService {
@@ -38,6 +42,26 @@ export class AnalyticsService implements IAnalyticsService {
       }
 
       const result = await this.repository.modifyNewsAnalytics(news.id, undefined, readingDuration)
+      return result instanceof ApiCustomError ? result : null
+    })
+  }
+
+  /**
+   * Provides flexible service to allow system to increment the metric system of an analytics
+   * @param newsId
+   * @param metricType
+   * @returns
+   */
+  async incrementMetric(
+    newsId: string,
+    metricType: 'views' | 'likes' | 'shares'
+  ): Promise<ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      if (!newsId) {
+        return new ApiCustomError('Bad Request', 400, 'News ID is required')
+      }
+
+      const result = await this.repository.incrementMetric(newsId, metricType)
       return result instanceof ApiCustomError ? result : null
     })
   }

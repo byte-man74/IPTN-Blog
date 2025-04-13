@@ -113,8 +113,6 @@ export function useAppQueryWithPaginationAndParams<
   return useErrorHandling(() => query)()
 }
 
-
-
 export function useAppMutation<
   TData = unknown,
   TError = AxiosError,
@@ -126,13 +124,15 @@ export function useAppMutation<
     options?: Omit<AxiosRequestConfig, 'url' | 'method'> & {
       enabled?: boolean;
     };
-    onSuccess?: (data: NonNullable<TData>) => void;
-    onError?: (error: TError) => void;
+    onSuccess?: (data: NonNullable<TData>, variables: { data: TVariables }, context: unknown) => void;
+    onError?: (error: TError, variables: { data: TVariables }, context: unknown) => void;
+    onMutate?: (variables: { data: TVariables }) => Promise<unknown> | unknown;
+    onSettled?: (data: NonNullable<TData> | undefined, error: TError | null, variables: { data: TVariables }, context: unknown) => void;
   }
-): UseMutationResult<NonNullable<TData>, TError, { data: TVariables }> {
-  const { apiRoute, method, options, onSuccess, onError } = config;
+): UseMutationResult<NonNullable<TData>, TError, { data: TVariables }, unknown> {
+  const { apiRoute, method, options, onSuccess, onError, onMutate, onSettled } = config;
 
-  const mutation = useMutation<NonNullable<TData>, TError, { data: TVariables }>({
+  const mutation = useMutation<NonNullable<TData>, TError, { data: TVariables }, unknown>({
     mutationFn: async ({ data }: { data: TVariables }) => {
       const response = await axiosInstance.request<TData>({
         url: apiRoute,
@@ -149,18 +149,30 @@ export function useAppMutation<
 
       return response.data as NonNullable<TData>;
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables, context) => {
       if (onSuccess) {
-        onSuccess(data);
+        onSuccess(data, variables, context);
       }
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       if (onError) {
-        onError(error);
+        onError(error, variables, context);
+      }
+    },
+    onMutate: async (variables) => {
+      if (onMutate) {
+        return await onMutate(variables);
+      }
+      return undefined;
+    },
+    onSettled: (data, error, variables, context) => {
+      if (onSettled) {
+        onSettled(data, error, variables, context);
       }
     },
     retry: 0,
   });
+
 
   return useErrorHandling(() => mutation)();
 }

@@ -1,6 +1,15 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { routes } from '@/network/route'
-import { CreateNewsCategoryDTO, CreateNewsDTO, CreateTagDTO, FullNewsDTO, NewsCategoryDTO, NewsDTO, TagDTO, UpdateNewsDTO } from '@/app/(server)/modules/news/news.types'
+import {
+  CreateNewsCategoryDTO,
+  CreateNewsDTO,
+  CreateTagDTO,
+  FullNewsDTO,
+  NewsCategoryDTO,
+  NewsDTO,
+  TagDTO,
+  UpdateNewsDTO,
+} from '@/app/(server)/modules/news/news.types'
 import { NewsQueryKey } from '@/network/query-keys/news'
 import { useAppMutation } from '../client.constructor'
 
@@ -21,7 +30,6 @@ export function useCreateNews() {
   })
 }
 
-
 export function useUpdateNews(slug: string) {
   const queryClient = useQueryClient()
 
@@ -34,7 +42,6 @@ export function useUpdateNews(slug: string) {
     },
   })
 }
-
 
 /**
  * Hook for deleting a news item
@@ -54,7 +61,6 @@ export function useDeleteNews(slug: string) {
   })
 }
 
-
 export function useCreateCategory() {
   const queryClient = useQueryClient()
 
@@ -66,7 +72,6 @@ export function useCreateCategory() {
     },
   })
 }
-
 
 export function useCreateTag() {
   const queryClient = useQueryClient()

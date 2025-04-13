@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { NewsService } from '@/app/(server)/modules/news/news.service'
+import { logger } from '@/lib/utils/logger'
 
 // export const dynamic = 'force-dynamic'
 
@@ -13,7 +14,7 @@ export async function GET() {
       message: result
     })
   } catch (error) {
-    console.error('Migration error:', error)
+    logger.error('Migration error:', error)
     return NextResponse.json(
       {
         success: false,

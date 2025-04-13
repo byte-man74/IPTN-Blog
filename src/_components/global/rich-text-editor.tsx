@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { uploadFileToCloudinaryClientUsage } from '@/lib/third-party/cloudinary/manageCloudinaryUpload'
 import Youtube from '@tiptap/extension-youtube'
+import { logger } from '@/lib/utils/logger'
 
 interface RichTextEditorProps {
   content: string
@@ -101,7 +102,7 @@ export function RichTextEditor({
             editor.chain().focus().setImage({ src: imageUrl }).run()
           }
         } catch (error) {
-          console.error('Error uploading image:', error)
+          logger.error('Error uploading image:', error)
           alert('Failed to upload image. Please try again.')
         } finally {
           setIsUploading(false)

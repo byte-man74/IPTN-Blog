@@ -1,5 +1,6 @@
 import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { API_URL } from '../environment-config'
+import { logger } from '@/lib/utils/logger'
 
 // Create axios instance with base configuration
 const axiosInstance = axios.create({
@@ -31,7 +32,7 @@ axiosInstance.interceptors.request.use(
     return config
   },
   (error: AxiosError) => {
-    console.error('Request interceptor error:', error.message)
+    logger.error('Request interceptor error:', error.message)
     return Promise.reject(error)
   }
 )
@@ -45,7 +46,7 @@ axiosInstance.interceptors.response.use(
     // Handle errors
     if (error.response) {
       // Server responded with error status
-      console.error('Response error:', error.response.status, error.response.data)
+      logger.error('Response error:', error.response.status, error.response.data)
 
       // Handle 401 Unauthorized errors
       if (error.response.status === 401 && typeof window !== 'undefined') {
@@ -54,13 +55,13 @@ axiosInstance.interceptors.response.use(
       }
     } else if (error.request) {
       // Request made but no response received
-      console.error('Request error:', error.request)
+      logger.error('Request error:', error.request)
       if (error.code === 'ECONNREFUSED') {
-        console.error('Connection refused. Please check if the server is running and accessible.')
+        logger.error('Connection refused. Please check if the server is running and accessible.')
       }
     } else {
       // Error in request setup
-      console.error('Error:', error.message)
+      logger.error('Error:', error.message)
     }
     return Promise.reject(error)
   }
