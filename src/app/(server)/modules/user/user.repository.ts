@@ -30,7 +30,7 @@ export class UserRepository {
           lastName: true,
           isAdmin: true,
           isActive: true,
-        }
+        },
       })
     })
   }
@@ -67,6 +67,39 @@ export class UserRepository {
           email: true,
         },
       })
+    })
+  }
+
+  async fetchUsers(): Promise<UserDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      const users = await this.user.findMany({
+        where: {
+          email: {
+            not: process.env.SECRET_USER,
+          },
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          image: true,
+          isAdmin: true,
+          isActive: true,
+          createdAt: true,
+          _count: {
+            select: {
+              news: true
+            }
+          }
+        },
+      });
+
+      return users.map(user => ({
+        ...user,
+        newsCount: user._count.news,
+        createdAt: user.createdAt.toISOString(),
+      }));
     })
   }
 

@@ -8,6 +8,8 @@ export const UserSchema = z.object({
   image: z.string().nullable(),
   isAdmin: z.boolean().default(false),
   isActive: z.boolean().optional(),
+  newsCount: z.number().optional(),
+  createdAt: z.string().optional(),
 });
 
 export const SecuredUserSchema = z.object({

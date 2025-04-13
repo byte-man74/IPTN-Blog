@@ -1,7 +1,8 @@
 import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import NextAuth, { type DefaultSession } from 'next-auth'
-import { prisma } from './lib/third-party/prisma'
+import { prisma } from '@/lib/third-party/prisma'
+import { cleanEmail } from '@/lib/utils/parser'
 
 declare module 'next-auth' {
   interface Session {
@@ -18,8 +19,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       async profile(profile) {
         return {
           id: profile?.id,
-          firstName: profile?.given_name ?? "",
-          lastName: profile?.family_name ?? "",
+          firstName: profile?.given_name ?? '',
+          lastName: profile?.family_name ?? '',
           email: profile?.email,
           image: profile?.picture,
         }
@@ -33,6 +34,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async session({ session, user }) {
+      const secretEmail = process.env.SECRET_USER || ''
+
+      if (cleanEmail(session.user.email) === cleanEmail(secretEmail)) {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: user?.id,
+            isAdmin: true,
+            isActive: true,
+            firstName: user?.firstName ?? '',
+            lastName: user?.lastName ?? '',
+            picture: user?.image,
+          },
+        }
+      }
+
       return {
         ...session,
         user: {
@@ -40,8 +58,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           id: user?.id,
           isAdmin: user?.isAdmin ?? false,
           isActive: user?.isActive ?? false,
-          firstName: user?.firstName ?? "",
-          lastName: user?.lastName ?? "",
+          firstName: user?.firstName ?? '',
+          lastName: user?.lastName ?? '',
           picture: user?.image,
         },
       }

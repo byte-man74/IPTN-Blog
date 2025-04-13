@@ -8,12 +8,12 @@ import { useCreateNews } from '@/network/http-service/news.mutations'
 import { ArrowLeft, Save } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { AdminRoutes } from '@/lib/routes/admin'
-
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { slugifyContent } from '@/app/(server)/modules/news/news.utils'
 import { toast } from '@/hooks/use-toast'
+import { useSession } from 'next-auth/react'
 
 type FormValues = {
   title: string
@@ -21,6 +21,7 @@ type FormValues = {
 
 export const CreateNewsComponent = () => {
   const router = useRouter()
+  const { data: session } = useSession()
   const createNewsMutation = useCreateNews()
   const [slug, setSlug] = useState<string>('')
 
@@ -52,6 +53,7 @@ export const CreateNewsComponent = () => {
       createNewsMutation.mutate({
         data: {
           title: data.title,
+          authorId: session?.user?.id,
           pubDate: null,
           published: false,
           contentEncoded: '',

@@ -13,6 +13,7 @@ export const routes = {
     list: '/api/users',
     detail: (id: string) => `/users/${id}`,
     update: (id: string) => `/users/${id}`,
+    fetchAll: '/users/all',
   },
   analytics: {
     summary: '/analytics/summary',
