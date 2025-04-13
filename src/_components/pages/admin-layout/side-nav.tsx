@@ -6,7 +6,6 @@ import {
   FileText,
   MessageSquare,
   Settings,
-  BarChart2,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -60,12 +59,12 @@ export const SideNav = () => {
       icon: MessageSquare,
       matchPath: (path: string) => path.startsWith(`${AdminRoutes.categories}`),
     },
-    {
-      href: `${AdminRoutes.analytics}/`,
-      label: 'Analytics',
-      icon: BarChart2,
-      matchPath: (path: string) => path.startsWith(`${AdminRoutes.analytics}`),
-    },
+    // {
+    //   href: `${AdminRoutes.analytics}/`,
+    //   label: 'Analytics',
+    //   icon: BarChart2,
+    //   matchPath: (path: string) => path.startsWith(`${AdminRoutes.analytics}`),
+    // },
     {
       href: `${AdminRoutes.settings}`,
       label: 'Settings',

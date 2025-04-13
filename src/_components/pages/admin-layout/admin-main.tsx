@@ -1,6 +1,7 @@
 import React from 'react'
 import { FileText, MessageSquare, Users, Edit, ArrowRight, BarChart2 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
+import { AdminRoutes } from '@/lib/routes/admin'
 
 const blogStats = {
   totalPosts: 42,
@@ -120,13 +121,13 @@ export const AdminMainComponent = () => {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           <AppLink
-            href="/admin/posts"
+            href={AdminRoutes.news}
             className="bg-white rounded-lg p-4 shadow border border-gray-100 hover:shadow-md hover:border-primaryGreen/30 transition-all duration-200 group"
           >
             <div className="p-2 bg-gray-100 rounded-full w-fit mb-3 group-hover:bg-primaryGreen/10">
               <Edit className="h-4 w-4 text-gray-600 group-hover:text-primaryGreen" />
             </div>
-            <h3 className="text-gray-900 text-sm font-medium mb-1">Manage Posts</h3>
+            <h3 className="text-gray-900 text-sm font-medium mb-1">Manage News</h3>
             <p className="text-gray-600 text-xs mb-2">Edit, delete, or update posts</p>
             <span className="text-primaryGreen text-xs font-medium flex items-center">
               View <ArrowRight className="h-3 w-3 ml-1" />
@@ -148,7 +149,7 @@ export const AdminMainComponent = () => {
           </AppLink>
 
           <AppLink
-            href="/admin/analytics"
+            href={AdminRoutes.analytics}
             className="bg-white rounded-lg p-4 shadow border border-gray-100 hover:shadow-md hover:border-primaryGreen/30 transition-all duration-200 group"
           >
             <div className="p-2 bg-gray-100 rounded-full w-fit mb-3 group-hover:bg-primaryGreen/10">

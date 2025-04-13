@@ -12,6 +12,7 @@ import MainNavBanner from '@/_components/public/main-nav-banner'
 import GlobalSocialBanner from '@/_components/public/social-banner'
 import ArticleNav from '@/app/(client)/(public)/articles/article-nav'
 import { auth } from '@/auth'
+import { ClientRoutes } from '@/lib/routes/client'
 
 type NewsArticleProps = {
   params: { slug: string }
@@ -19,6 +20,7 @@ type NewsArticleProps = {
 
 export async function generateMetadata({ params }: NewsArticleProps): Promise<Metadata> {
   const { slug } = await params
+  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
 
   try {
     const response = await createServerAxiosInstance(routes.news.detail(slug))
@@ -45,6 +47,9 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
         description: newsData.summary ?? '',
         images: newsData.seo?.twitterImage ? [newsData.seo.twitterImage] : [],
       },
+      alternates: {
+        canonical: `${domain}/${ClientRoutes.viewNews(slug)}`,
+      },
     }
   } catch (error) {
     logger.error('Error fetching news data for SEO:', error)
@@ -56,6 +61,7 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
 }
 
 function generateStructuredData(newsData: FullNewsDTO) {
+  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
@@ -73,12 +79,12 @@ function generateStructuredData(newsData: FullNewsDTO) {
       name: 'IPTN',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://example.com/logo.png',
+        url: `${domain}/assets/iptn-black.webp`,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${process.env.NEXT_PUBLIC_SITE_URL}/news/${newsData.slug}`,
+      '@id': `${domain}/news/${newsData.slug}`,
     },
   }
 }
@@ -107,7 +113,10 @@ export default async function NewsArticle({ params }: NewsArticleProps) {
 
     const dehydratedState = dehydrate(queryClient)
     const newsData = queryClient.getQueryData<FullNewsDTO>([NewsQueryKey.NEWS_DETAILS, slug])
-    if (!newsData || (!newsData.published && !(session?.user?.isAdmin && session?.user?.isActive))) {
+    if (
+      !newsData ||
+      (!newsData.published && !(session?.user?.isAdmin && session?.user?.isActive))
+    ) {
       notFound()
     }
 
@@ -126,7 +135,7 @@ export default async function NewsArticle({ params }: NewsArticleProps) {
           <MainNavBanner />
           <div className="relative w-full flex flex-col items-center">
             <ArticleNav />
-            <ViewNews slug={slug} />s
+            <ViewNews slug={slug} />
           </div>
         </HydrationBoundary>
       </div>

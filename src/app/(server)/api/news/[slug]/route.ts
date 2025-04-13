@@ -42,6 +42,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { slug: 
         )
       }
 
+      // Convert pubDate string to Date object if it exists
+      if (body.pubDate && typeof body.pubDate === 'string') {
+        body.pubDate = new Date(body.pubDate)
+      }
+
       // Validate request body against schema
       const validationResult = CreateNewsSchema.partial().safeParse(body)
 

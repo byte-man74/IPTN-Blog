@@ -60,7 +60,11 @@ const ViewNews = ({ slug }: { slug: string }) => {
         },
       }),
       Youtube.configure({
-        nocookie: true,
+        width: 640,
+        height: 480,
+        HTMLAttributes: {
+          class: 'rounded-lg w-full max-w-full aspect-video',
+        },
       }),
     ],
     content: data?.contentEncoded || '',

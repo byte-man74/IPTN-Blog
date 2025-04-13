@@ -3,8 +3,6 @@
 import React from 'react'
 import {
   BarChart2,
-  TrendingUp,
-  Users as UsersIcon,
   Clock,
   ExternalLink,
   Lock,
@@ -24,28 +22,24 @@ export const AdminAnalyticsComponent = () => {
         id: 1,
         title: 'Total Page Views',
         value: analyticsSummary?.totalViews.toLocaleString() || '0',
-        change: '+12.3%', // This would be calculated from historical data
         icon: <Eye className="h-6 w-6 text-blue-500" />,
       },
       {
         id: 2,
         title: 'Total Articles',
         value: analyticsSummary?.totalNews.toLocaleString() || '0',
-        change: '+8.7%', // This would be calculated from historical data
         icon: <BarChart2 className="h-6 w-6 text-green-500" />,
       },
       {
         id: 3,
         title: 'Published Articles',
         value: analyticsSummary?.totalNewsPublished.toLocaleString() || '0',
-        change: '+2.1%', // This would be calculated from historical data
         icon: <Clock className="h-6 w-6 text-purple-500" />,
       },
       {
         id: 4,
         title: 'Total Comments',
         value: analyticsSummary?.totalComments.toLocaleString() || '0',
-        change: '+0.8%', // This would be calculated from historical data
         icon: <MessageSquare className="h-6 w-6 text-orange-500" />,
       },
     ],
@@ -148,16 +142,6 @@ export const AdminAnalyticsComponent = () => {
                             </dd>
                           </dl>
                         </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 px-5 py-3">
-                      <div className="text-sm">
-                        <span
-                          className={`font-medium ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}
-                        >
-                          {item.change}
-                        </span>{' '}
-                        <span className="text-gray-500">from previous period</span>
                       </div>
                     </div>
                   </div>

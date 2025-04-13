@@ -1,4 +1,5 @@
-import { AdminMainComponent } from '@/_components/pages/admin-layout/admin-main'
+
+import { AdminAnalyticsComponent } from '@/_components/pages/admin-layout/admin-analytics'
 import React from 'react'
 
 /**
@@ -9,5 +10,5 @@ import React from 'react'
  * and navigation to other admin areas.
  */
 export default function AdminDashboard() {
-  return <AdminMainComponent />
+  return <AdminAnalyticsComponent />
 }
