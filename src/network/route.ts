@@ -14,4 +14,7 @@ export const routes = {
     detail: (id: string) => `/users/${id}`,
     update: (id: string) => `/users/${id}`,
   },
+  analytics: {
+    summary: '/analytics/summary',
+  },
 }

@@ -1,37 +1,52 @@
+'use client'
+
 import React from 'react'
-import { BarChart2, TrendingUp, Users as UsersIcon, Clock, ExternalLink, Lock } from 'lucide-react'
+import {
+  BarChart2,
+  TrendingUp,
+  Users as UsersIcon,
+  Clock,
+  ExternalLink,
+  Lock,
+  Eye,
+  MessageSquare,
+} from 'lucide-react'
+import { useFetchAnalyticsSummary } from '@/network/http-service/analytics.hooks'
+import { Skeleton } from '@/_components/global/skeleton'
 
 export const AdminAnalyticsComponent = () => {
-  // Simulated data - in a real app, this would come from an API
+  const { data: analyticsSummary, isLoading } = useFetchAnalyticsSummary()
+
+  // Format the analytics data for display
   const analyticsData = {
     summary: [
       {
         id: 1,
         title: 'Total Page Views',
-        value: '124,582',
-        change: '+12.3%',
-        icon: <BarChart2 className="h-6 w-6 text-blue-500" />,
+        value: analyticsSummary?.totalViews.toLocaleString() || '0',
+        change: '+12.3%', // This would be calculated from historical data
+        icon: <Eye className="h-6 w-6 text-blue-500" />,
       },
       {
         id: 2,
-        title: 'Unique Visitors',
-        value: '45,678',
-        change: '+8.7%',
-        icon: <UsersIcon className="h-6 w-6 text-green-500" />,
+        title: 'Total Articles',
+        value: analyticsSummary?.totalNews.toLocaleString() || '0',
+        change: '+8.7%', // This would be calculated from historical data
+        icon: <BarChart2 className="h-6 w-6 text-green-500" />,
       },
       {
         id: 3,
-        title: 'Avg. Session Duration',
-        value: '3m 42s',
-        change: '+2.1%',
+        title: 'Published Articles',
+        value: analyticsSummary?.totalNewsPublished.toLocaleString() || '0',
+        change: '+2.1%', // This would be calculated from historical data
         icon: <Clock className="h-6 w-6 text-purple-500" />,
       },
       {
         id: 4,
-        title: 'Conversion Rate',
-        value: '3.2%',
-        change: '+0.8%',
-        icon: <TrendingUp className="h-6 w-6 text-orange-500" />,
+        title: 'Total Comments',
+        value: analyticsSummary?.totalComments.toLocaleString() || '0',
+        change: '+0.8%', // This would be calculated from historical data
+        icon: <MessageSquare className="h-6 w-6 text-orange-500" />,
       },
     ],
     popularPosts: [
@@ -96,33 +111,57 @@ export const AdminAnalyticsComponent = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Summary Cards */}
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {analytics.summary.map((item) => (
-              <div key={item.id} className="bg-white overflow-hidden shadow">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">{item.icon}</div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">{item.title}</dt>
-                        <dd>
-                          <div className="text-lg font-medium text-gray-900">{item.value}</div>
-                        </dd>
-                      </dl>
+            {isLoading
+              ? // Show skeletons while loading
+                Array(4)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div key={index} className="bg-white overflow-hidden shadow">
+                      <div className="p-5">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0">
+                            <Skeleton className="h-6 w-6 rounded-full" />
+                          </div>
+                          <div className="ml-5 w-0 flex-1">
+                            <Skeleton className="h-4 w-24 mb-2" />
+                            <Skeleton className="h-6 w-16" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 px-5 py-3">
+                        <Skeleton className="h-4 w-32" />
+                      </div>
+                    </div>
+                  ))
+              : analytics.summary.map((item) => (
+                  <div key={item.id} className="bg-white overflow-hidden shadow">
+                    <div className="p-5">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0">{item.icon}</div>
+                        <div className="ml-5 w-0 flex-1">
+                          <dl>
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              {item.title}
+                            </dt>
+                            <dd>
+                              <div className="text-lg font-medium text-gray-900">{item.value}</div>
+                            </dd>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-5 py-3">
+                      <div className="text-sm">
+                        <span
+                          className={`font-medium ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}
+                        >
+                          {item.change}
+                        </span>{' '}
+                        <span className="text-gray-500">from previous period</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <span
-                      className={`font-medium ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}
-                    >
-                      {item.change}
-                    </span>{' '}
-                    <span className="text-gray-500">from previous period</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
 
           {/* Popular Posts */}

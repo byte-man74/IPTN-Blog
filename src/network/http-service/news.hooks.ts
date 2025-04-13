@@ -5,10 +5,7 @@ import {
   TagDTO,
   FullNewsDTO,
 } from '@/app/(server)/modules/news/news.types'
-import {
-  useAppQuery,
-  useAppQueryWithPaginationAndParams,
-} from '../client.constructor'
+import { useAppQuery, useAppQueryWithPaginationAndParams } from '../client.constructor'
 import { routes } from '@/network/route'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 import { NewsQueryKey } from '@/network/query-keys/news'
@@ -54,6 +51,5 @@ export function useFetchNewsDetail(slug: string) {
   return useAppQuery<FullNewsDTO>({
     queryKey: [NewsQueryKey.NEWS_DETAILS, slug],
     apiRoute: routes.news.detail(slug),
-  });
+  })
 }
-

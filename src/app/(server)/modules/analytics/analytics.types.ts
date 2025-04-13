@@ -39,3 +39,14 @@ export type AnalyticsUpdateDTO = z.infer<typeof AnalyticsUpdateSchema>;
  */
 export const MetricFieldSchema = z.enum(['views', 'likes', 'shares']);
 export type MetricField = z.infer<typeof MetricFieldSchema>;
+
+
+
+export const AnalyticsSummarySchema = z.object({
+    totalNews: z.number().nonnegative(),
+    totalNewsPublished: z.number().nonnegative(),
+    totalViews: z.number().nonnegative(),
+    totalComments: z.number().nonnegative()
+})
+
+export type  AnalyticsSummaryDTO = z.infer<typeof AnalyticsSummarySchema>
