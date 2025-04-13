@@ -1,5 +1,5 @@
 import { getRedisClient } from '@/lib/third-party/redis'
-import { AnalyticsSummaryDTO } from './analytics.types'
+import { AnalyticsPopularNewsDTO, AnalyticsSummaryDTO } from './analytics.types'
 import { logger } from '@/lib/utils/logger'
 
 export class AnalyticsCache {
@@ -56,6 +56,65 @@ export class AnalyticsCache {
       return true
     } catch (error) {
       logger.error('Failed to invalidate cached analytics summary:', error)
+      return false
+    }
+  }
+
+  /**
+   * Cache key for popular news data
+   * @private
+   */
+  private readonly POPULAR_NEWS_KEY = 'analytics:popular_news'
+
+  /**
+   * Store popular news data in cache
+   * @param data - Array of popular news items
+   * @returns boolean indicating success
+   */
+  async setPopularNews(data: AnalyticsPopularNewsDTO[]): Promise<boolean> {
+    try {
+      if (!this.redis) return false
+
+      await this.redis.set(this.POPULAR_NEWS_KEY, JSON.stringify(data), 'EX', this.TTL)
+      return true
+    } catch (error) {
+      logger.error('Failed to cache popular news:', error)
+      return false
+    }
+  }
+
+  /**
+   * Retrieve popular news data from cache
+   * @returns The cached popular news data or null if not found
+   */
+  async getPopularNews(): Promise<AnalyticsPopularNewsDTO[] | null> {
+    try {
+      if (!this.redis) return null
+
+      const data = await this.redis.get(this.POPULAR_NEWS_KEY)
+      if (data) {
+        return JSON.parse(data)
+      }
+
+      return null
+    } catch (error) {
+      logger.error('Failed to retrieve cached popular news:', error)
+      return null
+    }
+  }
+
+  /**
+   * Invalidate cached popular news data
+   * @returns boolean indicating success
+   */
+  async invalidatePopularNews(): Promise<boolean> {
+    try {
+      if (!this.redis) return false
+
+      await this.redis.del(this.POPULAR_NEWS_KEY)
+      return true
+    } catch (error) {
+      logger.error('Failed to invalidate cached popular news:', error)
       return false
     }
   }

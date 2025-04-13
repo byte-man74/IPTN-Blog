@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SimplifiedNewsSchema } from '../news/news.types';
 
 /**
  * Schema for analytics data
@@ -50,3 +51,13 @@ export const AnalyticsSummarySchema = z.object({
 })
 
 export type  AnalyticsSummaryDTO = z.infer<typeof AnalyticsSummarySchema>
+
+
+export const AnalyticsPopularNewsSchema = z.object({
+    news: SimplifiedNewsSchema,
+    views: z.number().int().nonnegative().default(0),
+    likes: z.number().int().nonnegative().default(0),
+    shares: z.number().int().nonnegative().default(0),
+});
+
+export type AnalyticsPopularNewsDTO = z.infer<typeof AnalyticsPopularNewsSchema>;

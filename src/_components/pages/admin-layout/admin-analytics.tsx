@@ -1,19 +1,17 @@
 'use client'
 
 import React from 'react'
+import { BarChart2, Clock, ExternalLink, Lock, Eye, MessageSquare, ThumbsUp } from 'lucide-react'
 import {
-  BarChart2,
-  Clock,
-  ExternalLink,
-  Lock,
-  Eye,
-  MessageSquare,
-} from 'lucide-react'
-import { useFetchAnalyticsSummary } from '@/network/http-service/analytics.hooks'
+  useFetchAnalyticsSummary,
+  useFetchPopularNews,
+} from '@/network/http-service/analytics.hooks'
 import { Skeleton } from '@/_components/global/skeleton'
+import { AppLink } from '@/_components/global/app-link'
 
 export const AdminAnalyticsComponent = () => {
   const { data: analyticsSummary, isLoading } = useFetchAnalyticsSummary()
+  const { data: popularNews, isLoading: isLoadingPopularNews } = useFetchPopularNews()
 
   // Format the analytics data for display
   const analyticsData = {
@@ -43,13 +41,6 @@ export const AdminAnalyticsComponent = () => {
         icon: <MessageSquare className="h-6 w-6 text-orange-500" />,
       },
     ],
-    popularPosts: [
-      { id: 1, title: 'How to Optimize Your Blog for SEO', views: 12453, engagement: '87%' },
-      { id: 2, title: '10 Writing Tips for Beginner Bloggers', views: 8765, engagement: '92%' },
-      { id: 3, title: 'The Future of Content Marketing', views: 7654, engagement: '78%' },
-      { id: 4, title: 'Building a Loyal Audience for Your Blog', views: 6543, engagement: '85%' },
-      { id: 5, title: 'Monetization Strategies for Bloggers', views: 5432, engagement: '81%' },
-    ],
     trafficSources: [
       { id: 1, source: 'Organic Search', percentage: 42, color: 'bg-blue-500' },
       { id: 2, source: 'Social Media', percentage: 28, color: 'bg-purple-500' },
@@ -61,9 +52,37 @@ export const AdminAnalyticsComponent = () => {
   // Always perform nullish check for data that would come from API
   const analytics = analyticsData ?? {
     summary: [],
-    popularPosts: [],
     trafficSources: [],
   }
+
+  // Calculate engagement rate for each post
+  const processedPopularNews = React.useMemo(() => {
+    if (!popularNews) return []
+
+    return popularNews.map((post) => {
+      // Get the publish date or creation date
+      const publishDate = new Date(post.news.pubDate || post.news.createdAt);
+      const currentDate = new Date();
+
+      // Calculate days since publication
+      const daysSincePublished = Math.max(
+        1,
+        Math.floor((currentDate.getTime() - publishDate.getTime()) / (1000 * 60 * 60 * 24))
+      );
+
+      // Calculate engagement rate as views per day since publication
+      const calculatedEngagementRate =
+        post.views > 0
+          ? Math.round((post.views / daysSincePublished) * 100) / 100 // Views per day with 2 decimal precision
+          : 0;
+
+      return {
+        ...post,
+        engagementRate: calculatedEngagementRate,
+        publishedAt: post.news.pubDate || post.news.createdAt,
+      }
+    })
+  }, [popularNews])
 
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
@@ -89,15 +108,15 @@ export const AdminAnalyticsComponent = () => {
                   </p>
                 </div>
               </div>
-              <a
+              <AppLink
                 href="https://mixpanel.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium text-white bg-primaryGreen hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >
                 View on Mixpanel
                 <ExternalLink className="ml-1.5 h-3 w-3" />
-              </a>
+              </AppLink>
             </div>
           </div>
         </div>
@@ -151,40 +170,77 @@ export const AdminAnalyticsComponent = () => {
           {/* Popular Posts */}
           <div className="mt-8">
             <h2 className="text-lg leading-6 font-medium text-gray-900">Popular Posts</h2>
-            <div className="mt-2 bg-white shadow overflow-hidden">
-              <ul className="divide-y divide-gray-200">
-                {analytics.popularPosts.map((post) => (
-                  <li key={post.id}>
-                    <div className="px-4 py-4 sm:px-6">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-primaryGreen truncate">
-                          {post.title}
-                        </p>
-                        <div className="ml-2 flex-shrink-0 flex">
-                          <p className="px-2 inline-flex text-xs leading-5 font-semibold bg-green-100 text-green-800">
-                            {post.engagement} engagement
-                          </p>
+            <div className="mt-2 bg-white shadow overflow-hidden rounded-lg">
+              {isLoadingPopularNews ? (
+                <div className="p-4">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, index) => (
+                      <div key={index} className="mb-4 last:mb-0">
+                        <Skeleton className="h-5 w-3/4 mb-2" />
+                        <div className="flex justify-between">
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="h-4 w-16" />
                         </div>
                       </div>
-                      <div className="mt-2 sm:flex sm:justify-between">
-                        <div className="sm:flex">
-                          <p className="flex items-center text-sm text-gray-500">
-                            <BarChart2 className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
-                            {post.views.toLocaleString()} views
-                          </p>
+                    ))}
+                </div>
+              ) : (
+                <ul className="divide-y divide-gray-200">
+                  {processedPopularNews && processedPopularNews.length > 0 ? (
+                    processedPopularNews.map((post, index) => (
+                      <li
+                        key={post.news.id || index}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="px-4 py-4 sm:px-6">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-primaryGreen truncate">
+                              {post.news.title}
+                            </p>
+                            <div className="ml-2 flex-shrink-0 flex">
+                              <p className="px-2 inline-flex text-xs leading-5 font-semibold bg-green-100 text-green-800 rounded-full">
+                                {post.engagementRate ? `${post.engagementRate}% engagement` : '--%'}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-2 sm:flex sm:justify-between">
+                            <div className="sm:flex space-x-4">
+                              <p className="flex items-center text-sm text-gray-500">
+                                <Eye className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                {post.views?.toLocaleString() || 0} views
+                              </p>
+                              {post.likes !== undefined && (
+                                <p className="flex items-center text-sm text-gray-500 mt-2 sm:mt-0">
+                                  <ThumbsUp className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                  {post.likes.toLocaleString()} likes
+                                </p>
+                              )}
+                            </div>
+                            {post.news.pubDate && (
+                              <p className="flex items-center text-sm text-gray-500 mt-2 sm:mt-0">
+                                <Clock className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                {new Date(post.publishedAt).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="px-4 py-5 text-center text-sm text-gray-500">
+                      No popular posts data available
+                    </li>
+                  )}
+                </ul>
+              )}
             </div>
           </div>
 
           {/* Traffic Sources - Blurred */}
           <div className="mt-8">
             <h2 className="text-lg leading-6 font-medium text-gray-900">Traffic Sources</h2>
-            <div className="mt-2 bg-white shadow overflow-hidden relative">
+            <div className="mt-2 bg-white shadow overflow-hidden relative rounded-lg">
               <div className="px-4 py-5 sm:p-6 filter blur-sm">
                 {analytics.trafficSources.map((source) => (
                   <div key={source.id} className="mt-4 first:mt-0">
@@ -192,9 +248,9 @@ export const AdminAnalyticsComponent = () => {
                       <div className="text-sm font-medium text-gray-900">{source.source}</div>
                       <div className="text-sm font-medium text-gray-500">{source.percentage}%</div>
                     </div>
-                    <div className="mt-2 w-full bg-gray-200 h-2.5">
+                    <div className="mt-2 w-full bg-gray-200 h-2.5 rounded-full">
                       <div
-                        className={`${source.color} h-2.5`}
+                        className={`${source.color} h-2.5 rounded-full`}
                         style={{ width: `${source.percentage}%` }}
                       ></div>
                     </div>
@@ -211,38 +267,17 @@ export const AdminAnalyticsComponent = () => {
                     View complete traffic source breakdown with geographic data
                   </p>
                   <div className="mt-4">
-                    <a
+                    <AppLink
                       href="https://mixpanel.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm text-white bg-primaryGreen hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       View on Mixpanel
                       <ExternalLink className="ml-1.5 h-4 w-4" />
-                    </a>
+                    </AppLink>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Date Range Selector */}
-          <div className="mt-8 bg-white shadow overflow-hidden">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Date Range</h3>
-              <div className="mt-4 flex space-x-4">
-                <button className="px-4 py-2 border border-transparent text-sm font-medium text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                  Last 7 days
-                </button>
-                <button className="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                  Last 30 days
-                </button>
-                <button className="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                  Last 90 days
-                </button>
-                <button className="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                  Custom Range
-                </button>
               </div>
             </div>
           </div>

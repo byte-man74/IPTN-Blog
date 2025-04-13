@@ -3,6 +3,7 @@ import { FullNewsDTO } from '@/app/(server)/modules/news/news.types'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import {
   AnalyticsDTO,
+  AnalyticsPopularNewsDTO,
   AnalyticsSummaryDTO,
   MetricField,
 } from '@/app/(server)/modules/analytics/analytics.types'
@@ -16,6 +17,7 @@ interface IAnalyticsService {
   ): Promise<AnalyticsDTO | ApiCustomError | null>
   incrementMetric(newsId: string, metricType: MetricField): Promise<ApiCustomError | null>
   getAnalyticsSummary(): Promise<AnalyticsSummaryDTO | ApiCustomError | null>
+  getAnalyticsPopularNews(): Promise<AnalyticsPopularNewsDTO[] | ApiCustomError | null>
 }
 
 export class AnalyticsService implements IAnalyticsService {
@@ -68,5 +70,12 @@ export class AnalyticsService implements IAnalyticsService {
   async getAnalyticsSummary(): Promise<AnalyticsSummaryDTO | ApiCustomError | null> {
     const result = await this.repository.getAnalyticsSummary()
     return result
+  }
+
+  async getAnalyticsPopularNews(): Promise<AnalyticsPopularNewsDTO[] | ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      const result = await this.repository.getAnalyticsPopularNews()
+      return result
+    })
   }
 }

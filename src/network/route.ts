@@ -8,14 +8,16 @@ export const routes = {
     categories: '/news/categories',
     tags: '/news/tags',
     analytics: (id: string) => `/news/internal/${id}/analytics`,
+
   },
   users: {
-    list: '/api/users',
+    list: '/users',
     detail: (id: string) => `/users/${id}`,
     update: (id: string) => `/users/${id}`,
     fetchAll: '/users/all',
   },
   analytics: {
     summary: '/analytics/summary',
+    popular: '/analytics/popular',
   },
 }

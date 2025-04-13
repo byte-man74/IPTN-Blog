@@ -3,6 +3,7 @@ import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import ApiCustomError from '@/types/api-custom-error'
 import {
   AnalyticsDTO,
+  AnalyticsPopularNewsDTO,
   AnalyticsSummaryDTO,
   AnalyticsUpdateDTO,
   MetricField,
@@ -15,9 +16,8 @@ export class AnalyticsRepository {
   private readonly news = prisma.news
   private readonly comment = prisma.comment
 
-
   constructor() {
-    this.cache =  new AnalyticsCache();
+    this.cache = new AnalyticsCache()
   }
 
   /**
@@ -113,47 +113,101 @@ export class AnalyticsRepository {
   async getAnalyticsSummary(): Promise<AnalyticsSummaryDTO | ApiCustomError | null> {
     return await tryCatchHandler(async () => {
       // Check if data exists in cache
-      const analyticsCache = new AnalyticsCache();
-      const cachedData = await analyticsCache.getAnalyticsSummary();
+      const analyticsCache = new AnalyticsCache()
+      const cachedData = await analyticsCache.getAnalyticsSummary()
 
       // If cached data exists, return it
       if (cachedData) {
-        return cachedData;
+        return cachedData
       }
 
       // If not in cache, fetch from database
       // Get total news count
-      const totalNews = await this.news.count();
+      const totalNews = await this.news.count()
 
       // Get total published news count
       const totalNewsPublished = await this.news.count({
         where: { published: true },
-      });
+      })
 
       // Get sum of all views
       const viewsAggregate = await this.analytics.aggregate({
         _sum: { views: true },
-      });
+      })
 
       // Get total comments count
-      const totalComments = await this.comment.count();
+      const totalComments = await this.comment.count()
 
       const summaryData = {
         totalNews,
         totalNewsPublished,
         totalViews: viewsAggregate._sum.views || 0,
         totalComments,
-      };
+      }
 
-      // Store in cache for future requests
+      // Store in cache for future request
+      await analyticsCache.setAnalyticsSummary(summaryData)
 
-      console.log("yes i don set the data")
-      await analyticsCache.setAnalyticsSummary(summaryData);
-
-      return summaryData;
-    });
+      return summaryData
+    })
   }
 
+  async getAnalyticsPopularNews(): Promise<AnalyticsPopularNewsDTO[] | ApiCustomError | null> {
+    return await tryCatchHandler(async () => {
+      // Check if data exists in cache
+      const analyticsCache = new AnalyticsCache()
+      const cachedData = await analyticsCache.getPopularNews()
 
-//   async getAnalyticsPopularNews(): {}
+      // If cached data exists, return it
+      if (cachedData) {
+        return cachedData
+      }
+
+      // If not in cache, fetch from database
+      const popularNewsData = await this.analytics.findMany({
+        select: {
+          news: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              coverImage: true,
+              summary: true,
+              pubDate: true,
+              createdAt: true,
+              lastUpdated: true,
+              authorId: true,
+              published: true,
+              analytics: true,
+            },
+          },
+          views: true,
+          likes: true,
+          shares: true,
+        },
+        where: {
+          news: {
+            published: true,
+          },
+        },
+        orderBy: {
+          views: 'desc',
+        },
+        take: 10,
+      })
+
+      // Transform data to match AnalyticsPopularNewsDTO structure
+      const popularNews = popularNewsData.map((item) => ({
+        news: item.news,
+        views: item.views,
+        likes: item.likes || 0,
+        shares: item.shares || 0,
+      }))
+
+      // Store in cache for future requests
+      await analyticsCache.setPopularNews(popularNews)
+
+      return popularNews
+    })
+  }
 }
