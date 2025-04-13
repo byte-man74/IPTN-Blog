@@ -3,6 +3,7 @@ import { SideNav } from '@/_components/pages/admin-layout/side-nav'
 import { auth } from "@/auth"
 import { redirect } from 'next/navigation'
 import { logger } from '@/lib/utils/logger'
+import { Metadata } from 'next'
 
 /**
  * Admin Layout Component
@@ -11,6 +12,17 @@ import { logger } from '@/lib/utils/logger'
  * It includes the header with search functionality, notifications, and a sidebar
  * with navigation links to different admin sections.
  */
+
+// Define metadata for admin pages
+export const metadata: Metadata = {
+  title: 'Admin Dashboard',
+  description: 'Admin control panel for managing site content and settings',
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const session = await auth()
 
@@ -26,18 +38,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      <div className="flex h-screen overflow-hidden sticky z-20 top-10">
-        {/* Sidebar */}
-        <SideNav />
+    <>
+      <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+        <div className="flex h-screen overflow-hidden sticky z-20 top-10">
+          {/* Sidebar */}
+          <SideNav />
 
-        {/* Main content */}
-        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-          <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-            <div className="flex">{children ?? <div>Loading...</div>}</div>{' '}
-          </div>
-        </main>
+          {/* Main content */}
+          <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
+            <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+              <div className="flex">{children ?? <div>Loading...</div>}</div>{' '}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

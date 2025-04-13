@@ -44,6 +44,12 @@ export const FullNewsSchema = z.object({
     seo: z.object({
       openGraphImage: z.string().nullable().optional(),
       twitterImage: z.string().nullable().optional(),
+    }).nullable().optional(),
+    analytics: z.object({
+      views: z.number().default(0),
+      likes: z.number().default(0),
+      shares: z.number().default(0),
+      readDuration: z.string().nullable().optional(),
     }).nullable().optional()
   })
 

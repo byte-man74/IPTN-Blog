@@ -119,7 +119,8 @@ export class NewsRepository {
           categories: true,
           tags: true,
           comments: true,
-          seo: true
+          seo: true,
+          analytics: true
         },
       })
     })
@@ -392,5 +393,31 @@ export class NewsRepository {
       (updatedNews.title && updatedNews.title !== originalNews.title) ||
       (updatedNews.coverImage && updatedNews.coverImage !== originalNews.coverImage)
     );
+  }
+
+  async shouldSetupAnalytics(
+    slug: string,
+    updatedNews: Partial<UpdateNewsDTO>
+  ): Promise<boolean> {
+    // Check if the news article already has analytics
+    const newsWithAnalytics = await this.news.findUnique({
+      where: { slug },
+      select: {
+        analytics: true,
+        contentEncoded: true,
+      },
+    });
+
+    if (!newsWithAnalytics) return true;
+
+    // If there are no analytics yet, we should set them up
+    if (!newsWithAnalytics.analytics) return true;
+
+    // If content has changed, we might need to update reading duration
+    if (updatedNews.contentEncoded && updatedNews.contentEncoded !== newsWithAnalytics.contentEncoded) {
+      return true;
+    }
+
+    return false;
   }
 }
