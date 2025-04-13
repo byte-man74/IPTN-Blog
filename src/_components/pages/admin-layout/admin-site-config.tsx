@@ -1,7 +1,17 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Trash2, Save, RefreshCw, CheckCircle, X, RotateCw } from 'lucide-react'
+import {
+  Plus,
+  Trash2,
+  Save,
+  RefreshCw,
+  CheckCircle,
+  X,
+  RotateCw,
+  Newspaper,
+  Bell,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useFetchCategories } from '@/network/http-service/news.hooks'
 import { useCreateCategory } from '@/network/http-service/news.mutations'
@@ -32,6 +42,10 @@ import { Separator } from '@/components/ui/separator'
 import { toast } from '@/hooks/use-toast'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/utils/logger'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { SiteStatusDashboard } from './admin-site-status'
+
+
 
 export const AdminSiteConfigComponent = () => {
   // Fetch data
@@ -48,6 +62,7 @@ export const AdminSiteConfigComponent = () => {
   const [selectedSubCategories, setSelectedSubCategories] = useState<number[]>([])
   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
+  const [activeTab, setActiveTab] = useState('navigation')
 
   // Initialize state from fetched data
   useEffect(() => {
@@ -186,11 +201,13 @@ export const AdminSiteConfigComponent = () => {
   if (categoriesLoading || configLoading) {
     return (
       <div className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-5xl mx-auto space-y-8">
           <div className="flex justify-between items-center">
             <Skeleton className="h-8 w-56" />
             <Skeleton className="h-10 w-32" />
           </div>
+
+          <Skeleton className="h-12 w-full" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
@@ -230,13 +247,13 @@ export const AdminSiteConfigComponent = () => {
           <Card className="bg-destructive/10 border-destructive">
             <CardHeader>
               <CardTitle className="flex items-center text-destructive">
-                <X className="h-5 w-5 mr-2" /> {configError ? 'Configuration Error' : 'No Configuration Found'}
+                <X className="h-5 w-5 mr-2" />{' '}
+                {configError ? 'Configuration Error' : 'No Configuration Found'}
               </CardTitle>
               <CardDescription>
                 {configError
                   ? 'There was an error loading the site configuration. You may need to initialize it.'
-                  : 'Site configuration has not been set up yet. Please initialize it to continue.'
-                }
+                  : 'Site configuration has not been set up yet. Please initialize it to continue.'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -264,219 +281,256 @@ export const AdminSiteConfigComponent = () => {
 
   return (
     <main className="flex-1 p-6 overflow-auto">
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-5xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Site Navigation Configuration</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Site Management</h2>
             <p className="text-gray-500 text-sm mt-1">
-              Configure the categories that appear in the site&apos;s navigation
+              Configure site navigation and monitor content health
             </p>
           </div>
 
-          <Button onClick={handleSaveNavigation} disabled={updateNavMutation.isPending}>
-            {updateNavMutation.isPending ? (
-              <>
-                <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Saving...
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" /> Save Configuration
-              </>
-            )}
-          </Button>
+          {activeTab === 'navigation' && (
+            <Button onClick={handleSaveNavigation} disabled={updateNavMutation.isPending}>
+              {updateNavMutation.isPending ? (
+                <>
+                  <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" /> Save Configuration
+                </>
+              )}
+            </Button>
+          )}
         </div>
 
         <Separator />
 
-        {/* Create Category Dialog */}
-        <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Category</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="newCategory">Category Name</Label>
-                <Input
-                  id="newCategory"
-                  value={newCategoryName}
-                  onChange={(e) => setNewCategoryName(e.target.value)}
-                  placeholder="Enter category name"
-                />
-              </div>
+        {/* Tabs Interface */}
+        <Tabs
+          defaultValue="navigation"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto mb-6">
+            <TabsTrigger value="navigation" className="flex items-center gap-2">
+              <Newspaper className="h-4 w-4" />
+              <span>Navigation</span>
+            </TabsTrigger>
+            <TabsTrigger value="content-status" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              <span>Content Status</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Navigation Configuration Tab */}
+          <TabsContent value="navigation" className="space-y-6">
+            {/* Create Category Dialog */}
+            <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Category</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="newCategory">Category Name</Label>
+                    <Input
+                      id="newCategory"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      placeholder="Enter category name"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleCreateCategory}
+                    disabled={createCategoryMutation.isPending || !newCategoryName.trim()}
+                  >
+                    {createCategoryMutation.isPending ? (
+                      <>
+                        <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Creating...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" /> Create Category
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Key Categories Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Key Categories</span>
+                    <Badge variant="outline" className="ml-2">
+                      {selectedKeyCategories.length}/5
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription>
+                    These categories will appear in the main navigation bar
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Add Category Dropdown */}
+                  <div className="mb-4 flex items-center gap-2">
+                    <Select
+                      onValueChange={(value) => handleKeyCategoryAdd(Number(value))}
+                      disabled={selectedKeyCategories.length >= 5}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Add category..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getAvailableCategories().map((category) => (
+                          <SelectItem key={category.id} value={category.id.toString()}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => setCategoryDialogOpen(true)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                    </Dialog>
+                  </div>
+
+                  {/* Selected Categories */}
+                  <div className="space-y-2">
+                    {getSelectedKeyCategoryData().map((category) => (
+                      <div
+                        key={category.id}
+                        className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
+                      >
+                        <span>{category.name}</span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => removeKeyCategory(category.id)}
+                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedKeyCategories.length === 0 && (
+                    <div className="text-center py-4 text-gray-500 italic">
+                      No key categories selected
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Sub Categories Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Sub Categories</span>
+                    <Badge variant="outline" className="ml-2">
+                      {selectedSubCategories.length}
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription>These categories will appear in dropdown menus</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Add Category Dropdown */}
+                  <div className="mb-4 flex items-center gap-2">
+                    <Select onValueChange={(value) => handleSubCategoryAdd(Number(value))}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Add category..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getAvailableCategories().map((category) => (
+                          <SelectItem key={category.id} value={category.id.toString()}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => setCategoryDialogOpen(true)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                    </Dialog>
+                  </div>
+
+                  {/* Selected Categories */}
+                  <div className="space-y-2">
+                    {getSelectedSubCategoryData().map((category) => (
+                      <div
+                        key={category.id}
+                        className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
+                      >
+                        <span>{category.name}</span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => removeSubCategory(category.id)}
+                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedSubCategories.length === 0 && (
+                    <div className="text-center py-4 text-gray-500 italic">
+                      No sub categories selected
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end mt-6">
               <Button
-                onClick={handleCreateCategory}
-                disabled={createCategoryMutation.isPending || !newCategoryName.trim()}
+                size="lg"
+                onClick={handleSaveNavigation}
+                disabled={updateNavMutation.isPending}
+                className="w-full sm:w-auto"
               >
-                {createCategoryMutation.isPending ? (
+                {updateNavMutation.isPending ? (
                   <>
-                    <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Creating...
+                    <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Saving...
                   </>
                 ) : (
                   <>
-                    <Plus className="h-4 w-4 mr-2" /> Create Category
+                    <CheckCircle className="h-4 w-4 mr-2" /> Save Configuration
                   </>
                 )}
               </Button>
             </div>
-          </DialogContent>
-        </Dialog>
+          </TabsContent>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Key Categories Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Key Categories</span>
-                <Badge variant="outline" className="ml-2">
-                  {selectedKeyCategories.length}/5
-                </Badge>
-              </CardTitle>
-              <CardDescription>
-                These categories will appear in the main navigation bar
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Add Category Dropdown */}
-              <div className="mb-4 flex items-center gap-2">
-                <Select
-                  onValueChange={(value) => handleKeyCategoryAdd(Number(value))}
-                  disabled={selectedKeyCategories.length >= 5}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Add category..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getAvailableCategories().map((category) => (
-                      <SelectItem key={category.id} value={category.id.toString()}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="icon" variant="outline" onClick={() => setCategoryDialogOpen(true)}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                </Dialog>
-              </div>
-
-              {/* Selected Categories */}
-              <div className="space-y-2">
-                {getSelectedKeyCategoryData().map((category) => (
-                  <div
-                    key={category.id}
-                    className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
-                  >
-                    <span>{category.name}</span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => removeKeyCategory(category.id)}
-                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-
-              {selectedKeyCategories.length === 0 && (
-                <div className="text-center py-4 text-gray-500 italic">
-                  No key categories selected
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Sub Categories Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Sub Categories</span>
-                <Badge variant="outline" className="ml-2">
-                  {selectedSubCategories.length}
-                </Badge>
-              </CardTitle>
-              <CardDescription>These categories will appear in dropdown menus</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Add Category Dropdown */}
-              <div className="mb-4 flex items-center gap-2">
-                <Select onValueChange={(value) => handleSubCategoryAdd(Number(value))}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Add category..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getAvailableCategories().map((category) => (
-                      <SelectItem key={category.id} value={category.id.toString()}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="icon" variant="outline" onClick={() => setCategoryDialogOpen(true)}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                </Dialog>
-              </div>
-
-              {/* Selected Categories */}
-              <div className="space-y-2">
-                {getSelectedSubCategoryData().map((category) => (
-                  <div
-                    key={category.id}
-                    className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
-                  >
-                    <span>{category.name}</span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => removeSubCategory(category.id)}
-                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-
-              {selectedSubCategories.length === 0 && (
-                <div className="text-center py-4 text-gray-500 italic">
-                  No sub categories selected
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Save Button */}
-        <div className="flex justify-end mt-6">
-          <Button
-            size="lg"
-            onClick={handleSaveNavigation}
-            disabled={updateNavMutation.isPending}
-            className="w-full sm:w-auto"
-          >
-            {updateNavMutation.isPending ? (
-              <>
-                <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Saving...
-              </>
-            ) : (
-              <>
-                <CheckCircle className="h-4 w-4 mr-2" /> Save Configuration
-              </>
-            )}
-          </Button>
-        </div>
+          {/* Content Status Tab */}
+          <TabsContent value="content-status">
+            <SiteStatusDashboard />
+          </TabsContent>
+        </Tabs>
       </div>
     </main>
   )
