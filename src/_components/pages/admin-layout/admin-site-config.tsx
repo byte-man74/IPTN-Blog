@@ -322,7 +322,7 @@ export const AdminSiteConfigComponent = () => {
             </TabsTrigger>
             <TabsTrigger value="content-status" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
-              <span>Content Status</span>
+              <span>Content Health</span>
             </TabsTrigger>
           </TabsList>
 

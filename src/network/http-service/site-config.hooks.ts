@@ -13,3 +13,15 @@ export function useFetchSiteConfig() {
     apiRoute: routes.siteConfig.get,
   })
 }
+
+/**
+ * Hook for performing a simple health check on site content
+ * This is a lightweight check that can be called frequently to determine if a full scan is needed
+ * @returns Query result with information about whether a full health check is needed
+ */
+export function useSimpleSiteHealthCheck() {
+  return useAppQuery<{ needsFullScan: boolean }>({
+    queryKey: [SiteConfigQueryKey.SIMPLE_HEALTH_CHECK],
+    apiRoute: routes.siteConfig.simpleHealthCheck,
+  })
+}

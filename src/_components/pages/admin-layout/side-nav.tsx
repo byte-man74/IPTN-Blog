@@ -10,6 +10,7 @@ import {
   User,
   BarChart2,
   Cog,
+  AlertTriangle,
 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
@@ -17,6 +18,7 @@ import { AppLogo } from '@/_components/global/app-logo'
 import { useSession, signOut } from 'next-auth/react'
 import { AppImage } from '@/_components/global/app-image'
 import { AdminRoutes } from '@/lib/routes/admin'
+import { useSimpleSiteHealthCheck } from '@/network/http-service/site-config.hooks'
 
 /**
  * SideNav Component
@@ -32,6 +34,7 @@ export const SideNav = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const { data: session } = useSession()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const { data: healthCheckData } = useSimpleSiteHealthCheck()
 
   // Always perform nullish check for data coming from hook
   const currentPath = pathname ?? ''
@@ -58,6 +61,9 @@ export const SideNav = () => {
       label: 'Configuration',
       icon: Cog,
       matchPath: (path: string) => path.startsWith(`${AdminRoutes.configuration}`),
+      badge: healthCheckData?.needsFullScan ? (
+        <AlertTriangle className="h-4 w-4 text-amber-400 ml-2 animate-pulse" />
+      ) : null,
     },
     {
       href: `${AdminRoutes.adsManager}`,
@@ -146,7 +152,17 @@ export const SideNav = () => {
                       isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
                     }`}
                   />
-                  {!isCollapsed && <span className="truncate">{item.label}</span>}
+                  {!isCollapsed && (
+                    <div className="flex items-center">
+                      <span className="truncate">{item.label}</span>
+                      {item.badge && item.badge}
+                    </div>
+                  )}
+                  {isCollapsed && item.badge && (
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 -translate-x-1">
+                      {item.badge}
+                    </div>
+                  )}
                 </AppLink>
               )
             })}

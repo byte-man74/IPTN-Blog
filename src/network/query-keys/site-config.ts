@@ -1,3 +1,4 @@
 export const SiteConfigQueryKey = {
   SITE_CONFIG: 'SITE_CONFIG',
+  SIMPLE_HEALTH_CHECK: "SIMPLE_HEALTH_CHECK"
 }

@@ -23,5 +23,7 @@ export const routes = {
     get: '/site-config',
     initialize: '/site-config/initialize',
     navigation: '/site-config/navigation',
+    healthCheck: '/site-config/health-check',
+    simpleHealthCheck: "/site-config/simple-health-check"
   },
 }
