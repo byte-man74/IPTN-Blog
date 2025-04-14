@@ -178,6 +178,15 @@ export class NewsRepository {
         }
       }
 
+      // Filter by category slug if provided
+      if (filters.categorySlug) {
+        where.categories = {
+          some: {
+            slug: filters.categorySlug,
+          },
+        }
+      }
+
       // Filter by tags if provided
       if (filters.tagIds && filters.tagIds.length > 0) {
         where.tags = {
@@ -195,6 +204,16 @@ export class NewsRepository {
           analytics: {
             select: {
               views: true,
+              likes: true,
+              shares: true,
+              readDuration: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              firstName: true,
+              image: true,
             },
           },
         },

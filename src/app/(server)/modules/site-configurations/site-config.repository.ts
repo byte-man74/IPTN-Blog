@@ -52,21 +52,16 @@ export class SiteConfigRepository {
 
   async setUpBasicSiteConfiguration(): Promise<ApiCustomError | null | SiteConfigurationDTO> {
     return tryCatchHandler(async () => {
-      return await this.siteConfiguration.upsert({
-        where: { id: 1 },
-        create: {
+      return await this.siteConfiguration.create({
+        data: {
+          id: 1,
           navBarKeyCategories: { connect: [] },
           navBarSubCategories: { connect: [] },
-        },
-        update: {
-          navBarKeyCategories: { set: [] },
-          navBarSubCategories: { set: [] },
         },
         include: this.getNavigationInclude(),
       })
     })
   }
-
   /**
    * Configures site navigation with key and sub categories
    */
@@ -84,7 +79,7 @@ export class SiteConfigRepository {
         },
       })
 
-      // Then connect the new categories
+      // Then connect the new categories in the specified order
       return await this.siteConfiguration.update({
         where: { id: 1 },
         data: {
@@ -344,7 +339,6 @@ export class SiteConfigRepository {
     return this.checkCategoryContentHealth(categoryId, [CONTENT_CRITERIA.anyContent])
   }
 
-
   /**
    * Performs a simple health check to determine if a full scan is needed
    * This is a lightweight check that can be called frequently to notify admins
@@ -361,14 +355,14 @@ export class SiteConfigRepository {
 
       // Check for minimum content requirements on homepage
       const homePageCheck = await this.checkHomePageContentHealth()
-      if (homePageCheck.some(check => check.status === 'error')) {
+      if (homePageCheck.some((check) => check.status === 'error')) {
         return { needsFullScan: true }
       }
 
       // Quick check on key categories (just checking if they have any content)
       for (const category of siteConfig.navBarKeyCategories) {
         const categoryCheck = await this.checkGenericCategoryHealth(category.id)
-        if (categoryCheck.some(check => check.status === 'error')) {
+        if (categoryCheck.some((check) => check.status === 'error')) {
           return { needsFullScan: true }
         }
       }

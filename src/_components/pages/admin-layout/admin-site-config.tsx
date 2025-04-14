@@ -11,6 +11,8 @@ import {
   RotateCw,
   Newspaper,
   Bell,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useFetchCategories } from '@/network/http-service/news.hooks'
@@ -88,12 +90,16 @@ export const AdminSiteConfigComponent = () => {
   // Helper functions for category filtering
   const getSelectedKeyCategoryData = () => {
     if (!categories) return []
-    return categories.filter((cat) => selectedKeyCategories.includes(cat.id))
+    return selectedKeyCategories.map(id =>
+      categories.find(cat => cat.id === id)
+    ).filter(Boolean)
   }
 
   const getSelectedSubCategoryData = () => {
     if (!categories) return []
-    return categories.filter((cat) => selectedSubCategories.includes(cat.id))
+    return selectedSubCategories.map(id =>
+      categories.find(cat => cat.id === id)
+    ).filter(Boolean)
   }
 
   const getAvailableCategories = () => {
@@ -126,6 +132,39 @@ export const AdminSiteConfigComponent = () => {
 
   const removeSubCategory = (categoryId: number) => {
     setSelectedSubCategories((prev) => prev.filter((id) => id !== categoryId))
+  }
+
+  // Handle category reordering
+  const moveKeyCategory = (categoryId: number, direction: 'up' | 'down') => {
+    setSelectedKeyCategories(prev => {
+      const index = prev.indexOf(categoryId)
+      if (index === -1) return prev
+
+      const newOrder = [...prev]
+      if (direction === 'up' && index > 0) {
+        [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]]
+      } else if (direction === 'down' && index < prev.length - 1) {
+        [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]]
+      }
+
+      return newOrder
+    })
+  }
+
+  const moveSubCategory = (categoryId: number, direction: 'up' | 'down') => {
+    setSelectedSubCategories(prev => {
+      const index = prev.indexOf(categoryId)
+      if (index === -1) return prev
+
+      const newOrder = [...prev]
+      if (direction === 'up' && index > 0) {
+        [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]]
+      } else if (direction === 'down' && index < prev.length - 1) {
+        [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]]
+      }
+
+      return newOrder
+    })
   }
 
   // Handle category creation
@@ -412,18 +451,38 @@ export const AdminSiteConfigComponent = () => {
                   <div className="space-y-2">
                     {getSelectedKeyCategoryData().map((category) => (
                       <div
-                        key={category.id}
+                        key={category?.id}
                         className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
                       >
-                        <span>{category.name}</span>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => removeKeyCategory(category.id)}
-                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <span>{category?.name}</span>
+                        <div className="flex items-center">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => moveKeyCategory(category?.id as number, 'up')}
+                            disabled={selectedKeyCategories.indexOf(category?.id as number) === 0}
+                            className="h-8 w-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => moveKeyCategory(category?.id as number, 'down')}
+                            disabled={selectedKeyCategories.indexOf(category?.id as number) === selectedKeyCategories.length - 1}
+                            className="h-8 w-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => removeKeyCategory(category?.id as number)}
+                            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -480,18 +539,38 @@ export const AdminSiteConfigComponent = () => {
                   <div className="space-y-2">
                     {getSelectedSubCategoryData().map((category) => (
                       <div
-                        key={category.id}
+                        key={category?.id}
                         className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
                       >
-                        <span>{category.name}</span>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => removeSubCategory(category.id)}
-                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <span>{category?.name}</span>
+                        <div className="flex items-center">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => moveSubCategory(category?.id as number, 'up')}
+                            disabled={selectedSubCategories.indexOf(category?.id as number) === 0}
+                            className="h-8 w-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => moveSubCategory(category?.id as number, 'down')}
+                            disabled={selectedSubCategories.indexOf(category?.id as number) === selectedSubCategories.length - 1}
+                            className="h-8 w-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => removeSubCategory(category?.id as number)}
+                            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>

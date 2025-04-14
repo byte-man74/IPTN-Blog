@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppLink } from '@/_components/global/app-link'
 import { AppImage } from '@/_components/global/app-image'
+import { ClientRoutes } from '@/lib/routes/client'
 
 interface BreakingNewsItemProps {
   title: string
@@ -17,13 +18,12 @@ interface BreakingNewsItemProps {
  * @param {string} [imageUrl] - Optional URL for the news thumbnail image
  * @param {string} url - The link destination when the news item is clicked
  * @param {string} [timestamp] - Optional timestamp showing when the news was published
- * @returns {JSX.Element | null} - Returns the news item component or null if required props are missing
  */
 const BreakingNewsItem = ({ title, imageUrl, url, timestamp }: BreakingNewsItemProps) => {
   if (!title || !url) return null;
 
   return (
-    <AppLink href={url} className="inline-flex items-center mx-6 hover:text-primaryGreen transition-colors">
+    <AppLink href={ClientRoutes.viewNews(url)} className="inline-flex items-center mx-6 hover:text-primaryGreen transition-colors">
       {imageUrl && (
         <div className="relative h-12 w-10 mr-3 overflow-hidden rounded-sm">
           <AppImage

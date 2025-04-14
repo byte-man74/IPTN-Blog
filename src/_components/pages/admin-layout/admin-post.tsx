@@ -30,6 +30,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toast } from '@/hooks/use-toast'
+import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
 
 const AdminPostMainComponent = () => {
   const [page, setPage] = useState(1)
@@ -415,9 +416,9 @@ const AdminPostMainComponent = () => {
                           <div className="flex items-center">
                             <div>
                               <div className="text-sm font-medium text-gray-900">
-                                {post.title.length > 40
-                                  ? `${post.title.substring(0, 40)}...`
-                                  : post.title}
+                                {cleanUpNewsTitle(post.title).length > 40
+                                  ? `${cleanUpNewsTitle(post.title).substring(0, 40)}...`
+                                  : cleanUpNewsTitle(post.title)}
                               </div>
                               <div className="text-sm text-gray-500 truncate max-w-xs">
                                 {post.summary
@@ -479,7 +480,7 @@ const AdminPostMainComponent = () => {
                             </AppLink>
                             <button
                               className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded"
-                              onClick={() => openDeleteDialog({ slug: post.slug, title: post.title })}
+                              onClick={() => openDeleteDialog({ slug: post.slug, title: cleanUpNewsTitle(post.title) })}
                             >
                               Delete
                             </button>

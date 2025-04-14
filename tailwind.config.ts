@@ -71,7 +71,7 @@ export default {
         'basic-header': '16px',
       },
       animation: {
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee 90s linear infinite',
       },
       keyframes: {
         marquee: {

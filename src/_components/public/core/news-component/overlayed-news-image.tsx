@@ -2,34 +2,40 @@ import React from 'react';
 import { CalendarDays, Clock, Eye, MessageSquare, Tag } from 'lucide-react';
 import { AppImage } from '@/_components/global/app-image';
 import { AppLink } from '@/_components/global/app-link';
-import { NewsItemType } from '@/types/public';
+import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 
 interface OverlayedNewsImageProps {
-    newsItem?: NewsItemType;
+    newsItem?: NewsDTO;
 }
 
 /**
  * This is a news component that has the component overlayed as the bg image with its meta data above it.
- * @param {OverlayedNewsImageProps} props - The props for the component.
- * @returns {JSX.Element} The rendered OverlayedNewsImage component.
+ * @param {OverlayedNewsImageProps} props - The props for the component.s
  */
 const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
   const {
-    imageUrl,
+    coverImage,
     title,
-    category,
-    date,
+    pubDate,
     slug,
-    readTime,
-    views,
-    comments
+    analytics,
+    tags
   } = newsItem ?? {};
 
+  // Extract needed data from the news item
+  const imageUrl = coverImage;
+  const tag = tags?.[0]?.name;
+  const date = pubDate ? new Date(pubDate).toLocaleDateString() : undefined;
+  const readTime = analytics?.readDuration;
+  const views = analytics?.views;
+  const comments = 3
+//   const comments = analytics?.comments;
+
   return (
-    <AppLink href={slug ?? "#"} className='w-full'>
+    <AppLink href={slug ? `/news/${slug}` : "#"} className='w-full'>
       <div className="relative w-full h-[21rem] overflow-hidden group flex">
         {imageUrl ? (
-          <AppLink href={slug ?? "#"} className="w-full">
+          <>
             <AppImage
               src={imageUrl}
               alt={title ?? "News image"}
@@ -38,7 +44,7 @@ const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
             />
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-black opacity-50 transition-opacity duration-300 group-hover:opacity-40"></div>
-          </AppLink>
+          </>
         ) : (
           <div className="w-full h-full bg-gray-200"></div>
         )}
@@ -66,10 +72,10 @@ const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
                 </div>
               )}
 
-              {category && (
+              {tag && (
                 <div className="bg-primaryGreen px-2 py-1 shadow-md flex items-center gap-1">
                   <Tag className="w-3 h-3 text-white" />
-                  <span className="text-white text-xs">{category}</span>
+                  <span className="text-white text-xs">{tag}</span>
                 </div>
               )}
 
@@ -93,11 +99,11 @@ const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
             </div>
 
             {/* Headline */}
-            <AppLink href={slug ?? "#"} className="block">
+            <div className="block">
               <h3 className="text-white text-[18px] font-semibold leading-tight hover:text-primaryGreen transition-colors drop-shadow-lg">
                 {title ?? "News title"}
               </h3>
-            </AppLink>
+            </div>
           </div>
         </div>
       </div>

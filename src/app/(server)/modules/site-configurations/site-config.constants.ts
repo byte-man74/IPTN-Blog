@@ -4,7 +4,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   editorsPick: {
     slug: 'editors-pick',
     name: "Editor's Picks",
-    threshold: 3,
+    threshold: 2,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -97,6 +97,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.breaking,
       CONTENT_CRITERIA.trending,
       CONTENT_CRITERIA.video,
+      CONTENT_CRITERIA.topNews,
     ],
   },
   {
@@ -128,5 +129,11 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     criteria: [CONTENT_CRITERIA.fifthCategoryFeatured],
   },
 ]
+
+
+export const HomePage = CATEGORY_CRITERIA[0]
+
+export const HomePageBreakingNews = HomePage.criteria[2]
+export const HomePageEditorsPick = HomePage.criteria[0]
 
 export const CONTENT_FRESHNESS_DAYS = 7

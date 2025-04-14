@@ -12,10 +12,22 @@ export const SimplifiedNewsSchema = z.object({
   lastUpdated: z.date(),
   authorId: z.string().nullable().optional(),
   published: z.boolean().default(false),
+  categories: z.array(z.object({
+    id: z.number(),
+    name: z.string(),
+    slug: z.string(),
+    description: z.string().nullable().optional()
+  })).optional(),
+  tags: z.array(z.object({
+    id: z.number(),
+    name: z.string(),
+  })).optional(),
   analytics: z.object({
     views: z.number().default(0),
+    likes: z.number().default(0),
+    shares: z.number().default(0),
+    readDuration: z.string().nullable().optional(),
   }).nullable().optional(),
-
 })
 
 
@@ -81,6 +93,7 @@ export const NewsFilterSchema = z.object({
   authorId: z.string().nullable().optional(),
   published: z.boolean().nullable().optional(),
   categoryIds: z.array(z.number()).nullable().optional(),
+  categorySlug: z.string().nullable().optional(),
   tagIds: z.array(z.number()).nullable().optional(),
   startDate: z.date().nullable().optional(),
   endDate: z.date().nullable().optional(),
