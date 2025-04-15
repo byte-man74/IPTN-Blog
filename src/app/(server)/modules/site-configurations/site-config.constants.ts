@@ -50,6 +50,22 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: true,
     severity: 'warning',
   },
+  recommendedContent: {
+    slug: 'recommended-content',
+    name: 'Recommended Content',
+    threshold: 1,
+    maxThreshold: 10,
+    requiresFresh: false,
+    severity: 'healthy',
+  },
+  blogs: {
+    slug: 'blog',
+    name: 'Our Blogs',
+    threshold: 1,
+    maxThreshold: 10,
+    requiresFresh: false,
+    severity: 'warning',
+  },
   secondCategoryFeatured: {
     slug: 'featured',
     name: 'Featured News',
@@ -98,6 +114,8 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.trending,
       CONTENT_CRITERIA.video,
       CONTENT_CRITERIA.topNews,
+      CONTENT_CRITERIA.recommendedContent,
+      CONTENT_CRITERIA.blogs
     ],
   },
   {
@@ -130,10 +148,15 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   },
 ]
 
-
 export const HomePage = CATEGORY_CRITERIA[0]
 
 export const HomePageBreakingNews = HomePage.criteria[2]
 export const HomePageEditorsPick = HomePage.criteria[0]
+export const HomePageTopNews = HomePage.criteria[5]
+export const HomePageWithVideos = HomePage.criteria[4]
+export const HomePageTrending = HomePage.criteria[3]
+export const HomePageFeatured = HomePage.criteria[1]
+export const HomePageRecommendedContent = HomePage.criteria[6]
+export const HomePageBlogContent = HomePage.criteria[7]
 
 export const CONTENT_FRESHNESS_DAYS = 7

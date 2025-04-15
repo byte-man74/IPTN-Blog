@@ -74,11 +74,6 @@ export const HeroNavigationItems = [
     url: '/lifestyle',
   },
   {
-    id: 'about-us',
-    name: 'About Us',
-    url: '/about-us',
-  },
-  {
     id: 'contact-us',
     name: 'Contact Us',
     url: '/contact-us',

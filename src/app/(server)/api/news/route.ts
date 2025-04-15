@@ -4,6 +4,9 @@ import { CreateNewsSchema, NewsFilterSchema } from '@/app/(server)/modules/news/
 import ApiCustomError from '@/types/api-custom-error'
 import { isValidJson } from '@/lib/utils/validator'
 import { QUERY_PARAMS_TITLES } from '@/lib/constants/api-filters'
+import { auth } from '@/auth'
+
+
 
 // GET /api/news - Get news with filters
 export async function GET(request: NextRequest) {
@@ -28,8 +31,23 @@ export async function GET(request: NextRequest) {
       filters.published = searchParams.get('published') === 'true'
     }
 
+    // Check if user is requesting unpublished content and is not authenticated
+    if (filters.published === false) {
+        const session = await auth()
+      if (!session?.user.isAdmin && !session?.user.isActive) {
+        return NextResponse.json(
+          { error: 'Authentication required to access unpublished content' },
+          { status: 401 }
+        )
+      }
+    }
+
     if (searchParams.has('categoryIds')) {
       filters.categoryIds = searchParams.get('categoryIds')?.split(',').map(Number)
+    }
+
+    if (searchParams.has('categorySlug')) {
+      filters.categorySlug = searchParams.get('categorySlug')
     }
 
     if (searchParams.has('tagIds')) {

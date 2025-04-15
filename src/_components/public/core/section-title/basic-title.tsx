@@ -19,7 +19,7 @@ const BasicTitle: React.FC<BasicTitleProps> = ({ title }) => {
   const displayTitle = title ?? "Editor's Pick";
 
   return (
-    <div className="flex items-center w-full mb-2 xs:mb-3">
+    <div className="flex items-center w-full mb-4 xs:mb-3">
       <div className="h-[2px] xs:h-[3px] bg-primaryGreen flex-grow-0 w-6 xs:w-10"></div>
       <h2 className="mx-1.5 xs:mx-2 font-semibold text-[16px] xs:text-[18px]">{displayTitle}</h2>
       <div className="h-[2px] xs:h-[3px] bg-[#CCCCCC] flex-grow"></div>

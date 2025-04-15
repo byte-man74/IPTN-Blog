@@ -1,35 +1,44 @@
 import React from 'react';
-
 import { Camera, Eye, MessageSquare, Calendar } from 'lucide-react';
 import { AppLink } from '@/_components/global/app-link';
-import { NewsItemType } from '@/types/public';
 import { AppImage } from '@/_components/global/app-image';
+import { NewsDTO } from '@/app/(server)/modules/news/news.types';
+import { ClientRoutes } from '@/lib/routes/client';
+import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
 
 interface OverlayedNewsImageProps {
-  newsItem?: NewsItemType;
+  newsItem?: NewsDTO;
 }
 
 /**
- * OverlayedNewsImage component displays a news item with an overlayed background image and metadata.
+ * OverlayedNewsImageV2 component displays a news item with an overlayed background image and metadata.
  * @param {OverlayedNewsImageProps} props - The props for the component.
  */
 const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
+  if (!newsItem) {
+    return null;
+  }
+
   const {
-    imageUrl = "/placeholder.svg",
-    title = "News title",
-    date = "Date not available",
-    slug = "#",
-    readTime = "3 mins read",
-    views = 72,
-    comments = 30
-  } = newsItem ?? {};
+    coverImage,
+    title,
+    pubDate,
+    slug,
+    analytics,
+  } = newsItem;
+
+  const imageUrl = coverImage || "/placeholder.svg";
+  const date = pubDate ? new Date(pubDate).toLocaleDateString() : "Date not available";
+  const readTime = analytics?.readDuration || "3 mins read";
+  const views = analytics?.views || 0;
+  const comments = 3; // Placeholder until analytics includes comments
 
   return (
-    <AppLink href={slug} className="relative w-full min-h-[30rem] h-full overflow-hidden group">
+    <AppLink href={ClientRoutes.viewNews(slug)} className="relative w-full min-h-[30rem] h-full overflow-hidden group">
       <div className="">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <AppImage src={imageUrl} alt={title} priority className="object-cover w-full h-full" />
+          <AppImage src={imageUrl} alt={title || "News image"} priority className="object-cover w-full h-full" />
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         </div>
@@ -68,7 +77,7 @@ const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
         {/* Title */}
         <div className="absolute bottom-6 left-6 right-6">
           <h2 className="text-2xl md:text-2xl font-bold text-white leading-tight hover:text-primaryGreen transition-colors">
-            {title}
+            {cleanUpNewsTitle(title)}
           </h2>
         </div>
       </div>

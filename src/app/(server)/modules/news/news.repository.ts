@@ -104,7 +104,7 @@ export class NewsRepository {
         include: {
           categories: true,
           tags: true,
-          seo: true
+          seo: true,
         },
       })
     })
@@ -120,7 +120,7 @@ export class NewsRepository {
           tags: true,
           comments: true,
           seo: true,
-          analytics: true
+          analytics: true,
         },
       })
     })
@@ -198,7 +198,16 @@ export class NewsRepository {
 
       const news = this.news.paginate({
         where,
-        include: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          pubDate: true,
+          published: true,
+          createdAt: true,
+          lastUpdated: true,
+          coverImage: true,
+          summary: true,
           categories: true,
           tags: true,
           analytics: {
@@ -404,20 +413,17 @@ export class NewsRepository {
         title: true,
         coverImage: true,
       },
-    });
+    })
 
-    if (!originalNews) return true;
+    if (!originalNews) return true
 
     return !!(
       (updatedNews.title && updatedNews.title !== originalNews.title) ||
       (updatedNews.coverImage && updatedNews.coverImage !== originalNews.coverImage)
-    );
+    )
   }
 
-  async shouldSetupAnalytics(
-    slug: string,
-    updatedNews: Partial<UpdateNewsDTO>
-  ): Promise<boolean> {
+  async shouldSetupAnalytics(slug: string, updatedNews: Partial<UpdateNewsDTO>): Promise<boolean> {
     // Check if the news article already has analytics
     const newsWithAnalytics = await this.news.findUnique({
       where: { slug },
@@ -425,18 +431,21 @@ export class NewsRepository {
         analytics: true,
         contentEncoded: true,
       },
-    });
+    })
 
-    if (!newsWithAnalytics) return true;
+    if (!newsWithAnalytics) return true
 
     // If there are no analytics yet, we should set them up
-    if (!newsWithAnalytics.analytics) return true;
+    if (!newsWithAnalytics.analytics) return true
 
     // If content has changed, we might need to update reading duration
-    if (updatedNews.contentEncoded && updatedNews.contentEncoded !== newsWithAnalytics.contentEncoded) {
-      return true;
+    if (
+      updatedNews.contentEncoded &&
+      updatedNews.contentEncoded !== newsWithAnalytics.contentEncoded
+    ) {
+      return true
     }
 
-    return false;
+    return false
   }
 }

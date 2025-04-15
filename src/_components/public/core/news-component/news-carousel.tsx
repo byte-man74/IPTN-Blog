@@ -1,29 +1,31 @@
 "use client"
 
 import React, { useEffect } from "react";
-import { Calendar, Camera, Eye, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Camera, ChevronLeft, ChevronRight } from "lucide-react";
 import { AppImage } from "@/_components/global/app-image";
 import { AppLink } from "@/_components/global/app-link";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { NewsItemType } from "@/types/public";
+import { NewsDTO } from "@/app/(server)/modules/news/news.types";
+import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.utils";
+import { ClientRoutes } from "@/lib/routes/client";
 
 interface NewsCarouselProps {
-  newsItems: NewsItemType[];
+  newsItems?: NewsDTO[];
 }
 
 /**
  * NewsCarousel component
  *
- * This component displays a carousel of news items. Each item includes an image, title, date, and metadata such as read time, category, views, and comments.
+ * This component displays a carousel of news items. Each item includes an image, title, date, and metadata such as category.
  */
 export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   const items = newsItems ?? [];
 
-
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
+      // Mobile detection logic if needed
     };
 
     checkMobile();
@@ -54,7 +56,7 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   };
 
   return (
-    <div className="relative h-[29rem] xs:h-[26rem] mx-auto border border-gray-200 overflow-hidden shadow-lg">
+    <div className="relative h-[24rem] xs:h-[26rem] sm:h-[29rem] mx-auto border border-gray-200 overflow-hidden shadow-lg">
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -73,9 +75,9 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
           <div key={item.id} className="w-full h-full">
             {/* Main Image Container */}
             <div className="relative w-full h-full">
-              <AppLink href={item?.slug ?? "#"}>
+              <AppLink href={ClientRoutes.viewNews(item.slug)}>
                 <AppImage
-                  src={item?.imageUrl ?? "/placeholder.jpg"}
+                  src={item?.coverImage ?? "/placeholder.jpg"}
                   alt={item?.title ?? "News image"}
                   className="object-cover w-full h-full"
                   priority
@@ -85,56 +87,38 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
               </AppLink>
 
               {/* Top Date Indicator */}
-              <div className="absolute top-3 sm:top-6 left-3 sm:left-6 flex items-center gap-2 z-10">
-                <div className="bg-primaryGreen p-1.5 sm:p-2 text-white flex items-center justify-center rounded-sm shadow-md">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+              <div className="absolute top-2 sm:top-6 left-2 sm:left-6 flex items-center gap-2 z-10">
+                <div className="bg-primaryGreen p-1 sm:p-2 text-white flex items-center justify-center rounded-sm shadow-md">
+                  <Calendar className="w-3 h-3 sm:w-5 sm:h-5" />
                 </div>
                 <span className="text-white text-xs sm:text-sm font-medium bg-black/40 px-2 sm:px-3 py-1 rounded-sm backdrop-blur-sm">
-                  {item?.date ?? "Date not available"}
+                  {item?.pubDate ? calculateTimeStampFromDate(item.pubDate) : "Date not available"}
                 </span>
               </div>
 
               {/* Bottom Content Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 sm:p-8 z-10">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-3 sm:p-8 z-10">
                 {/* Metadata */}
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-5">
-                  {item?.readTime && (
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <div className="bg-primaryGreen rounded-full p-1.5 sm:p-2 text-white flex items-center justify-center shadow-md">
-                        <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </div>
-                      <span className="text-white text-xs sm:text-sm font-medium">{item.readTime}</span>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2 sm:mb-5">
+                  {item?.categories && item.categories.length > 0 && (
+                    <div className="bg-primaryGreen px-2 sm:px-4 py-0.5 sm:py-1.5 rounded-sm shadow-md">
+                      <span className="text-white text-xs sm:text-sm font-medium">{item.categories[0].name}</span>
                     </div>
                   )}
 
-                  {item?.category && (
-                    <div className="bg-primaryGreen px-2 sm:px-4 py-1 sm:py-1.5 rounded-sm shadow-md">
-                      <span className="text-white text-xs sm:text-sm font-medium">{item.category}</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <div className="bg-primaryGreen rounded-full p-1 sm:p-2 text-white flex items-center justify-center shadow-md">
+                      <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
-                  )}
-
-                  {item?.views !== undefined && item?.views !== null && (
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <div className="bg-primaryGreen/70 rounded-full p-1.5 sm:p-2 text-white flex items-center justify-center shadow-md">
-                        <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </div>
-                      <span className="text-white text-xs sm:text-sm font-medium">{item.views}</span>
-                    </div>
-                  )}
-
-                  {item?.comments !== undefined && item?.comments !== null && (
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <div className="bg-primaryGreen/70 rounded-full p-1.5 sm:p-2 text-white flex items-center justify-center shadow-md">
-                        <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </div>
-                      <span className="text-white text-xs sm:text-sm font-medium">{item.comments}</span>
-                    </div>
-                  )}
+                    <span className="text-white text-xs sm:text-sm font-medium">
+                       {item?.analytics?.readDuration} read
+                    </span>
+                  </div>
                 </div>
 
                 {/* Headline */}
-                <AppLink href={item?.slug ?? "#"}>
-                  <h2 className="text-white text-lg sm:text-xl md:text-2xl font-bold leading-tight">
+                <AppLink href={ClientRoutes.viewNews(item.slug)}>
+                  <h2 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight line-clamp-3 sm:line-clamp-none">
                     {item?.title ?? "News title"}
                   </h2>
                 </AppLink>
@@ -166,8 +150,8 @@ const CustomButtonGroup = ({ next, previous }: CustomButtonGroupProps) => {
         className="text-white touch-manipulation"
         aria-label="Previous slide"
       >
-        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-2 sm:p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
-          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-1.5 sm:p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
+          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
         </div>
       </button>
       <button
@@ -175,8 +159,8 @@ const CustomButtonGroup = ({ next, previous }: CustomButtonGroupProps) => {
         className="text-white touch-manipulation"
         aria-label="Next slide"
       >
-        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-2 sm:p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
-          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+        <div className="bg-[#116427]/50 hover:bg-[#116427] rounded-full p-1.5 sm:p-4 text-white flex items-center justify-center shadow-md transition-colors duration-300">
+          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
         </div>
       </button>
     </div>

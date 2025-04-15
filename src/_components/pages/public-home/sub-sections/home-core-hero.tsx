@@ -18,7 +18,7 @@ import React from 'react'
  */
 const HomeCoreHero = () => {
   return (
-    <div className="flex flex-col sm:flex-row w-full justify-between gap-4 sm:gap-2 items-stretch">
+    <div className="flex flex-col sm:flex-row w-full justify-between gap-6 sm:gap-2 items-stretch">
       <EditorsPick />
       <MainContent />
       <TrendingNow />

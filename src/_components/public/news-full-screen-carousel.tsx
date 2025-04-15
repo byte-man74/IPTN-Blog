@@ -3,20 +3,21 @@
 import React from 'react'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import 'react-multi-carousel/lib/styles.css'
-import { NewsItemType } from '@/types/public'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import NewsWithDescription from '@/_components/public/core/news-component/news-with-description'
 import Carousel from 'react-multi-carousel'
 import NewsFullScreen from '@/_components/public/core/news-component/news-fullscreen'
-
+import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 
 interface CarouselItemComponentType {
     itemType: "news-fullscreen"
 }
+
 interface NewsFullScreenCarouselProps {
     title: string
-    items: NewsItemType[]
+    items?: NewsDTO[]
     carouselItem: CarouselItemComponentType
+    isLoading?: boolean
 }
 
 /**
@@ -25,9 +26,10 @@ interface NewsFullScreenCarouselProps {
  * @param {NewsFullScreenCarouselProps} props - The props for the component.
  * @param {string} props.title - The title of the news category.
  * @param {Array} props.items - The list of news items to display in the carousel.
- * @param {React.ComponentType} [props.CarouselItemComponent] - Optional custom component for rendering each carousel item.
+ * @param {boolean} props.isLoading - Whether the data is currently loading.
+ * @param {Object} props.carouselItem - Configuration for the carousel item type.
  */
-export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullScreenCarouselProps) => {
+export const NewsFullScreenCarousel = ({ title, items = [], carouselItem, isLoading = false }: NewsFullScreenCarouselProps) => {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -69,6 +71,15 @@ export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullS
    */
   const ItemComponent = carouselItem.itemType === "news-fullscreen" ? NewsFullScreen : NewsWithDescription;
 
+  if (isLoading) {
+    return (
+      <div className="mt-6 flex flex-col gap-8 relative">
+        <FullWidthAlternateTitle title={title} />
+        <div className="h-96 w-full bg-gray-200 animate-pulse rounded-lg"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="mt-6 flex flex-col gap-8 relative">
       <FullWidthAlternateTitle title={title} />
@@ -84,7 +95,7 @@ export const NewsFullScreenCarousel = ({ title, items, carouselItem }: NewsFullS
         sliderClass="h-full"
         containerClass="h-full"
       >
-        {items?.map(item => (
+        {items.map(item => (
             <div className="h-full w-full flex items-stretch overflow-hidden" key={item.id} >
               <ItemComponent newsItem={item} />
             </div>

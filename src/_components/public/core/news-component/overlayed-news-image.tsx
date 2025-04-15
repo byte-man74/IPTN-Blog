@@ -6,13 +6,15 @@ import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 
 interface OverlayedNewsImageProps {
     newsItem?: NewsDTO;
+    height?: string;
 }
 
 /**
  * This is a news component that has the component overlayed as the bg image with its meta data above it.
- * @param {OverlayedNewsImageProps} props - The props for the component.s
+ * @param {OverlayedNewsImageProps} props - The props for the component.
+ * @param {string} props.height - Optional height for the component, defaults to 21rem.
  */
-const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
+const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImageProps) => {
   const {
     coverImage,
     title,
@@ -33,7 +35,7 @@ const OverlayedNewsImage = ({ newsItem }: OverlayedNewsImageProps) => {
 
   return (
     <AppLink href={slug ? `/news/${slug}` : "#"} className='w-full'>
-      <div className="relative w-full h-[21rem] overflow-hidden group flex">
+      <div className="relative w-full overflow-hidden group flex" style={{ height }}>
         {imageUrl ? (
           <>
             <AppImage

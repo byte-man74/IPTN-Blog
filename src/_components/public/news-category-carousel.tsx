@@ -4,13 +4,13 @@
 import React from 'react'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import 'react-multi-carousel/lib/styles.css'
-import { NewsItemType } from '@/types/public'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import NewsWithDescription from '@/_components/public/core/news-component/news-with-description'
 import Carousel from 'react-multi-carousel'
 import OverlayedNewsImage from '@/_components/public/core/news-component/overlayed-news-image'
 import BasicNewsWithTagV2 from '@/_components/public/core/news-component/basic-news-with-tag-v2'
 import OverlayedNewsImageV2 from '@/_components/public/core/news-component/overlayed-news-v2'
+import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 
 
 interface CarouselItemComponentType {
@@ -18,7 +18,8 @@ interface CarouselItemComponentType {
 }
 interface NewsCategoryCarouselProps {
     title?: string
-    items: NewsItemType[]
+    items?: NewsDTO[]
+    isLoading?: boolean
     carouselItem: CarouselItemComponentType
 }
 
@@ -28,16 +29,15 @@ interface NewsCategoryCarouselProps {
  * @param {NewsCategoryCarouselProps} props - The props for the component.
  * @param {string} props.title - The title of the news category.
  * @param {Array} props.items - The list of news items to display in the carousel.
- * @param {React.ComponentType} [props.CarouselItemComponent] - Optional custom component for rendering each carousel item.
-/**
- * NewsCategoryCarousel component displays a full-width alternate title for a news category
- * and a carousel of news items.
- * @param {NewsCategoryCarouselProps} props - The props for the component.
- * @param {string} props.title - The title of the news category.
- * @param {Array} props.items - The list of news items to display in the carousel.
+ * @param {boolean} props.isLoading - Whether the data is currently loading.
  * @param {CarouselItemComponentType} [props.carouselItem] - The type of carousel item to render.
  */
-export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: "news-with-description" } }: NewsCategoryCarouselProps) => {
+export const NewsCategoryCarousel = ({
+  title,
+  items,
+  isLoading = false,
+  carouselItem = { itemType: "news-with-description" }
+}: NewsCategoryCarouselProps) => {
   /**
    * Get the number of items to display based on the item type.
    * @param {string} itemType - The type of the carousel item.
@@ -95,10 +95,6 @@ export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: 
 
   /**
    * Determine the component to use for rendering each carousel item based on the carouselItem type.
-   * If carouselItem is "full-video", render FullVideoComponent; if "with-description", render NewsWithDescription.
-   */
-  /**
-   * Determine the component to use for rendering each carousel item based on the carouselItem type.
    * Use a switch case to handle different item types.
    */
   let ItemComponent;
@@ -119,10 +115,23 @@ export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: 
       ItemComponent = NewsWithDescription;
   }
 
+  // Render skeleton loading state if data is loading
+  if (isLoading) {
+    return (
+      <div className="mt-6 flex flex-col gap-8 relative">
+        {title && <FullWidthAlternateTitle title={title} />}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array(numberOfItems.desktop).fill(0).map((_, index) => (
+            <div key={`skeleton-${index}`} className="h-64 bg-gray-200 animate-pulse rounded-md"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-6 flex flex-col gap-8 relative">
-
-    {title && <FullWidthAlternateTitle title={title ?? "NA"} />}
+      {title && <FullWidthAlternateTitle title={title ?? "NA"} />}
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -131,7 +140,7 @@ export const NewsCategoryCarousel = ({ title, items, carouselItem = { itemType: 
         arrows={false}
         renderButtonGroupOutside={true}
         customButtonGroup={<CustomButtonGroup />}
-        itemClass="flex relative h-full pl-4"
+        itemClass="flex relative h-full md:pl-4 pl-0"
       >
         {items?.map(item => (
             <div className="h-full w-full flex items-stretch overflow-hidden" key={item.id} >
