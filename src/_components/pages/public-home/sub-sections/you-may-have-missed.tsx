@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import type React from "react"
-import OverlayedNewsImage from "@/_components/public/core/news-component/overlayed-news-image"
-import FullWidthAlternateTitle from "@/_components/public/core/section-title/full-width-alternate-title"
-import DarkerBasicNewsWithTag from "@/_components/public/core/news-component/darker-basic-news-with-tag"
-import type { NewsDTO } from "@/app/(server)/modules/news/news.types"
-import { Skeleton } from "@/components/ui/skeleton"
-import { AdSpacing } from "@/_components/global/ads-spacing"
+import type React from 'react'
+import OverlayedNewsImage from '@/_components/public/core/news-component/overlayed-news-image'
+import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
+import DarkerBasicNewsWithTag from '@/_components/public/core/news-component/darker-basic-news-with-tag'
+import type { NewsDTO } from '@/app/(server)/modules/news/news.types'
+import { Skeleton } from '@/components/ui/skeleton'
+import { AdSpacing } from '@/_components/global/ads-spacing'
 
 /**
  * This component displays a section with recommended news items.
@@ -16,10 +16,14 @@ const HomePageFreeContent: React.FC<{
   title?: string
   newsItems?: NewsDTO[]
   isLoading?: boolean
-}> = ({ title = "Recommended Content", newsItems = [], isLoading = false }) => {
+}> = ({ title = 'Recommended Content', newsItems = [], isLoading = false }) => {
   // Helper function to render news item or ad space
   const renderNewsItem = (index: number) => {
-    return newsItems.length > index ? <DarkerBasicNewsWithTag newsItem={newsItems[index]} backgroundColor="#D9D9D9" /> : <AdSpacing />
+    return newsItems.length > index ? (
+      <DarkerBasicNewsWithTag newsItem={newsItems[index]} backgroundColor="#D9D9D9" />
+    ) : (
+      <AdSpacing />
+    )
   }
 
   return (
@@ -55,7 +59,11 @@ const HomePageFreeContent: React.FC<{
           {/* First column */}
           <div className="space-y-4">
             <div className="w-full aspect-[16/9] h-[65%]">
-              {newsItems.length > 0 ? <OverlayedNewsImage newsItem={newsItems[0]} height={"100%"} /> : <AdSpacing />}
+              {newsItems.length > 0 ? (
+                <OverlayedNewsImage newsItem={newsItems[0]} height={'100%'} />
+              ) : (
+                <AdSpacing />
+              )}
             </div>
             <div className="h-[31%]">{renderNewsItem(1)}</div>
           </div>
