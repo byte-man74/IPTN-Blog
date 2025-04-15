@@ -5,6 +5,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'editors-pick',
     name: "Editor's Picks",
     threshold: 2,
+    maxThreshold: 2,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -38,7 +39,8 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   topNews: {
     slug: 'top-news',
     name: 'Top News',
-    threshold: 1,
+    threshold: 4,
+    maxThreshold: 8,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -62,7 +64,6 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'blog',
     name: 'Our Blogs',
     threshold: 1,
-    maxThreshold: 10,
     requiresFresh: false,
     severity: 'warning',
   },
@@ -132,9 +133,10 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     index: 1,
     name: 'Second Category',
     criteria: [
-      CONTENT_CRITERIA.secondCategoryFeatured,
+      CONTENT_CRITERIA.featured,
       CONTENT_CRITERIA.secondCategoryTrending,
-      CONTENT_CRITERIA.secondCategoryTopNews,
+      CONTENT_CRITERIA.topNews,
+      CONTENT_CRITERIA.editorsPick
     ],
   },
   {

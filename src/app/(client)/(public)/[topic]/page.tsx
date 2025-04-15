@@ -22,7 +22,7 @@ export async function generateMetadata(
   { params }: TopicPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const topic = params.topic
+  const topic = await params.topic
 
   try {
     const response = await createServerAxiosInstance(routes.siteConfig.get)
@@ -93,7 +93,7 @@ function getCategoryContent(categoryIndex: number, categoryId: number) {
 }
 
 export default async function TopicPage({ params }: TopicPageProps) {
-  const category = params.topic
+  const category = await params.topic
   const queryClient = new QueryClient()
 
   try {

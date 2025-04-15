@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Camera } from 'lucide-react';
+import { Clock, Tag } from 'lucide-react';
 import { AppImage } from '@/_components/global/app-image';
 import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 import { AppLink } from '@/_components/global/app-link';
@@ -36,35 +36,54 @@ export default function BasicNewsWithTagV2({ newsItem }: BasicNewsWithTagV2Props
   const readTime = analytics?.readDuration;
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug)} className="w-full">
-      <div className="w-full max-w-3xl overflow-hidden border border-gray-200 bg-white shadow-md flex flex-col md:flex-row">
+    <AppLink href={ClientRoutes.viewNews(slug)} className="w-full group">
+      <div className="w-full overflow-hidden  bg-white shadow-sm hover:shadow-md transition-all duration-300 flex flex-col md:flex-row border-l-0 group-hover:border-l-2 group-hover:border-l-primaryGreen">
         {/* Left side - Image */}
-        <div className="relative h-[11rem] w-full md:w-2/5 lg:w-1/3 overflow-hidden">
-          <AppImage src={coverImage as string} alt={title ?? 'News Image'} className="object-cover h-full w-full" priority />
+        <div className="relative h-[12rem] w-full md:w-2/5 lg:w-1/3 overflow-hidden">
+          <AppImage
+            src={coverImage as string}
+            alt={title ?? 'News Image'}
+            className="object-cover h-full w-full transition-transform duration-500 group-hover:scale-105"
+            priority
+          />
+          {category && (
+            <div className="absolute top-3 left-3 bg-primaryGreen text-white px-3 py-1 text-xs font-medium rounded-sm shadow-md">
+              {category}
+            </div>
+          )}
         </div>
 
         {/* Right side - Content */}
-        <div className="py-2 px-4 md:py-3 md:px-6 flex flex-col justify-between bg-gray-50 w-full md:w-3/5 lg:w-2/3">
-          {/* Metadata row */}
-          <div className="flex flex-wrap items-center gap-4 mb-4">
-            <div className="flex items-center gap-2">
-              <div className="bg-green-700 rounded-full p-2">
-                <Calendar className="h-5 w-5 text-white" />
-              </div>
-              <span className="bg-gray-400 text-white px-3 py-1 text-sm">{date ?? 'N/A'}</span>
-            </div>
+        <div className="p-4 md:p-5 flex flex-col justify-between bg-gray-50 w-full md:w-3/5 lg:w-2/3">
+          {/* Headline */}
+          <h2 className="text-lg md:text-xl font-semibold leading-tight mb-3 group-hover:text-primaryGreen transition-colors duration-300">
+            {cleanUpNewsTitle(title)}
+          </h2>
 
-            <div className="flex items-center gap-2">
-              <div className="bg-green-700 rounded-full p-2">
-                <Camera className="h-5 w-5 text-white" />
+          {/* Metadata row */}
+          <div className="flex flex-wrap items-center justify-between mt-auto">
+            {date && (
+              <div className="flex items-center gap-2 text-gray-600">
+                <span className="text-sm">{date}</span>
               </div>
-              <span className="text-black text-sm">{readTime ?? 'N/A'}</span>
-              <span className="text-green-700 font-medium ml-2">{category ?? 'N/A'}</span>
+            )}
+
+            <div className="flex items-center gap-4">
+              {readTime && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-primaryGreen" />
+                  <span className="text-sm text-gray-700">{readTime}</span>
+                </div>
+              )}
+
+              {category && (
+                <div className="flex items-center gap-1.5 md:hidden">
+                  <Tag className="h-4 w-4 text-primaryGreen" />
+                  <span className="text-sm font-medium text-primaryGreen">{category}</span>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Headline */}
-          <h2 className="text-xl font-bold leading-tight">{cleanUpNewsTitle(title)}</h2>
         </div>
       </div>
     </AppLink>

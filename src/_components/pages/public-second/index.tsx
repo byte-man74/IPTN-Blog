@@ -5,8 +5,9 @@ import React from 'react'
 import { SecondPageContentHero } from '@/_components/pages/public-second/sub-sections/news-hero'
 import { AdsBox } from '@/_components/public/core/ads-box'
 import TopNews from '@/_components/pages/public-second/sub-sections/top-news'
-import Politics from '@/_components/pages/public-second/sub-sections/politics'
+
 import Sports from '@/_components/pages/public-second/sub-sections/sports'
+import SecondCategoryFeatured from './sub-sections/featured'
 
 
 interface SecondPageContentProps {
@@ -20,7 +21,7 @@ export const SecondPageContent = ({ category }: SecondPageContentProps) => {
       <SecondPageContentHero category={category} />
       <AdsBox />
       <TopNews category={category} />
-      <Politics category={category} />
+      <SecondCategoryFeatured category={category} />
       <Sports category={category} />
     </div>
   )

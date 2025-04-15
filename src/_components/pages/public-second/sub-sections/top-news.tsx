@@ -22,7 +22,7 @@ const TopNews = ({ category }: TopNewsProps) => {
       categorySlug: CONTENT_CRITERIA.topNews.slug,
     },
     1,
-    8 // Maximum 8 items for the grid
+    8 
   )
 
   // Skeleton for news items

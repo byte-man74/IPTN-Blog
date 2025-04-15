@@ -169,22 +169,29 @@ export class NewsRepository {
         ]
       }
 
-      // Filter by categories if provided
+      // Filter by categories if provided - using AND logic to require all categories
       if (filters.categoryIds && filters.categoryIds.length > 0) {
-        where.categories = {
-          some: {
-            id: { in: filters.categoryIds },
-          },
-        }
+        where.AND = filters.categoryIds.map(categoryId => ({
+          categories: {
+            some: {
+              id: categoryId
+            }
+          }
+        }))
       }
 
       // Filter by category slug if provided
       if (filters.categorySlug) {
-        where.categories = {
-          some: {
-            slug: filters.categorySlug,
-          },
+        if (!where.AND) {
+          where.AND = []
         }
+        where.AND.push({
+          categories: {
+            some: {
+              slug: filters.categorySlug,
+            },
+          }
+        })
       }
 
       // Filter by tags if provided

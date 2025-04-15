@@ -134,8 +134,9 @@ export class SiteConfigRepository {
         siteConfig.navBarKeyCategories.map(async (category, index) => {
           let checks: ContentHealthResult[] = []
 
-          // Get the appropriate criteria based on category index
-          const categoryCriteria = CATEGORY_CRITERIA.find((c) => c.index === index)
+          // Get the appropriate criteria based on position in the array
+          // Use the actual index in the navBarKeyCategories array, not the index property from CATEGORY_CRITERIA
+          const categoryCriteria = CATEGORY_CRITERIA[index + 1] // +1 because index 0 is for home page
 
           if (categoryCriteria) {
             checks = await this.checkCategoryContentHealth(category.id, categoryCriteria.criteria)
@@ -185,7 +186,8 @@ export class SiteConfigRepository {
    * Checks the content health of the home page
    */
   async checkHomePageContentHealth(): Promise<ContentHealthResult[]> {
-    const homeCriteria = CATEGORY_CRITERIA.find((c) => c.index === 0)?.criteria || []
+    // Always use the first criteria (index 0) for home page
+    const homeCriteria = CATEGORY_CRITERIA[0]?.criteria || []
 
     return this.performContentChecks(homeCriteria)
   }
@@ -231,17 +233,24 @@ export class SiteConfigRepository {
 
     // Apply specific content type filter based on criterion
     if (criterion.slug) {
-      if (filter.categories) {
-        // If we already have a category filter by ID, we need to add a second condition
-        // We can't use array in some, so we need to use AND with multiple conditions
+      if (categoryId) {
+        // If we have both categoryId and slug, use AND to ensure both conditions are met
         filter.AND = [
-          { categories: { some: { id: categoryId } } },
-          { categories: { some: { slug: criterion.slug } } },
+          {
+            categories: {
+              some: { id: categoryId }
+            }
+          },
+          {
+            categories: {
+              some: { slug: criterion.slug }
+            }
+          }
         ]
         // Remove the original categories filter since we're using AND
         delete filter.categories
       } else {
-        // No existing category filter, just add the slug filter
+        // No categoryId, just filter by slug
         filter.categories = {
           some: { slug: criterion.slug },
         }
