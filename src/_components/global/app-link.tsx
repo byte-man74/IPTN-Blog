@@ -46,7 +46,9 @@ export const AppLink = ({
   icon: Icon,
   iconSize = 20,
 }: AppLinkProps) => {
-  const isExternal = href?.startsWith('http') || href?.startsWith('mailto:')
+  // Trim href if it's a string
+  const trimmedHref = typeof href === 'string' ? href.trim() : href
+  const isExternal = trimmedHref?.startsWith('http') || trimmedHref?.startsWith('mailto:')
   const linkProps = isExternal
     ? {
         target: target || '_blank',
@@ -56,7 +58,7 @@ export const AppLink = ({
 
   return (
     <Link
-      href={href ?? '#'}
+      href={!trimmedHref || trimmedHref === "" ? '#' : trimmedHref}
       className={`transition-colors ${className}`}
       aria-label={ariaLabel}
       {...linkProps}

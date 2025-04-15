@@ -10,7 +10,7 @@ import { NewsQueryKey } from '@/network/query-keys/news'
 import { notFound } from 'next/navigation'
 import MainNavBanner from '@/_components/public/main-nav-banner'
 import GlobalSocialBanner from '@/_components/public/social-banner'
-import ArticleNav from '@/app/(client)/(public)/articles/article-nav'
+import ArticleNav from '@/_components/public/core/news-component/article-nav'
 import { auth } from '@/auth'
 import { ClientRoutes } from '@/lib/routes/client'
 

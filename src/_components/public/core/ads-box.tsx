@@ -6,8 +6,8 @@ import React from 'react'
  */
 export const AdsBox = () => {
   return (
-    <div className='w-full flex h-[20rem] justify-center items-center bg-[#D2D2D2]'>
-        <span className="inset-0 opacity-30  text-black text-[102px] font-bold opacity-1">
+    <div className='w-full flex h-[20rem] justify-center items-center bg-[#D2D2D2] overflow-hidden'>
+        <span className="inset-0 opacity-30 text-black text-[102px] font-bold sm:text-[80px] xs:text-[60px] overflow-hidden">
             <h2
                 className="font-black tracking-widest text-transparent whitespace-nowrap overflow-hidden"
                 style={{

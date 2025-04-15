@@ -60,11 +60,13 @@ export const AppImage = ({
   fallbackSrc = '',
   optimizeImage = false,
 }: AppImageProps) => {
-  const [imgSrc, setImgSrc] = useState<string>(src || fallbackSrc)
+  // Ensure src is not an empty string, use fallbackSrc or a default placeholder
+  const initialSrc = src && src.trim() !== '' ? src : (fallbackSrc || '/assets/placeholder.png')
+  const [imgSrc, setImgSrc] = useState<string>(initialSrc)
   const [hasError, setHasError] = useState<boolean>(false)
 
   const handleError = () => {
-    if (fallbackSrc) {
+    if (fallbackSrc && fallbackSrc.trim() !== '') {
       setImgSrc(fallbackSrc)
     } else {
       setHasError(true)

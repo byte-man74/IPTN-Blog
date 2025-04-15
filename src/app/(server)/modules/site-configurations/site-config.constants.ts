@@ -70,6 +70,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'featured',
     name: 'Featured News',
     threshold: 2,
+    maxThreshold: 8,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -78,6 +79,14 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     name: 'Trending News',
     threshold: 0,
     maxThreshold: 2,
+    severity: 'warning',
+  },
+  secondCategoryTopNews: {
+    slug: 'top-news',
+    name: 'Top News',
+    threshold: 4,
+    maxThreshold: 8,
+    requiresFresh: true,
     severity: 'warning',
   },
   thirdCategoryTrending: {
@@ -125,7 +134,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     criteria: [
       CONTENT_CRITERIA.secondCategoryFeatured,
       CONTENT_CRITERIA.secondCategoryTrending,
-      CONTENT_CRITERIA.topNews,
+      CONTENT_CRITERIA.secondCategoryTopNews,
     ],
   },
   {

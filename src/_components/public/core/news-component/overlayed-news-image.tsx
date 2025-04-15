@@ -3,6 +3,7 @@ import { CalendarDays, Clock, Eye, MessageSquare, Tag } from 'lucide-react';
 import { AppImage } from '@/_components/global/app-image';
 import { AppLink } from '@/_components/global/app-link';
 import { NewsDTO } from '@/app/(server)/modules/news/news.types';
+import { ClientRoutes } from '@/lib/routes/client';
 
 interface OverlayedNewsImageProps {
     newsItem?: NewsDTO;
@@ -34,7 +35,7 @@ const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImagePr
 //   const comments = analytics?.comments;
 
   return (
-    <AppLink href={slug ? `/news/${slug}` : "#"} className='w-full'>
+    <AppLink href={ClientRoutes.viewNews(slug ?? "#")} className='w-full'>
       <div className="relative w-full overflow-hidden group flex rounded-none shadow-md transition-all duration-300 hover:shadow-xl" style={{ height }}>
         {imageUrl ? (
           <>

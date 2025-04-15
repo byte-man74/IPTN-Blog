@@ -1,5 +1,4 @@
 export const ClientRoutes = {
-    home: "",
-    categories: "",
+    home: "/",
     viewNews: (slug: string) => `news/${slug}`,
 }

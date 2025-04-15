@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Calendar, Camera, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { AppImage } from "@/_components/global/app-image";
 import { AppLink } from "@/_components/global/app-link";
@@ -21,7 +21,7 @@ interface NewsCarouselProps {
  */
 export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
   const items = newsItems ?? [];
-  const [activeIndex, setActiveIndex] = useState(0);
+
 
   // Detect mobile screen size
   useEffect(() => {
@@ -56,9 +56,7 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
     }
   };
 
-  const handleBeforeChange = (nextSlide: number) => {
-    setActiveIndex(nextSlide);
-  };
+
 
   return (
     <div className="relative h-[24rem] xs:h-[26rem] sm:h-[29rem] mx-auto border border-gray-200 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-sm">
@@ -75,7 +73,6 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
         containerClass="h-full"
         swipeable={true}
         draggable={true}
-        beforeChange={handleBeforeChange}
       >
         {items.map((item) => (
           <div key={item.id} className="w-full h-full">
@@ -144,22 +141,6 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
           </div>
         ))}
       </Carousel>
-
-      {/* Carousel Indicators */}
-      {items.length > 1 && (
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-1.5 pb-1 z-20">
-          {items.map((_, index) => (
-            <div
-              key={index}
-              className={`h-1 rounded-full transition-all duration-300 ${
-                index === activeIndex
-                  ? "w-6 bg-primaryGreen"
-                  : "w-2 bg-white/60 hover:bg-white/80"
-              }`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

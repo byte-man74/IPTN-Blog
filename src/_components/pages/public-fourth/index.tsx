@@ -1,10 +1,15 @@
+
 import NewsScreenFullWidthHero from '@/_components/public/core/news-component/news-screen-full-width-hero'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { longCarouselBasicNewsData } from '@/lib/constants/pre-data'
 import React from 'react'
 import MasonryNewsGrid from './sub-sections/masonry'
 
-export const LifestylePageContent = () => {
+interface FourthPageContentProps {
+  category: string
+}
+
+export const FourthPageContent = ({ category }: FourthPageContentProps) => {
   return (
     <>
       <NewsScreenFullWidthHero newsItems={longCarouselBasicNewsData} />
@@ -17,7 +22,7 @@ export const LifestylePageContent = () => {
           carouselItem={{ itemType: 'overlay-v2' }}
         />
       </div>
-        <MasonryNewsGrid />
+        <MasonryNewsGrid category={category} />
     </>
   )
 }

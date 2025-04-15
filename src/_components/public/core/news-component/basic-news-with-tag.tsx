@@ -10,10 +10,9 @@ interface BasicNewsWithTagProps {
 }
 
 const BasicNewsWithTag: React.FC<BasicNewsWithTagProps> = ({ newsContent }) => {
-  const { title, slug, analytics, categories, pubDate, tags } = newsContent ?? {};
+  const { title, slug, analytics,  pubDate, tags } = newsContent ?? {};
 
   const readTime = analytics?.readDuration;
-  const category = categories?.[0]?.name;
   const tag = tags?.[0]?.name
   const date = pubDate ? new Date(pubDate).toLocaleDateString() : undefined;
 

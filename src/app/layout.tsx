@@ -129,7 +129,9 @@ export default function RootLayout({
             <ErrorProvider error={null}>
               <Toaster />
               <NextTopLoader showSpinner={false} color="#008751" />
-              <div className="mx-auto max-w-[140rem]">{children ?? <div>Loading...</div>}</div>
+              <div className="mx-auto max-w-[140rem]">
+                {children}
+              </div>
             </ErrorProvider>
           </ReactQueryProvider>
         </NextAuthProvider>
