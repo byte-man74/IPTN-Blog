@@ -72,7 +72,7 @@ export const calculateTimeStampFromDate = (date: string | Date) => {
     });
   }
 }
-export const cleanUpNewsTitle = (title: string): string => {
+export const cleanUpNewsTitle = (title: string, maxLength: number = 70): string => {
   if (!title) return '';
 
   // Remove HTML tags if present
@@ -91,5 +91,14 @@ export const cleanUpNewsTitle = (title: string): string => {
   // Remove special characters that might cause issues
   cleanTitle = cleanTitle.replace(/[^\w\s.,!?'\-]/g, '');
 
-  return cleanTitle;
+  // Truncate title if it exceeds maxLength
+  if (cleanTitle.length <= maxLength) {
+    return cleanTitle;
+  }
+
+  // Find the last space before maxLength to avoid cutting words
+  const lastSpace = cleanTitle.substring(0, maxLength).lastIndexOf(' ');
+  const cutPoint = lastSpace > 0 ? lastSpace : maxLength;
+
+  return cleanTitle.substring(0, cutPoint).trim() + '...';
 }

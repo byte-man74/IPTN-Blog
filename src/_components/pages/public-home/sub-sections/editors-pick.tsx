@@ -45,11 +45,11 @@ const EditorsPick = () => {
   const smallNewsItems = data?.data.slice(1) || []
 
   return (
-    <div className="w-full sm:w-[30%] min-h-full flex flex-col justify-between">
+    <div className="w-full sm:w-[35%] min-h-full flex flex-col justify-between">
       <BasicTitle title="Editor's pick" />
 
       {isLoading ? (
-        <div className="w-full h-[21rem] bg-gray-200 animate-pulse rounded"></div>
+        <div className="w-full h-[20rem] bg-gray-200 animate-pulse rounded"></div>
       ) : (
         <OverlayedNewsImage newsItem={featuredNewsItem} />
       )}
