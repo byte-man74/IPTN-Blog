@@ -8,6 +8,7 @@ interface IAdsService {
   getAdForPageType(pageType: string): Promise<ApiCustomError | AdsDTO | null>
   getAdForNews(newsSlug: string): Promise<ApiCustomError | AdsDTO | null>
   modifyAd(adData: EditAdDTO): Promise<ApiCustomError | AdsDTO>
+  deleteAd(adId: string): Promise<ApiCustomError | null>
 }
 
 export class AdsService implements IAdsService {
@@ -38,6 +39,13 @@ export class AdsService implements IAdsService {
   async modifyAd(adData: EditAdDTO): Promise<ApiCustomError | AdsDTO> {
     return tryCatchHandler(async () => {
       return await this.repository.modifyAd(adData)
+    })
+  }
+
+  async deleteAd(adId: string): Promise<ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      await this.repository.deleteAd(adId)
+      return null
     })
   }
 }

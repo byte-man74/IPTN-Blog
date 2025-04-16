@@ -7,8 +7,6 @@ import { AdPosition } from '@prisma/client'
 export class AdsRepository {
   private readonly ads = prisma.advertisement
 
-
-
   async createAnAd(adData: CreateAdDTO): Promise<ApiCustomError | AdsDTO> {
     return tryCatchHandler(async () => {
       const createdAd = await this.ads.create({
@@ -67,6 +65,22 @@ export class AdsRepository {
       })
 
       return updated
+    })
+  }
+
+  async deleteAd(adId: string): Promise<ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      const deletedAd = await this.ads.delete({
+        where: {
+          id: adId,
+        },
+      })
+
+      if (!deletedAd) {
+        return new ApiCustomError('Ad not found', 404)
+      }
+
+      return null
     })
   }
 }
