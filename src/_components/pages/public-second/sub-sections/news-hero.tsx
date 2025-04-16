@@ -17,8 +17,8 @@ interface SecondPageContentHeroProps {
 export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) => {
   // Calculate date limit once using useMemo to prevent recreating on each render
   const dateLimit = useMemo(() => {
-    return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  }, []);
+    return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  }, [])
 
   //editors-pick
   const { data: secondPageEditorsPick, isLoading: secondPageEditorsPickIsLoading } = useFetchNews(
