@@ -86,7 +86,7 @@ function getCategoryContent(categoryIndex: number, categoryId: number) {
     <SecondPageContent key="second" category={categoryId} />,
     <ThirdPageContent key="third" category={categoryId} />,
     <FourthPageContent key="fourth" category={categoryId} />,
-    <FifthNavPageContent key="fifth" category={categoryId.toString()} />,
+    <FifthNavPageContent key="fifth" category={categoryId} />,
   ]
 
   return contentMap[categoryIndex] || null

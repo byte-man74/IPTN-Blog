@@ -26,6 +26,7 @@ import { ChevronDown, Search, UserCog, UserMinus, UserPlus, RefreshCw, Loader2 }
 import { useFetchUsers } from '@/network/http-service/user.hooks'
 import { useUpdateUserInformation } from '@/network/http-service/user.mutations'
 import { useSession } from 'next-auth/react'
+import { logger } from '@/lib/utils/logger'
 
 export  const AdminSettingsPageMainComponent = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -69,7 +70,7 @@ export  const AdminSettingsPageMainComponent = () => {
         description: `User ${!currentStatus ? 'promoted to admin' : 'demoted from admin'}`,
       })
     } catch (error) {
-      console.error('Error updating user admin status:', error)
+      logger.error('Error updating user admin status:', error)
       toast({
         title: 'Error',
         description: 'Failed to update user admin status.',
@@ -108,7 +109,7 @@ export  const AdminSettingsPageMainComponent = () => {
         description: `User ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
       })
     } catch (error) {
-      console.error('Error updating user status:', error)
+      logger.error('Error updating user status:', error)
       toast({
         title: 'Error',
         description: 'Failed to update user status.',

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SiteConfigService } from '@/app/(server)/modules/site-configurations/site-config.service'
+import { logger } from '@/lib/utils/logger'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Error initializing site configuration:', error)
+    logger.error('Error initializing site configuration:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

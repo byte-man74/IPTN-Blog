@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Login Page
@@ -24,7 +25,7 @@ export const LoginComponent = () => {
       await signIn('google', { callbackUrl: '/admin' })
     } catch (error) {
 
-      console.error('Google sign in error:', error)
+      logger.error('Google sign in error:', error)
       setFormError('root', {
         type: 'manual',
         message: 'An error occurred with Google sign in',

@@ -1,18 +1,20 @@
+'use client'
+
 import React from 'react'
-import { EntertainmentHero } from '@/_components/pages/public-fifth/sub-sections/hero'
-import EntertainmentFullWidthSubArticle from '@/_components/pages/public-fifth/sub-sections/full-width-sub-article'
-import { MoviesCategory } from '@/_components/pages/public-fifth/sub-sections/movies-category'
+import { FifthSectionHero } from '@/_components/pages/public-fifth/sub-sections/hero'
+import { FifthSectionFullWidthSubArticle } from '@/_components/pages/public-fifth/sub-sections/full-width-sub-article'
+import { FifthSectionFeaturedCategory } from './sub-sections/featured'
 
 interface FifthNavPageContentProps {
-  category: string
+  category: number
 }
 
 export const FifthNavPageContent = ({ category }: FifthNavPageContentProps) => {
   return (
     <>
-      <EntertainmentHero category={category} />
-      <EntertainmentFullWidthSubArticle category={category} />
-      <MoviesCategory category={category} />
+      <FifthSectionHero category={category} />
+      <FifthSectionFullWidthSubArticle category={category} />
+      <FifthSectionFeaturedCategory category={category} />
     </>
   )
 }

@@ -14,6 +14,7 @@ import {
   CONTENT_CRITERIA,
   CONTENT_FRESHNESS_DAYS,
 } from './site-config.constants'
+import { logger } from '@/lib/utils/logger'
 
 export class SiteConfigRepository {
   private readonly siteConfiguration = prisma.siteConfiguration
@@ -330,7 +331,7 @@ export class SiteConfigRepository {
         },
       }
     } catch (error) {
-      console.error(`Error checking content for criterion ${criterion.name}:`, error)
+      logger.error(`Error checking content for criterion ${criterion.name}:`, error)
 
       // Return an error result if something goes wrong
       return {

@@ -164,7 +164,11 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     // Fifth category (index 4)
     index: 4,
     name: 'Fifth Category',
-    criteria: [CONTENT_CRITERIA.fifthCategoryFeatured],
+    criteria: [
+      CONTENT_CRITERIA.fifthCategoryFeatured,
+      CONTENT_CRITERIA.topPicks,
+      CONTENT_CRITERIA.trending,
+    ],
   },
 ]
 

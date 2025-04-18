@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { AppImage } from '@/_components/global/app-image'
+import { logger } from '@/lib/utils/logger'
 
 export const AdminAdsComponent = () => {
   const queryClient = useQueryClient()
@@ -74,7 +75,7 @@ export const AdminAdsComponent = () => {
       queryClient.invalidateQueries({ queryKey: [AdsQueryKey.LIST] })
       setDeleteDialogOpen(false)
     } catch (error) {
-      console.error('Error deleting ad:', error)
+      logger.error('Error deleting ad:', error)
     }
   }
 
