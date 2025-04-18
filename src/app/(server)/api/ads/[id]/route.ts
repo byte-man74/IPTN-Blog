@@ -1,4 +1,4 @@
-// app/api/ads/route.ts
+
 
 import { NextRequest, NextResponse } from 'next/server'
 import { AdsService } from '@/app/(server)/modules/ads/ads.service'
@@ -6,6 +6,32 @@ import { EditAdSchema } from '@/app/(server)/modules/ads/ads.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { logger } from '@/lib/utils/logger'
 
+
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const adId = params.id;
+
+    if (!adId) {
+      return NextResponse.json({ error: 'Missing ad ID parameter' }, { status: 400 });
+    }
+
+    const adService = new AdsService();
+    const ad = await adService.fetchAdDetail(adId);
+
+    if (ad instanceof ApiCustomError) {
+      return NextResponse.json({ error: ad.message }, { status: ad.status });
+    }
+
+    if (!ad) {
+      return NextResponse.json({ error: 'Ad not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(ad, { status: 200 });
+  } catch (error) {
+    logger.error(`Failed to fetch ad: ${error}`);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -40,11 +66,16 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest,  { params }: { params: { id: string } }) {
   try {
     // Extract adId from query parameters
-    const { searchParams } = new URL(request.url)
-    const adId = searchParams.get('id')
+    const adId = params.id;
+
+    if (!adId) {
+      return NextResponse.json({ error: 'Missing ad ID parameter' }, { status: 400 });
+    }
+
+
 
     if (!adId) {
       return NextResponse.json({ error: 'Missing ad ID query parameter' }, { status: 400 })

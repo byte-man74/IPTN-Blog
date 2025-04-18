@@ -10,6 +10,7 @@ interface IAdsService {
   modifyAd(adData: EditAdDTO): Promise<ApiCustomError | AdsDTO>
   deleteAd(adId: string): Promise<ApiCustomError | null>
   fetchAds(adsQueryParamFilter: AdsFilterDTO): Promise<ApiCustomError | AdsDTO[] | null>
+  fetchAdDetail(id: string): Promise<ApiCustomError | AdsDTO | null>
 }
 
 export class AdsService implements IAdsService {
@@ -53,6 +54,12 @@ export class AdsService implements IAdsService {
   async fetchAds(adsQueryParamFilter: AdsFilterDTO): Promise<ApiCustomError | AdsDTO[] | null> {
     return tryCatchHandler(async () => {
       return await this.repository.fetchAds(adsQueryParamFilter)
+    })
+  }
+
+async fetchAdDetail(id: string): Promise<ApiCustomError | AdsDTO | null> {
+    return tryCatchHandler(async () => {
+      return await this.repository.fetchAdDetail(id)
     })
   }
 }

@@ -26,4 +26,11 @@ export const routes = {
     healthCheck: '/site-config/health-check',
     simpleHealthCheck: "/site-config/simple-health-check"
   },
+  ads: {
+    list: '/ads',
+    create: '/ads',
+    update: (id: string) => `/ads/${id}`,
+    delete: (id: string) => `/ads/${id}`,
+    details: (id: string) => `/ads/${id}`,
+  },
 }

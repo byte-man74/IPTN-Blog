@@ -84,36 +84,52 @@ export class AdsRepository {
     })
   }
 
-
   async fetchAds(adsQueryParamFilter: AdsFilterDTO): Promise<AdsDTO[] | ApiCustomError | null> {
     return tryCatchHandler(async () => {
-      const { pageType, isActive = true, title } = adsQueryParamFilter;
+      const { pageType, isActive = true, title } = adsQueryParamFilter
 
-      const whereClause: any = { isActive };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const whereClause: any = { isActive }
 
       if (pageType) {
-        whereClause.position = pageType;
+        whereClause.position = pageType
       }
 
       if (title) {
         whereClause.title = {
           contains: title,
-          mode: 'insensitive'
-        };
+          mode: 'insensitive',
+        }
       }
 
       const ads = await this.ads.findMany({
         where: whereClause,
         orderBy: {
-          createdAt: 'desc'
-        }
-      });
+          createdAt: 'desc',
+        },
+      })
 
       if (!ads || ads.length === 0) {
-        return null;
+        return null
       }
 
-      return ads;
-    });
+      return ads
+    })
+  }
+
+  async fetchAdDetail(id: string): Promise<AdsDTO | ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      const ad = await this.ads.findUnique({
+        where: {
+          id: id,
+        },
+      })
+
+      if (!ad) {
+        return new ApiCustomError('Ad not found', 404)
+      }
+
+      return ad
+    })
   }
 }
