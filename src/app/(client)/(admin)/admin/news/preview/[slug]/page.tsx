@@ -1,23 +1,13 @@
 import { PreviewPostComponent } from '@/_components/pages/admin-layout/admin-preview'
 import React from 'react'
-import { Metadata } from 'next'
 
-type PreviewNewsProps = {
-  params: { slug: string }
-}
+type Params = Promise<{ slug: string }>
 
-export async function generateMetadata({ params }: PreviewNewsProps): Promise<Metadata> {
-  return {
-    title: `Preview: ${params.slug}`,
-  }
-}
-
-const PreviewNews = ({ params }: PreviewNewsProps) => {
-  const { slug } = params
+export default async function PreviewNews(props: { params: Params }) {
+  const params = await props.params;
+  const slug = params.slug;
 
   return (
     <PreviewPostComponent slug={slug} />
   )
 }
-
-export default PreviewNews

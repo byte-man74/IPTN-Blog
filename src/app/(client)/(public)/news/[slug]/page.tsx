@@ -14,12 +14,15 @@ import ArticleNav from '@/_components/public/core/news-component/article-nav'
 import { auth } from '@/auth'
 import { ClientRoutes } from '@/lib/routes/client'
 
+type Params = Promise<{ slug: string }>
+
 type NewsArticleProps = {
-  params: { slug: string }
+  params: Params
 }
 
 export async function generateMetadata({ params }: NewsArticleProps): Promise<Metadata> {
-  const { slug } = await params
+  const params_resolved = await params
+  const slug = params_resolved.slug
   const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
 
   try {
@@ -90,7 +93,8 @@ function generateStructuredData(newsData: FullNewsDTO) {
 }
 
 export default async function NewsArticle({ params }: NewsArticleProps) {
-  const { slug } = await params
+  const params_resolved = await params
+  const slug = params_resolved.slug
   const queryClient = new QueryClient()
   const session = await auth()
 

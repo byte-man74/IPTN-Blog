@@ -4,11 +4,12 @@ import React from 'react'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title';
 import NewsWithDescription from '@/_components/public/core/news-component/news-with-description';
 import { Skeleton } from '@/_components/global/skeleton';
+import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 
 interface MainSectionBodyIProps {
     title: string;
     sectionName: number;
-    data?: any[];
+    data?: NewsDTO[];
     isLoading: boolean;
 }
 

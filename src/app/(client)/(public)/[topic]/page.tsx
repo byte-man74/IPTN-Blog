@@ -13,8 +13,10 @@ import { SiteConfigurationDTO } from '@/app/(server)/modules/site-configurations
 import { Metadata, ResolvingMetadata } from 'next'
 import { capitalizeString } from '@/app/(server)/modules/site-configurations/site-config.utils'
 
+type Params = Promise<{ topic: string }>
+
 type TopicPageProps = {
-  params: { topic: string }
+  params: Params
 }
 
 // Generate dynamic metadata for better SEO
@@ -22,7 +24,8 @@ export async function generateMetadata(
   { params }: TopicPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const topic = await params.topic
+  const params_resolved = await params
+  const topic = params_resolved.topic
 
   try {
     const response = await createServerAxiosInstance(routes.siteConfig.get)
@@ -93,7 +96,8 @@ function getCategoryContent(categoryIndex: number, categoryId: number) {
 }
 
 export default async function TopicPage({ params }: TopicPageProps) {
-  const category = await params.topic
+  const params_resolved = await params
+  const topic = params_resolved.topic
   const queryClient = new QueryClient()
 
   try {
@@ -105,11 +109,11 @@ export default async function TopicPage({ params }: TopicPageProps) {
     ])
 
     // Validate if the category exists in navBarKeyCategories and get its index
-    const categoryIndex = siteConfig?.navBarKeyCategories.findIndex((cat) => cat.slug === category)
-    const categoryId = siteConfig?.navBarKeyCategories.find((cat) => cat.slug === category)?.id
+    const categoryIndex = siteConfig?.navBarKeyCategories.findIndex((cat) => cat.slug === topic)
+    const categoryId = siteConfig?.navBarKeyCategories.find((cat) => cat.slug === topic)?.id
 
     if (!siteConfig || categoryIndex === -1 || categoryIndex === undefined || !categoryId) {
-      logger.warn(`Category not found in key categories: ${category}`)
+      logger.warn(`Category not found in key categories: ${topic}`)
       notFound()
     }
 

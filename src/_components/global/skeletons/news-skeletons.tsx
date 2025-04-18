@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton } from '@/_components/global/skeleton'
+
 
 /**
  * StandardNewsItemSkeleton
