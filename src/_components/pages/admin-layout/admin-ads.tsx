@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Plus, Edit, Trash2, DollarSign, BarChart, ExternalLink } from 'lucide-react'
 import { useFetchAds } from '@/network/http-service/ads.hooks'
-import { useCreateAd, useUpdateAd, useDeleteAd } from '@/network/http-service/ads.mutations'
+import { useDeleteAd } from '@/network/http-service/ads.mutations'
 import { Skeleton } from '@/_components/global/skeleton'
 import { AppLink } from '@/_components/global/app-link'
 import { CreateAdComponent } from './create-ad'
@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { AppImage } from '@/_components/global/app-image'
 
 export const AdminAdsComponent = () => {
   const queryClient = useQueryClient()
@@ -325,7 +326,7 @@ export const AdminAdsComponent = () => {
                             <div className="flex items-center">
                               {ad.thumbnail && (
                                 <div className="flex-shrink-0 h-10 w-10 mr-3">
-                                  <img
+                                  <AppImage
                                     className="h-10 w-10 rounded-md object-cover"
                                     src={ad.thumbnail}
                                     alt=""
@@ -413,7 +414,7 @@ export const AdminAdsComponent = () => {
           <DialogHeader>
             <DialogTitle>Delete Ad Campaign</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete the ad campaign "{selectedAdTitle}"? This action
+              Are you sure you want to delete the ad campaign &quot;{selectedAdTitle}&quot;? This action
               cannot be undone.
             </DialogDescription>
           </DialogHeader>
