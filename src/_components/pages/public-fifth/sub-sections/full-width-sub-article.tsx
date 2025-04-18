@@ -1,6 +1,7 @@
 import React from 'react'
 import BasicNews from '@/_components/public/core/news-component/basic-news'
 import { useFetchNews } from '@/network/http-service/news.hooks'
+import { BasicNewsSkeleton } from '@/_components/global/skeletons'
 
 interface EntertainmentFullWidthSubArticleProps {
   category: number
@@ -11,7 +12,9 @@ interface EntertainmentFullWidthSubArticleProps {
  * Ensures all data fields are checked for nullish values before rendering.
  * The marquee effect provides a continuous scrolling effect for a dynamic UI.
  */
-export const FifthSectionFullWidthSubArticle = ({ category }: EntertainmentFullWidthSubArticleProps) => {
+export const FifthSectionFullWidthSubArticle = ({
+  category,
+}: EntertainmentFullWidthSubArticleProps) => {
   const { data: latestNews, isLoading } = useFetchNews(
     {
       published: true,
@@ -25,11 +28,6 @@ export const FifthSectionFullWidthSubArticle = ({ category }: EntertainmentFullW
   const firstHalf = newsItems.slice(0, Math.ceil(newsItems.length / 2))
   const secondHalf = newsItems.slice(Math.ceil(newsItems.length / 2))
 
-  // Skeleton component for loading state
-  const NewsSkeleton = () => (
-    <div className="h-[9rem] w-1/2 flex-shrink-0 bg-gray-200 animate-pulse rounded"></div>
-  )
-
   return (
     <div className="w-full mt-4 pl-8 flex flex-col gap-2 h-auto">
       <div className="w-full flex overflow-hidden">
@@ -38,7 +36,7 @@ export const FifthSectionFullWidthSubArticle = ({ category }: EntertainmentFullW
             // Show skeletons while loading
             Array(6)
               .fill(0)
-              .map((_, index) => <NewsSkeleton key={index} />)
+              .map((_, index) => <BasicNewsSkeleton key={index} />)
           ) : firstHalf.length > 0 ? (
             // Show first half of news items
             firstHalf.map((newsItem, index) => (
@@ -60,7 +58,7 @@ export const FifthSectionFullWidthSubArticle = ({ category }: EntertainmentFullW
             // Show skeletons while loading
             Array(6)
               .fill(0)
-              .map((_, index) => <NewsSkeleton key={index} />)
+              .map((_, index) => <BasicNewsSkeleton key={index} />)
           ) : secondHalf.length > 0 ? (
             // Show second half of news items
             secondHalf.map((newsItem, index) => (

@@ -6,6 +6,7 @@ import FullWidthAlternateTitle from '@/_components/public/core/section-title/ful
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import React from 'react'
+import { FeaturedNewsItemSkeleton, StandardNewsItemSkeleton } from '@/_components/global/skeletons'
 
 // Constants for content types
 const TrendingContent = CONTENT_CRITERIA.trending
@@ -42,22 +43,12 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
   const trendingItems = trendingData?.data || []
   const topPicksItems = topPicksData?.data || []
 
-  // Rendering a skeleton for loading state
-  const NewsItemSkeleton = () => (
-    <div className="relative h-[15rem] w-full rounded-sm overflow-hidden animate-pulse bg-gray-200">
-      <div className="absolute bottom-0 left-0 right-0 p-3">
-        <div className="bg-gray-300 h-4 w-16 rounded-sm mb-2"></div>
-        <div className="bg-gray-300 h-5 w-3/4 rounded-sm"></div>
-      </div>
-    </div>
-  )
-
   return (
     <div className="flex gap-4 px-8 mt-6">
       <div className="w-1/2 min-h-10 flex flex-col gap-8 items-stretch">
         <FullWidthAlternateTitle title="Trending" />
         {trendingIsLoading ? (
-          <div className="h-[30rem] bg-gray-200 animate-pulse rounded"></div>
+          <FeaturedNewsItemSkeleton />
         ) : trendingItems.length > 0 ? (
           <OverlayedNewsImageV2 newsItem={trendingItems[0]} />
         ) : (
@@ -74,7 +65,7 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
             ? // Show skeletons while loading
               Array(4)
                 .fill(0)
-                .map((_, index) => <NewsItemSkeleton key={index} />)
+                .map((_, index) => <StandardNewsItemSkeleton key={index} />)
             : topPicksItems.length > 0
               ? // Show top picks data
                 topPicksItems.slice(0, 4).map((newsItem, index) => (

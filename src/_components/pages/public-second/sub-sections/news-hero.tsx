@@ -5,6 +5,7 @@ import FullWidthAlternateTitle from '@/_components/public/core/section-title/ful
 import React, { useMemo } from 'react'
 import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
+import { CarouselSkeleton, NewsWithDescriptionSkeleton } from '@/_components/global/skeletons'
 
 interface SecondPageContentHeroProps {
   category: number
@@ -41,31 +42,6 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
     },
     1,
     CONTENT_CRITERIA.secondCategoryTrending.maxThreshold
-  )
-
-  // Skeleton for carousel
-  const CarouselSkeleton = () => (
-    <div className="h-[24rem] xs:h-[26rem] sm:h-[29rem] mx-auto border border-gray-200 overflow-hidden shadow-lg rounded-sm bg-gray-200 animate-pulse">
-      <div className="w-full h-full relative">
-        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-8">
-          <div className="flex gap-2 mb-2">
-            <div className="bg-gray-300 h-6 w-20 rounded-sm"></div>
-            <div className="bg-gray-300 h-6 w-24 rounded-sm"></div>
-          </div>
-          <div className="bg-gray-300 h-8 w-3/4 rounded-sm mb-2"></div>
-          <div className="bg-gray-300 h-8 w-1/2 rounded-sm"></div>
-        </div>
-      </div>
-    </div>
-  )
-
-  // Skeleton for news with description
-  const NewsWithDescriptionSkeleton = () => (
-    <div className="flex flex-col gap-2 animate-pulse">
-      <div className="bg-gray-200 h-40 w-full rounded-sm"></div>
-      <div className="bg-gray-300 h-5 w-3/4 rounded-sm"></div>
-      <div className="bg-gray-300 h-5 w-1/2 rounded-sm"></div>
-    </div>
   )
 
   return (
