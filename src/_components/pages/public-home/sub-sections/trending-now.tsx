@@ -21,7 +21,7 @@ const TrendingNow = () => {
   const { data: trendingNews, isLoading } = useFetchNews(
     { published: true, categorySlug: HomePageTrending.slug },
     1,
-    HomePageTrending.maxThreshold
+    3
   )
 
   // Use fallback data if API data is loading or unavailable

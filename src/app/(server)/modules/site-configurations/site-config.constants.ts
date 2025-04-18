@@ -101,6 +101,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     name: 'Featured News',
     threshold: 5,
     severity: 'warning',
+    requiresFresh: true,
   },
   // Generic content check
   anyContent: {
@@ -168,6 +169,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.fifthCategoryFeatured,
       CONTENT_CRITERIA.topPicks,
       CONTENT_CRITERIA.trending,
+
     ],
   },
 ]

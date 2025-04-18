@@ -44,23 +44,23 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
   const topPicksItems = topPicksData?.data || []
 
   return (
-    <div className="flex gap-4 px-8 mt-6">
-      <div className="w-1/2 min-h-10 flex flex-col gap-8 items-stretch">
+    <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 md:px-8 mt-6">
+      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8 items-stretch mb-8 lg:mb-0">
         <FullWidthAlternateTitle title="Trending" />
         {trendingIsLoading ? (
           <FeaturedNewsItemSkeleton />
         ) : trendingItems.length > 0 ? (
           <OverlayedNewsImageV2 newsItem={trendingItems[0]} />
         ) : (
-          <div className="h-[30rem] flex items-center justify-center border border-gray-200">
+          <div className="h-[20rem] sm:h-[25rem] md:h-[30rem] flex items-center justify-center border border-gray-200">
             <p className="text-gray-500">No trending content available</p>
           </div>
         )}
       </div>
 
-      <div className="w-1/2 min-h-10 flex flex-col gap-8">
+      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8">
         <FullWidthAlternateTitle title="Top Picks" />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {topPicksIsLoading
             ? // Show skeletons while loading
               Array(4)
@@ -79,7 +79,7 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
                   .map((_, index) => (
                     <div
                       key={index}
-                      className="h-[15rem] flex items-center justify-center border border-gray-200"
+                      className="h-[12rem] sm:h-[15rem] flex items-center justify-center border border-gray-200"
                     >
                       <p className="text-gray-500">No content</p>
                     </div>
