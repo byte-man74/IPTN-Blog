@@ -125,7 +125,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.video,
       CONTENT_CRITERIA.topNews,
       CONTENT_CRITERIA.recommendedContent,
-      CONTENT_CRITERIA.blogs
+      CONTENT_CRITERIA.blogs,
     ],
   },
   {
@@ -136,20 +136,29 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.featured,
       CONTENT_CRITERIA.secondCategoryTrending,
       CONTENT_CRITERIA.topNews,
-      CONTENT_CRITERIA.editorsPick
+      CONTENT_CRITERIA.editorsPick,
     ],
   },
   {
     // Third category (index 2)
     index: 2,
     name: 'Third Category',
-    criteria: [CONTENT_CRITERIA.thirdCategoryTrending, CONTENT_CRITERIA.topPicks],
+    criteria: [
+      CONTENT_CRITERIA.thirdCategoryTrending,
+      CONTENT_CRITERIA.topPicks,
+      CONTENT_CRITERIA.editorsPick,
+      CONTENT_CRITERIA.featured,
+    ],
   },
   {
     // Fourth category (index 3)
     index: 3,
     name: 'Fourth Category',
-    criteria: [{ ...CONTENT_CRITERIA.featured, threshold: 1 }, CONTENT_CRITERIA.topPicks],
+    criteria: [
+      { ...CONTENT_CRITERIA.featured, threshold: 1 },
+      CONTENT_CRITERIA.topPicks,
+      CONTENT_CRITERIA.editorsPick,
+    ],
   },
   {
     // Fifth category (index 4)

@@ -84,8 +84,8 @@ async function fetchSiteConfig(queryClient: QueryClient) {
 function getCategoryContent(categoryIndex: number, categoryId: number) {
   const contentMap = [
     <SecondPageContent key="second" category={categoryId} />,
-    <ThirdPageContent key="third" category={categoryId.toString()} />,
-    <FourthPageContent key="fourth" category={categoryId.toString()} />,
+    <ThirdPageContent key="third" category={categoryId} />,
+    <FourthPageContent key="fourth" category={categoryId} />,
     <FifthNavPageContent key="fifth" category={categoryId.toString()} />,
   ]
 
