@@ -2,26 +2,28 @@
 
 import { AppImage } from '@/_components/global/app-image'
 import React from 'react'
-import { NewsItemType } from '@/types/public'
+import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { AppLink } from '@/_components/global/app-link'
 import { Calendar, Clock } from 'lucide-react'
+import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.utils";
+
 
 /**
  * MasonryNewsElement component displays a news item in a masonry layout.
- * @param {NewsItemType} newsItem - The news item data for the component.
+ * @param {NewsDTO} newsItem - The news item data for the component.
  */
-const MasonryNewsElement: React.FC<{ newsItem: NewsItemType }> = ({ newsItem }) => {
-  const { imageUrl, title, date, readTime, slug } = newsItem ?? {}
+const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
+  const { coverImage, title, pubDate, analytics, slug } = newsItem ?? {}
 
   return (
-    <AppLink href={slug} className="mb-8 relative overflow-hidden rounded-md group">
+    <AppLink href={`/news/${slug}`} className="mb-8 relative overflow-hidden rounded-md group">
       {/* Use a random aspect ratio for each card */}
       <div className="relative" style={{
         height: `${Math.floor(Math.random() * (500 - 300) + 300)}px`,
         marginBottom: "0.6rem"
       }}>
         <AppImage
-          src={imageUrl ?? '/placeholder-image.jpg'}
+          src={coverImage ?? ""}
           alt={title ?? "News image"}
           className="object-cover transition-transform duration-300 h-full "
         />
@@ -36,13 +38,13 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsItemType }> = ({ newsItem }) 
           <div className="rounded-full p-2 bg-primaryGreen">
                 <Calendar className="text-white w-4 h-4" />
             </div>
-            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{date ?? "Date not available"}</span>
+            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{pubDate ? calculateTimeStampFromDate(pubDate) : "Date not available"}</span>
           </div>
           <div className="flex items-center py-1 gap-2">
             <div className="rounded-full p-2 bg-primaryGreen">
                 <Clock className="text-white w-4 h-4" />
             </div>
-            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{readTime ?? "Read time not available"}</span>
+            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{analytics?.readDuration ? `${analytics?.readDuration} min read` : "Read time not available"}</span>
           </div>
         </div>
       </div>
