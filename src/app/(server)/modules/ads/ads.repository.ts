@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/third-party/prisma'
 import ApiCustomError from '@/types/api-custom-error'
-import { AdsDTO, CreateAdDTO, EditAdDTO } from './ads.types'
+import { AdsDTO, AdsFilterDTO, CreateAdDTO, EditAdDTO } from '@/app/(server)/modules/ads/ads.types'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { AdPosition } from '@prisma/client'
 
@@ -82,5 +82,38 @@ export class AdsRepository {
 
       return null
     })
+  }
+
+
+  async fetchAds(adsQueryParamFilter: AdsFilterDTO): Promise<AdsDTO[] | ApiCustomError | null> {
+    return tryCatchHandler(async () => {
+      const { pageType, isActive = true, title } = adsQueryParamFilter;
+
+      const whereClause: any = { isActive };
+
+      if (pageType) {
+        whereClause.position = pageType;
+      }
+
+      if (title) {
+        whereClause.title = {
+          contains: title,
+          mode: 'insensitive'
+        };
+      }
+
+      const ads = await this.ads.findMany({
+        where: whereClause,
+        orderBy: {
+          createdAt: 'desc'
+        }
+      });
+
+      if (!ads || ads.length === 0) {
+        return null;
+      }
+
+      return ads;
+    });
   }
 }

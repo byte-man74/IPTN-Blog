@@ -35,6 +35,14 @@ export const AdSchema = z.object({
 });
 
 
+
+export const AdsFilterSchema = z.object({
+  pageType: z.string().optional(),
+  isActive: z.boolean().optional().default(true),
+  title: z.string().optional(),
+});
+
+export type AdsFilterDTO = z.infer<typeof AdsFilterSchema>;
 export type AdsDTO =  z.infer<typeof AdSchema>
 export type CreateAdDTO = z.infer<typeof CreateAdSchema>
 export type EditAdDTO = z.infer<typeof EditAdSchema>

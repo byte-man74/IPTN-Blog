@@ -5,8 +5,6 @@ import { isValidJson } from '@/lib/utils/validator'
 import { AdsFilterSchema, CreateAdSchema } from '@/app/(server)/modules/ads/ads.types'
 import { logger } from '@/lib/utils/logger'
 
-
-
 /**
  * Fetch ad by page type
  * @route GET /api/ads?pageType=HOME
