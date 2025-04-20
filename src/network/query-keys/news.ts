@@ -3,5 +3,6 @@ export const NewsQueryKey = {
     NEWS: "NEWS",
     NEWS_DETAILS: "NEWS DETAILS",
     CATEGORIES: "CATEGORIES",
-    TAGS: "TAGS"
+    TAGS: "TAGS",
+    POPULAR_TAGS: "POPULAR TAGS"
 }

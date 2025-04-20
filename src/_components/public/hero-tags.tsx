@@ -1,6 +1,7 @@
+"use client"
 import React from 'react'
 import { AppLink } from '@/_components/global/app-link'
-import { PopularTags } from '@/lib/constants/public'
+import { useFetchPopularTags } from '@/network/http-service/news.hooks'
 
 /**
  * HeroTags component displays popular tags or categories in the hero section
@@ -9,8 +10,11 @@ import { PopularTags } from '@/lib/constants/public'
  * The component is hidden on mobile devices and only visible on larger screens
  */
 const HeroTags = () => {
-  // Perform nullish check for data from external source
-  const tags = PopularTags ?? [];
+  // Fetch popular tags from API
+  const { data: popularTags, isLoading } = useFetchPopularTags();
+
+  // Perform nullish check for data from API
+  const tags = popularTags ?? [];
 
   return (
     <div className="w-full sticky top-[4rem] z-50 hidden sm:block bg-[#E4E4E4]">
@@ -18,14 +22,16 @@ const HeroTags = () => {
           <div className="h-full flex w-[12rem] items-center justify-end bg-gray-200 px-6">
             <span className="font-semibold">Popular Tags</span>
           </div>
-          {tags.length > 0 ? (
+          {isLoading ? (
+            <span className="text-gray-500">Loading tags...</span>
+          ) : tags.length > 0 ? (
             tags.map((tag) => (
               <AppLink
-                key={tag?.id}
-                href={tag?.url ?? '#'}
-                className="text-gray-700 hover:text-primaryGreen transition-colors"
+                key={tag.id}
+                href={`/news?tagIds=${tag.id}`}
+                className="text-gray-700 hover:text-primaryGreen hover:font-medium transition-all duration-300 transform hover:scale-110 hover:underline px-2 py-1 rounded hover:bg-gray-100"
               >
-                {`#${tag?.name ?? 'tag'}`}
+                {`#${tag.name || 'tag'}`}
               </AppLink>
             ))
           ) : (

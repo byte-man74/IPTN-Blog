@@ -15,18 +15,18 @@ interface PoliticsProps {
  * Responsive layout for different screen sizes.
  */
 const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
-  const { data: featuredData, isLoading: featuredDataIsLoading } = useFetchNews(
+  const { data: politicsData, isLoading: politicsDataIsLoading } = useFetchNews(
     {
       published: true,
       categoryIds: [category],
-      categorySlug: CONTENT_CRITERIA.featured.slug,
+      categorySlug: CONTENT_CRITERIA.politics.slug,
     },
     1,
     8
   )
 
   // Get the news items from the response
-  const newsItems = featuredData?.data || []
+  const newsItems = politicsData?.data || []
 
   // Skeleton for news items
   const NewsItemSkeleton = () => (
@@ -40,9 +40,9 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
 
   return (
     <div className="relative px-4 sm:px-6 lg:px-8 py-5 sm:py-8 flex flex-col gap-6 sm:gap-8">
-      <FullWidthAlternateTitle title={CONTENT_CRITERIA.featured.name} />
+      <FullWidthAlternateTitle title={CONTENT_CRITERIA.politics.name} />
 
-      {featuredDataIsLoading ? (
+      {politicsDataIsLoading ? (
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 px-2 sm:px-4 lg:px-6">
           <div className="w-full lg:w-3/5 mb-4 lg:mb-0">
             <NewsItemSkeleton />
@@ -64,7 +64,7 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
           <div className="w-full lg:w-2/5 flex flex-col sm:flex-row lg:flex-col gap-4 sm:gap-6 lg:gap-8">
             {newsItems.slice(1, 3).map((item, index) => (
               <div className="w-full sm:w-1/2 lg:w-full transition-transform duration-300 hover:scale-[1.02]" key={item.id || index}>
-                <DarkerBasicNewsWithTag newsItem={item}  />
+                <DarkerBasicNewsWithTag newsItem={item} backgroundColor='#D9D9D9' />
               </div>
             ))}
           </div>
@@ -72,7 +72,7 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
       )}
 
       <div className="px-2 sm:px-4 w-full mt-2 sm:mt-4">
-        {featuredDataIsLoading ? (
+        {politicsDataIsLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-hidden">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="w-full">

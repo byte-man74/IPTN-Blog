@@ -66,7 +66,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <MainNavBanner />
       <HeroNavigation />
       <HeroTags />
-      <NewsBanner title="Trending" />
+      <NewsBanner title="Breaking News" />
       {children}
       <Footer />
     </>

@@ -49,7 +49,7 @@ export async function generateMetadata(
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${categoryName} | News Portal`,
+        title: `${categoryName} | Portal`,
         description: `Discover the latest ${categoryName} news and updates`,
       },
     }

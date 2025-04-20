@@ -1,6 +1,10 @@
 import { CategoryCriteria, ContentCriteria } from './site-config.types'
 
+/**
+ * Content criteria definitions for different content types across the site
+ */
 export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
+  // Home page primary content types
   editorsPick: {
     slug: 'editors-pick',
     name: "Editor's Picks",
@@ -11,7 +15,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   },
   featured: {
     slug: 'featured',
-    name: 'Featured News',
+    name: 'Featured Articles',
     threshold: 4,
     requiresFresh: true,
     severity: 'warning',
@@ -44,6 +48,8 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: true,
     severity: 'warning',
   },
+
+  // Common content types
   topPicks: {
     slug: 'top-picks',
     name: 'Top Picks',
@@ -67,9 +73,31 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: false,
     severity: 'warning',
   },
+  politics: {
+    slug: 'politics',
+    name: 'Politics',
+    threshold: 3,
+    severity: 'warning',
+  },
+  diaspora: {
+    slug: 'diaspora',
+    name: 'Diaspora',
+    threshold: 3,
+    requiresFresh: true,
+    severity: 'warning',
+  },
+  youMayHaveMissed: {
+    slug: 'you',
+    name: 'You may have missed',
+    threshold: 3,
+    requiresFresh: false,
+    severity: 'warning',
+  },
+
+  // Category-specific content types
   secondCategoryFeatured: {
     slug: 'featured',
-    name: 'Featured News',
+    name: 'Featured Articles',
     threshold: 2,
     maxThreshold: 8,
     requiresFresh: true,
@@ -98,11 +126,12 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   },
   fifthCategoryFeatured: {
     slug: 'featured',
-    name: 'Featured News',
+    name: 'Featured Articles',
     threshold: 5,
     severity: 'warning',
     requiresFresh: true,
   },
+
   // Generic content check
   anyContent: {
     slug: '',
@@ -113,6 +142,9 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   },
 }
 
+/**
+ * Category criteria definitions for different page categories
+ */
 export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   {
     // Home page (index 0)
@@ -169,20 +201,20 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.fifthCategoryFeatured,
       CONTENT_CRITERIA.topPicks,
       CONTENT_CRITERIA.trending,
-
     ],
   },
 ]
 
+// Home page exports for easy access
 export const HomePage = CATEGORY_CRITERIA[0]
-
 export const HomePageBreakingNews = HomePage.criteria[2]
 export const HomePageEditorsPick = HomePage.criteria[0]
 export const HomePageTopNews = HomePage.criteria[5]
 export const HomePageWithVideos = HomePage.criteria[4]
 export const HomePageTrending = HomePage.criteria[3]
 export const HomePageFeatured = HomePage.criteria[1]
-export const HomePageRecommendedContent = HomePage.criteria[6]
-export const HomePageBlogContent = HomePage.criteria[7]
+export const HomePageDiaspora = CONTENT_CRITERIA.diaspora
+export const HomePageYouMayHaveMissed = CONTENT_CRITERIA.youMayHaveMissed
 
+// Number of days content is considered "fresh"
 export const CONTENT_FRESHNESS_DAYS = 7

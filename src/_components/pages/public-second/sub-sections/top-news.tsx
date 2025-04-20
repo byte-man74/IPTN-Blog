@@ -3,7 +3,6 @@ import OverlayedNewsImage from '@/_components/public/core/news-component/overlay
 import React from 'react'
 import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
-import { AdsBox } from '@/_components/public/core/ads-box'
 import { StandardNewsItemSkeleton } from '@/_components/global/skeletons'
 
 interface TopNewsProps {
@@ -12,7 +11,6 @@ interface TopNewsProps {
 
 /**
  * TopNews component displays the top news section with a responsive grid of news items.
- * If there aren't enough news items, it fills the remaining spaces with ad boxes.
  * @param {TopNewsProps} props - The props for the component including category.
  */
 const TopNews = ({ category }: TopNewsProps) => {
@@ -26,7 +24,7 @@ const TopNews = ({ category }: TopNewsProps) => {
     8
   )
 
-  // Function to render grid items (news or ads)
+  // Function to render grid items (news)
   const renderGridItems = () => {
     if (topNewsDataIsLoading) {
       // Show skeletons while loading
@@ -36,27 +34,11 @@ const TopNews = ({ category }: TopNewsProps) => {
     }
 
     const newsItems = topNewsData?.data || []
-    const totalSlots = 8
-    const itemsToRender = []
 
     // Add available news items
-    for (let i = 0; i < newsItems.length; i++) {
-      itemsToRender.push(<OverlayedNewsImage key={`news-${i}`} newsItem={newsItems[i]} />)
-    }
-
-    // Fill remaining slots with ads
-    for (let i = newsItems.length; i < totalSlots; i++) {
-      if (newsItems.length > 0) {
-        // Only add ads if we have at least one news item
-        itemsToRender.push(
-          <div key={`ad-${i}`} className="h-[15rem] sm:h-[18rem]">
-            <AdsBox />
-          </div>
-        )
-      }
-    }
-
-    return itemsToRender
+    return newsItems.map((newsItem, index) => (
+      <OverlayedNewsImage key={`news-${index}`} newsItem={newsItem} />
+    ))
   }
 
   return (

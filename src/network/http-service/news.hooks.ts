@@ -47,6 +47,13 @@ export function useFetchTags() {
   })
 }
 
+export function  useFetchPopularTags() {
+    return useAppQuery<TagDTO[]>({
+        queryKey: [NewsQueryKey.POPULAR_TAGS],
+        apiRoute: routes.news.popularTags
+    })
+}
+
 export function useFetchNewsDetail(slug: string) {
   return useAppQuery<FullNewsDTO>({
     queryKey: [NewsQueryKey.NEWS_DETAILS, slug],

@@ -5,10 +5,10 @@ import HomeCoreHero from '@/_components/pages/public-home/sub-sections/home-core
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { NewsFullScreenCarousel } from '@/_components/public/news-full-screen-carousel'
 import {
-  HomePageBlogContent,
+  HomePageDiaspora,
   HomePageFeatured,
-  HomePageRecommendedContent,
   HomePageWithVideos,
+  HomePageYouMayHaveMissed,
 } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import HomePageFreeContent from '@/_components/pages/public-home/sub-sections/you-may-have-missed'
@@ -29,7 +29,9 @@ const HomePageContent = () => {
 
   //featured news
   const { data: featuredNews, isLoading: featuredNewsIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageFeatured.slug },
+    { published: true, categorySlug: HomePageFeatured.slug, categoryIds: [
+        //todo: pass the actual article here too
+    ] },
     1,
     HomePageFeatured.maxThreshold
   )
@@ -42,18 +44,18 @@ const HomePageContent = () => {
   )
 
   //recommended content news
-  const { data: recommendedContent, isLoading: recommendedContentIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageRecommendedContent.slug },
+  const { data: diasporaContent, isLoading: diasporaContentIsLoading } = useFetchNews(
+    { published: true, categorySlug: HomePageDiaspora.slug },
     1,
-    HomePageRecommendedContent.maxThreshold
+    HomePageDiaspora.maxThreshold
   )
 
-  //free content information
-  const { data: newsTaggedAsFreeContent, isLoading: newsTaggedAsFreeContentIsLoading } =
+  //you may have missed
+  const { data: youMayHaveMissedFreeContent, isLoading: youMayHaveMissedIsLoading } =
     useFetchNews(
-      { published: true, categorySlug: HomePageBlogContent.slug },
+      { published: true, categorySlug: HomePageYouMayHaveMissed.slug },
       1,
-      HomePageBlogContent.maxThreshold
+      HomePageYouMayHaveMissed .maxThreshold
     )
 
   return (
@@ -71,6 +73,15 @@ const HomePageContent = () => {
         isLoading={featuredNewsIsLoading}
         carouselItem={{ itemType: 'news-with-description' }}
       />
+
+      {/* throw in interviews here */}
+      <NewsCategoryCarousel
+        title={"Interviews"}
+        items={featuredNews?.data}
+        isLoading={featuredNewsIsLoading}
+        carouselItem={{ itemType: 'interview' }}
+      />
+
       <NewsCategoryCarousel
         title={HomePageWithVideos.name}
         items={newsWithVideos?.data}
@@ -79,15 +90,15 @@ const HomePageContent = () => {
       />
 
       <NewsFullScreenCarousel
-        title={HomePageRecommendedContent.name}
-        items={recommendedContent?.data}
-        isLoading={recommendedContentIsLoading}
+        title={HomePageDiaspora.name}
+        items={diasporaContent?.data}
+        isLoading={diasporaContentIsLoading}
         carouselItem={{ itemType: 'news-fullscreen' }}
       />
       <HomePageFreeContent
-        title={HomePageBlogContent.name}
-        newsItems={newsTaggedAsFreeContent?.data}
-        isLoading={newsTaggedAsFreeContentIsLoading}
+        title={HomePageYouMayHaveMissed.name}
+        newsItems={youMayHaveMissedFreeContent?.data}
+        isLoading={youMayHaveMissedIsLoading}
       />
     </div>
   )

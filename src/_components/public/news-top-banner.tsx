@@ -39,7 +39,7 @@ export const NewsBanner = ({ title }: NewsBannerProps) => {
       {/* Title section with improved responsive styling */}
       <div className="font-bold px-2 xs:px-2.5 sm:px-4 md:px-6 lg:px-8 mr-1.5 xs:mr-2 sm:mr-4 h-full bg-primaryGreen flex items-center justify-center text-white absolute left-0 z-10 shadow-md">
         <FiCircle className="mr-1.5 xs:mr-2 sm:mr-2.5 animate-pulse text-sm xs:text-sm sm:text-base md:text-lg" />
-        <span className="text-xs xs:text-sm sm:text-sm md:text-base truncate max-w-[90px] xs:max-w-full font-extrabold">{title}</span>
+        <span className="text-xs xs:text-sm sm:text-sm md:text-base truncate xs:max-w-full font-extrabold">{title}</span>
       </div>
 
       {/* News content with improved responsive padding and spacing */}

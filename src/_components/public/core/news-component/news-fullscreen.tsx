@@ -43,7 +43,7 @@ export default function NewsFullScreen({
     <AppLink href={ClientRoutes.viewNews(slug)} className="block hover:shadow-lg transition-shadow duration-300 w-full">
       <div className="w-full overflow-hidden border border-gray-200 shadow-sm">
         <div className="relative h-[30rem] w-full overflow-hidden">
-          <AppImage src={coverImage as string} alt={title ?? "News image"} className="object-cover w-full" priority />
+          <AppImage src={coverImage as string} alt={title ?? "News image"} className="object-cover w-full h-full object-center" priority />
           {/* Black overlay on top of the image */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
@@ -64,12 +64,6 @@ export default function NewsFullScreen({
 
         <div className="py-4">
           <div className="mb-3 flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primaryGreen text-white">
-                <User size={16} />
-              </div>
-              <span className="text-sm font-medium">Admin</span>
-            </div>
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <Calendar size={16} />
               <span>{date}</span>

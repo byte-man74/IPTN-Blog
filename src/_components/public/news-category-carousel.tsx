@@ -11,10 +11,11 @@ import OverlayedNewsImage from '@/_components/public/core/news-component/overlay
 import BasicNewsWithTagV2 from '@/_components/public/core/news-component/basic-news-with-tag-v2'
 import OverlayedNewsImageV2 from '@/_components/public/core/news-component/overlayed-news-v2'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
+import ImagePreviewNews from './core/news-component/image-preview-news'
 
 
 interface CarouselItemComponentType {
-    itemType: "news-overlay" | "news-with-description" | "basic-news-with-tag-v2" | "overlay-v2"
+    itemType: "news-overlay" | "news-with-description" | "basic-news-with-tag-v2" | "overlay-v2" | "interview"
 }
 interface NewsCategoryCarouselProps {
     title?: string
@@ -51,6 +52,7 @@ export const NewsCategoryCarousel = ({
         return { desktop: 2, tablet: 3, mobile: 1 };
       case "news-overlay":
       case "news-with-description":
+      case "news-interview":
       default:
         return { desktop: 4, tablet: 3, mobile: 1 };
     }
@@ -110,6 +112,9 @@ export const NewsCategoryCarousel = ({
         break;
     case "overlay-v2":
         ItemComponent = OverlayedNewsImageV2;
+        break
+        case "interview":
+        ItemComponent = ImagePreviewNews
         break
     default:
       ItemComponent = NewsWithDescription;

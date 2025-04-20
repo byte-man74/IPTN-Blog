@@ -7,6 +7,7 @@ export const routes = {
     delete: (id: string) => `/news/${id}`,
     categories: '/news/categories',
     tags: '/news/tags',
+    popularTags: "news/tags/popular",
     analytics: (id: string) => `/news/internal/${id}/analytics`,
   },
   users: {

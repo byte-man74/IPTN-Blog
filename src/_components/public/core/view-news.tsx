@@ -173,13 +173,13 @@ const ViewNews = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <article className="max-w-full w-full flex flex-col items-center">
+    <article className="max-w-full w-full flex flex-col items-center bg-[#E4E4E4]">
       {/* Header Section */}
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-6 flex flex-col items-center">
         {loading ? (
           <Skeleton className="h-12 md:h-16 w-full md:w-3/4 mb-3 md:mb-4" />
         ) : (
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight text-center">
             {cleanUpNewsTitle(data?.title ?? "") || 'Article Title'}
           </h1>
         )}
@@ -228,8 +228,8 @@ const ViewNews = ({ slug }: { slug: string }) => {
             <Skeleton className="h-5 md:h-6 w-5/6" />
           </div>
         ) : (
-          <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none mb-6 md:mb-8 font-tiro-devanagari">
-            {editor && <EditorContent editor={editor} className="prose max-w-none font-tiro-devanagari" />}
+          <div className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none mb-6 md:mb-8 font-tiro-devanagari text-base sm:text-lg md:text-xl">
+            {editor && <EditorContent editor={editor} className="prose max-w-none font-tiro-devanagari text-base sm:text-lg md:text-xl" />}
           </div>
         )}
 

@@ -42,6 +42,7 @@ export interface INewsService {
   deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError>
   fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError>
   fetchTags(): Promise<TagDTO[] | null | ApiCustomError>
+  getPopularTags(): Promise<TagDTO[] | null | ApiCustomError> 
 }
 
 export class NewsService implements INewsService {
@@ -222,5 +223,13 @@ export class NewsService implements INewsService {
    */
   async fetchTags(): Promise<TagDTO[] | null | ApiCustomError> {
     return await this.repository.fetchTags()
+  }
+
+  /**
+   * Retrieves popular tags used in published news articles with high view counts
+   * @returns Array of popular tags or error
+   */
+  async getPopularTags(): Promise<TagDTO[] | null | ApiCustomError> {
+    return await this.repository.getPopularTags()
   }
 }
