@@ -180,7 +180,24 @@ export class NewsRepository {
         }))
       }
 
-      // Filter by category slug if provided
+      // Filter by category slugs if provided
+      if (filters.categorySlugs && filters.categorySlugs.length > 0) {
+        if (!where.AND) {
+          where.AND = []
+        }
+
+        filters.categorySlugs.forEach(slug => {
+          where.AND.push({
+            categories: {
+              some: {
+                slug: slug,
+              },
+            }
+          })
+        })
+      }
+
+      // Filter by single category slug if provided
       if (filters.categorySlug) {
         if (!where.AND) {
           where.AND = []

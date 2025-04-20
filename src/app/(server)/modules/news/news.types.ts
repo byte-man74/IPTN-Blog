@@ -93,6 +93,7 @@ export const NewsFilterSchema = z.object({
   authorId: z.string().nullable().optional(),
   published: z.boolean().nullable().optional(),
   categoryIds: z.array(z.number()).nullable().optional(),
+  categorySlugs: z.array(z.string()).nullable().optional(),
   categorySlug: z.string().nullable().optional(),
   tagIds: z.array(z.number()).nullable().optional(),
   startDate: z.date().nullable().optional(),

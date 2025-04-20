@@ -1,11 +1,13 @@
-"use client"
+'use client'
 
 import NewsCarousel from '@/_components/public/core/news-component/news-carousel'
 import BasicTitle from '@/_components/public/core/section-title/basic-title'
+import {
+  HomePageArticles,
+  HomePageFeatured,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import React from 'react'
-
-import { HomePageTopNews } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
 /**
  * MainContent component
@@ -18,11 +20,11 @@ import { HomePageTopNews } from '@/app/(server)/modules/site-configurations/site
  * - Fetches and displays top news articles
  */
 const MainContent = () => {
-  // Fetch top news articles
+  // Fetch fetch featured articles
   const { data: mainNews, isLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageTopNews.slug },
+    { published: true, categorySlugs: [HomePageFeatured.slug, HomePageArticles.slug] },
     1,
-    HomePageTopNews.maxThreshold
+    5
   )
 
   return (

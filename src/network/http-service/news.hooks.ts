@@ -15,6 +15,8 @@ export function useFetchNews(params?: NewsFilterDTO, page?: number, limit?: numb
     ? {
         ...params,
         categoryIds: params.categoryIds?.length ? params.categoryIds.join(',') : undefined,
+        categorySlugs: params.categorySlugs?.length ? params.categorySlugs.join(',') : undefined,
+        categorySlug: params.categorySlug,
         tagIds: params.tagIds?.length ? params.tagIds.join(',') : undefined,
         startDate: params.startDate?.toISOString(),
         endDate: params.endDate?.toISOString(),

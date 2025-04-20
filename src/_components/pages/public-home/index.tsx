@@ -5,13 +5,16 @@ import HomeCoreHero from '@/_components/pages/public-home/sub-sections/home-core
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { NewsFullScreenCarousel } from '@/_components/public/news-full-screen-carousel'
 import {
+  HomePageArticles,
   HomePageDiaspora,
   HomePageFeatured,
+  HomePageInterviews,
   HomePageWithVideos,
   HomePageYouMayHaveMissed,
 } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import HomePageFreeContent from '@/_components/pages/public-home/sub-sections/you-may-have-missed'
+import { AdsBox } from '@/_components/public/core/ads-box'
 
 /**
  * HomePageContent component
@@ -31,10 +34,17 @@ const HomePageContent = () => {
   const { data: featuredNews, isLoading: featuredNewsIsLoading } = useFetchNews(
     {
       published: true,
-      categorySlug: HomePageFeatured.slug,
-      categoryIds: [
-        //todo: pass the actual article here too
-      ],
+      categorySlugs: [HomePageFeatured.slug, HomePageArticles.slug],
+    },
+    1,
+    HomePageFeatured.maxThreshold
+  )
+
+  //interviews
+  const { data: interviews, isLoading: interviewsIsLoading } = useFetchNews(
+    {
+      published: true,
+      categorySlugs: [HomePageInterviews.slug],
     },
     1,
     HomePageFeatured.maxThreshold
@@ -62,51 +72,67 @@ const HomePageContent = () => {
   )
 
   return (
-    <div
-      className="flex flex-col min-h-[2rem]
+    <>
+      <div
+        className="flex flex-col min-h-[2rem]
       gap-4 xs:gap-5 sm:gap-6 md:gap-12 lg:gap-12
       px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8
       mt-3 xs:mt-4 sm:mt-5 md:mt-6
       mx-auto w-full"
-    >
-      <HomeCoreHero />
-      <NewsCategoryCarousel
-        title={HomePageFeatured.name}
-        backgroundTitle="Featured"
-        items={featuredNews?.data}
-        isLoading={featuredNewsIsLoading}
-        carouselItem={{ itemType: 'news-with-description' }}
-      />
+      >
+        <HomeCoreHero />
 
-      {/* throw in interviews here */}
-      <NewsCategoryCarousel
-        title={'Interviews'}
-        backgroundTitle="Honor & Glory"
-        items={featuredNews?.data}
-        isLoading={featuredNewsIsLoading}
-        carouselItem={{ itemType: 'interview' }}
-      />
+        {!featuredNewsIsLoading && featuredNews?.data && featuredNews.data.length > 5 && (
+          <NewsCategoryCarousel
+            title={HomePageFeatured.name}
+            backgroundTitle="Featured"
+            items={featuredNews.data.slice(5)}
+            isLoading={featuredNewsIsLoading}
+            carouselItem={{ itemType: 'news-with-description' }}
+          />
+        )}
 
-      <NewsCategoryCarousel
-        title={HomePageWithVideos.name}
-        items={newsWithVideos?.data}
-        backgroundTitle="Must See"
-        isLoading={newsWithVideosIsLoading}
-        carouselItem={{ itemType: 'news-overlay' }}
-      />
+        {!interviewsIsLoading && interviews?.data && interviews.data.length > 0 && (
+          <NewsCategoryCarousel
+            title={'Interviews'}
+            backgroundTitle="Honor & Glory"
+            items={interviews.data}
+            isLoading={interviewsIsLoading}
+            carouselItem={{ itemType: 'interview' }}
+          />
+        )}
 
-      <NewsFullScreenCarousel
-        title={HomePageDiaspora.name}
-        items={diasporaContent?.data}
-        isLoading={diasporaContentIsLoading}
-        carouselItem={{ itemType: 'news-fullscreen' }}
-      />
-      <HomePageFreeContent
-        title={HomePageYouMayHaveMissed.name}
-        newsItems={youMayHaveMissedFreeContent?.data}
-        isLoading={youMayHaveMissedIsLoading}
-      />
-    </div>
+        {!newsWithVideosIsLoading && newsWithVideos?.data && newsWithVideos.data.length > 0 && (
+          <NewsCategoryCarousel
+            title={HomePageWithVideos.name}
+            items={newsWithVideos.data}
+            backgroundTitle="Must See"
+            isLoading={newsWithVideosIsLoading}
+            carouselItem={{ itemType: 'news-overlay' }}
+          />
+        )}
+
+        {!diasporaContentIsLoading && diasporaContent?.data && diasporaContent.data.length > 0 && (
+          <NewsFullScreenCarousel
+            title={HomePageDiaspora.name}
+            items={diasporaContent.data}
+            isLoading={diasporaContentIsLoading}
+            carouselItem={{ itemType: 'news-fullscreen' }}
+          />
+        )}
+
+        {!youMayHaveMissedIsLoading &&
+          youMayHaveMissedFreeContent?.data &&
+          youMayHaveMissedFreeContent.data.length > 0 && (
+            <HomePageFreeContent
+              title={HomePageYouMayHaveMissed.name}
+              newsItems={youMayHaveMissedFreeContent.data}
+              isLoading={youMayHaveMissedIsLoading}
+            />
+          )}
+      </div>
+      <AdsBox />
+    </>
   )
 }
 

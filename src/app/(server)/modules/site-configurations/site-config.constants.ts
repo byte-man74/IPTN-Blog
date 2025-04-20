@@ -13,10 +13,18 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: true,
     severity: 'warning',
   },
+  interviews: {
+    slug: 'interview',
+    name: "Interviews",
+    threshold: 2,
+    maxThreshold: 2,
+    requiresFresh: true,
+    severity: 'warning',
+  },
   featured: {
     slug: 'featured',
     name: 'Featured Articles',
-    threshold: 4,
+    threshold: 5,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -36,7 +44,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   },
   video: {
     slug: 'video',
-    name: 'Video News',
+    name: 'Videos',
     threshold: 4,
     severity: 'warning',
   },
@@ -87,14 +95,21 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     severity: 'warning',
   },
   youMayHaveMissed: {
-    slug: 'you',
+    slug: 'you-may-have-missed',
     name: 'You may have missed',
     threshold: 3,
     requiresFresh: false,
     severity: 'warning',
   },
+  articles: {
+    slug: 'article',
+    name: 'Articles',
+    threshold: 3,
+    requiresFresh: false,
+    severity: 'warning',
+  },
 
-  // Category-specific content types
+  // Category-specific content types with variations
   secondCategoryFeatured: {
     slug: 'featured',
     name: 'Featured Articles',
@@ -142,6 +157,13 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   },
 }
 
+// Category names as constants for more stable references
+export const HOME_PAGE = 'Home Page'
+export const SECOND_CATEGORY = 'Second Category'
+export const THIRD_CATEGORY = 'Third Category'
+export const FOURTH_CATEGORY = 'Fourth Category'
+export const FIFTH_CATEGORY = 'Fifth Category'
+
 /**
  * Category criteria definitions for different page categories
  */
@@ -149,22 +171,22 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   {
     // Home page (index 0)
     index: 0,
-    name: 'Home Page',
+    name: HOME_PAGE,
     criteria: [
       CONTENT_CRITERIA.editorsPick,
       CONTENT_CRITERIA.featured,
+      CONTENT_CRITERIA.articles,
       CONTENT_CRITERIA.breaking,
       CONTENT_CRITERIA.trending,
       CONTENT_CRITERIA.video,
-      CONTENT_CRITERIA.topNews,
-      CONTENT_CRITERIA.recommendedContent,
-      CONTENT_CRITERIA.blogs,
+      CONTENT_CRITERIA.interviews
+
     ],
   },
   {
     // Second category (index 1)
     index: 1,
-    name: 'Second Category',
+    name: SECOND_CATEGORY,
     criteria: [
       CONTENT_CRITERIA.featured,
       CONTENT_CRITERIA.secondCategoryTrending,
@@ -175,7 +197,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   {
     // Third category (index 2)
     index: 2,
-    name: 'Third Category',
+    name: THIRD_CATEGORY,
     criteria: [
       CONTENT_CRITERIA.thirdCategoryTrending,
       CONTENT_CRITERIA.topPicks,
@@ -186,7 +208,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   {
     // Fourth category (index 3)
     index: 3,
-    name: 'Fourth Category',
+    name: FOURTH_CATEGORY,
     criteria: [
       { ...CONTENT_CRITERIA.featured, threshold: 1 },
       CONTENT_CRITERIA.topPicks,
@@ -196,7 +218,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   {
     // Fifth category (index 4)
     index: 4,
-    name: 'Fifth Category',
+    name: FIFTH_CATEGORY,
     criteria: [
       CONTENT_CRITERIA.fifthCategoryFeatured,
       CONTENT_CRITERIA.topPicks,
@@ -205,16 +227,26 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
   },
 ]
 
+// Helper functions for accessing content criteria
+const getCategoryByName = (name: string): CategoryCriteria | undefined =>
+  CATEGORY_CRITERIA.find(category => category.name === name)
+
+const getContentCriteriaBySlug = (category: CategoryCriteria, slug: string): ContentCriteria | undefined =>
+  category.criteria.find(criteria => criteria.slug === slug)
+
 // Home page exports for easy access
-export const HomePage = CATEGORY_CRITERIA[0]
-export const HomePageBreakingNews = HomePage.criteria[2]
-export const HomePageEditorsPick = HomePage.criteria[0]
-export const HomePageTopNews = HomePage.criteria[5]
-export const HomePageWithVideos = HomePage.criteria[4]
-export const HomePageTrending = HomePage.criteria[3]
-export const HomePageFeatured = HomePage.criteria[1]
+export const HomePage = getCategoryByName(HOME_PAGE) as CategoryCriteria
+
+// Export commonly used content criteria
+export const HomePageBreakingNews = getContentCriteriaBySlug(HomePage, 'breaking') as ContentCriteria
+export const HomePageEditorsPick = getContentCriteriaBySlug(HomePage, 'editors-pick') as ContentCriteria
+export const HomePageWithVideos = getContentCriteriaBySlug(HomePage, 'video') as ContentCriteria
+export const HomePageTrending = getContentCriteriaBySlug(HomePage, 'trending') as ContentCriteria
+export const HomePageFeatured = getContentCriteriaBySlug(HomePage, 'featured') as ContentCriteria
 export const HomePageDiaspora = CONTENT_CRITERIA.diaspora
 export const HomePageYouMayHaveMissed = CONTENT_CRITERIA.youMayHaveMissed
+export const HomePageArticles = getContentCriteriaBySlug(HomePage, 'article') as ContentCriteria
+export const HomePageInterviews  = getContentCriteriaBySlug(HomePage, 'interview') as ContentCriteria
 
 // Number of days content is considered "fresh"
 export const CONTENT_FRESHNESS_DAYS = 7

@@ -50,6 +50,10 @@ export async function GET(request: NextRequest) {
       filters.categorySlug = searchParams.get('categorySlug')
     }
 
+    if (searchParams.has('categorySlugs')) {
+      filters.categorySlugs = searchParams.get('categorySlugs')?.split(',')
+    }
+
     if (searchParams.has('tagIds')) {
       filters.tagIds = searchParams.get('tagIds')?.split(',').map(Number)
     }
