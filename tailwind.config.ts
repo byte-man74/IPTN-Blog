@@ -59,6 +59,7 @@ export default {
       fontFamily: {
         sans: ['var(--font-geist-sans)'],
         mono: ['var(--font-geist-mono)'],
+        'tiro-devanagari': ['var(--font-tiro-devanagari)'],
       },
       padding: {
         'x-sm': '0.05rem',

@@ -4,7 +4,7 @@ import { AppLogo } from "../global/app-logo"
 
 export default function Footer() {
   return (
-    <footer className="bg-[#171717] text-white py-4 sm:py-6 px-4 sm:px-6 md:px-12">
+    <footer className="bg-[#171717] text-white py-4 sm:py-6 px-4 sm:px-6 md:px-12 mt-10">
       <div className="mx-auto bg-[#1D1D1D] p-6 sm:p-8 md:p-12 px-4 sm:px-10 md:px-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-16">
           {/* Newsletter Section */}

@@ -3,7 +3,7 @@ import React from 'react'
 
 type Params = Promise<{ slug: string }>
 
-export default async function UpdateNews(props: { params: Params }) {
+export default async function UpdateNews(props: { params: Promise<Params> }) {
   const params = await props.params;
   const slug = params.slug;
 

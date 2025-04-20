@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { Tiro_Devanagari_Hindi } from 'next/font/google'
 import { NextAuthProvider } from '@/providers/session-provider'
 import ReactQueryProvider from '@/providers/query-client-provider'
 import NextTopLoader from 'nextjs-toploader'
@@ -21,6 +22,16 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
   display: 'swap',
+})
+
+/**
+ * Tiro Devanagari Hindi font for multilingual content
+ */
+const tiroDevanagari = Tiro_Devanagari_Hindi({
+  weight: ['400'],
+  subsets: ['latin', 'devanagari'],
+  display: 'swap',
+  variable: '--font-tiro-devanagari',
 })
 
 // Get the domain from environment variables
@@ -112,7 +123,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${tiroDevanagari.variable}`}
+    >
       <head>
         <link rel="icon" href="/assets/favicon.svg" sizes="any" />
         <meta name="theme-color" content="#008751" />
@@ -129,9 +143,7 @@ export default function RootLayout({
             <ErrorProvider error={null}>
               <Toaster />
               <NextTopLoader showSpinner={false} color="#008751" />
-              <div className="mx-auto max-w-[140rem]">
-                {children}
-              </div>
+              <div className="mx-auto max-w-[140rem]">{children}</div>
             </ErrorProvider>
           </ReactQueryProvider>
         </NextAuthProvider>

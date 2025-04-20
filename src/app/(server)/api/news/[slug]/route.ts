@@ -6,9 +6,10 @@ import { isValidJson } from '@/lib/utils/validator'
 import { checkAuth } from '@/lib/utils/protected-route'
 
 // GET /api/news/[slug] - Get a specific news item
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params
+    const params = await props.params
+    const { slug } = params
     const newsService = new NewsService()
     const result = await newsService.getNewsBySlug(slug)
 
@@ -27,10 +28,11 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
 }
 
 // PATCH /api/news/[slug] - Edit a specific news item
-export async function PATCH(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   return checkAuth(request, async () => {
     try {
-      const { slug } = await params
+      const params = await props.params
+      const { slug } = params
       const body = await request.json()
       const newsService = new NewsService()
 
@@ -78,10 +80,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { slug: 
 }
 
 // DELETE /api/news/[slug] - Delete a specific news item
-export async function DELETE(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   return checkAuth(request, async () => {
     try {
-      const { slug } = await params
+      const params = await props.params
+      const { slug } = params
       const newsService = new NewsService()
       const result = await newsService.deleteNews(slug)
 

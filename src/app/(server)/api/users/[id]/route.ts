@@ -4,7 +4,8 @@ import { UserService } from '@/app/(server)/modules/user/user.service'
 import { checkAuth } from '@/lib/utils/protected-route'
 import { logger } from '@/lib/utils/logger'
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   return checkAuth(request, async () => {
     try {
       const userService = new UserService()

@@ -409,6 +409,56 @@ export class NewsRepository {
     })
   }
 
+  async getPopularTags(): Promise<TagDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      // Find tags that are used in published news articles with high view count
+      const tagsWithCount = await this.tag.findMany({
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: {
+              news: {
+                where: {
+                  published: true,
+                  analytics: {
+                    views: {
+                      gt: 50
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        where: {
+          news: {
+            some: {
+              published: true,
+              analytics: {
+                views: {
+                  gt: 100
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          news: {
+            _count: 'desc'
+          }
+        },
+        take: 10 // Limit to top 10 most popular tags
+      });
+
+      // Transform the result to match TagDTO structure
+      return tagsWithCount.map(tag => ({
+        id: tag.id,
+        name: tag.name,
+      }));
+    })
+  }
+
   async shouldRegenerateSeoImages(
     slug: string,
     updatedNews: Partial<UpdateNewsDTO>

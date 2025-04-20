@@ -18,7 +18,7 @@ const MainNavBanner = () => {
         <AppImage
           alt="banner nav layer"
           src="/assets/nav-layer.svg"
-          opacity={0.28}
+          opacity={1}
           className="absolute w-full h-full object-cover left-0 top-0 z-0"
         />
 

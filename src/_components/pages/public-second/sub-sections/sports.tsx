@@ -1,16 +1,16 @@
-import DarkerBasicNewsWithTag from "@/_components/public/core/news-component/darker-basic-news-with-tag"
-import OverlayedNewsImage from "@/_components/public/core/news-component/overlayed-news-image"
+// import DarkerBasicNewsWithTag from "@/_components/public/core/news-component/darker-basic-news-with-tag"
+// import OverlayedNewsImage from "@/_components/public/core/news-component/overlayed-news-image"
 import FullWidthAlternateTitle from "@/_components/public/core/section-title/full-width-alternate-title"
-import { dummyBasicNewsData, longCarouselBasicNewsData } from "@/lib/constants/pre-data"
+// import { dummyBasicNewsData, longCarouselBasicNewsData } from "@/lib/constants/pre-data"
 
 const Sports = () => {
-  const newsData = longCarouselBasicNewsData ?? []
+//   const newsData = longCarouselBasicNewsData ?? []
 
   return (
     <div className="relative px-8 py-5 flex flex-col gap-8">
       <FullWidthAlternateTitle title="Sports" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2">
           <OverlayedNewsImage newsItem={dummyBasicNewsData[0]} />
         </div>
@@ -30,10 +30,9 @@ const Sports = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
 
 export default Sports
-

@@ -11,7 +11,7 @@ import { default as TipTapImage } from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import { AppImage } from '@/_components/global/app-image'
 import { useIncrementNewsMetric } from '@/network/http-service/analytics.mutations'
-import { cleanUpNewsTitle } from '../../../app/(server)/modules/news/news.utils';
+import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
 
 
 // Define comment interface to avoid using 'any'
@@ -228,8 +228,8 @@ const ViewNews = ({ slug }: { slug: string }) => {
             <Skeleton className="h-5 md:h-6 w-5/6" />
           </div>
         ) : (
-          <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none mb-6 md:mb-8">
-            {editor && <EditorContent editor={editor} className="prose max-w-none" />}
+          <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none mb-6 md:mb-8 font-tiro-devanagari">
+            {editor && <EditorContent editor={editor} className="prose max-w-none font-tiro-devanagari" />}
           </div>
         )}
 

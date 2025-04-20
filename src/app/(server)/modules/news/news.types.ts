@@ -114,7 +114,6 @@ export const CreateNewsCategorySchema = NewsCategorySchema.omit({
 export const TagSchema = z.object({
   id: z.number(),
   name: z.string(),
-  slug: z.string().optional(),
 })
 
 export const CreateTagSchema = TagSchema.omit({
