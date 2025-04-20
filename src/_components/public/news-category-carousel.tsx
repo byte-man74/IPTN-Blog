@@ -19,6 +19,7 @@ interface CarouselItemComponentType {
 }
 interface NewsCategoryCarouselProps {
     title?: string
+    backgroundTitle?: string
     items?: NewsDTO[]
     isLoading?: boolean
     carouselItem: CarouselItemComponentType
@@ -36,6 +37,7 @@ interface NewsCategoryCarouselProps {
 export const NewsCategoryCarousel = ({
   title,
   items,
+  backgroundTitle,
   isLoading = false,
   carouselItem = { itemType: "news-with-description" }
 }: NewsCategoryCarouselProps) => {
@@ -124,7 +126,7 @@ export const NewsCategoryCarousel = ({
   if (isLoading) {
     return (
       <div className="mt-6 flex flex-col gap-8 relative">
-        {title && <FullWidthAlternateTitle title={title} />}
+        {title && <FullWidthAlternateTitle title={title} backgroundTitle={backgroundTitle} />}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {Array(numberOfItems.desktop).fill(0).map((_, index) => (
             <div key={`skeleton-${index}`} className="h-64 bg-gray-200 animate-pulse rounded-md"></div>
@@ -136,7 +138,7 @@ export const NewsCategoryCarousel = ({
 
   return (
     <div className="mt-6 flex flex-col gap-8 relative">
-      {title && <FullWidthAlternateTitle title={title ?? "NA"} />}
+      {title && <FullWidthAlternateTitle title={title ?? "NA"}  backgroundTitle={backgroundTitle}/>}
       <Carousel
         responsive={responsive}
         infinite={true}

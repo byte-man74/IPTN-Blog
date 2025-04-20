@@ -29,9 +29,13 @@ const HomePageContent = () => {
 
   //featured news
   const { data: featuredNews, isLoading: featuredNewsIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageFeatured.slug, categoryIds: [
+    {
+      published: true,
+      categorySlug: HomePageFeatured.slug,
+      categoryIds: [
         //todo: pass the actual article here too
-    ] },
+      ],
+    },
     1,
     HomePageFeatured.maxThreshold
   )
@@ -51,17 +55,16 @@ const HomePageContent = () => {
   )
 
   //you may have missed
-  const { data: youMayHaveMissedFreeContent, isLoading: youMayHaveMissedIsLoading } =
-    useFetchNews(
-      { published: true, categorySlug: HomePageYouMayHaveMissed.slug },
-      1,
-      HomePageYouMayHaveMissed .maxThreshold
-    )
+  const { data: youMayHaveMissedFreeContent, isLoading: youMayHaveMissedIsLoading } = useFetchNews(
+    { published: true, categorySlug: HomePageYouMayHaveMissed.slug },
+    1,
+    HomePageYouMayHaveMissed.maxThreshold
+  )
 
   return (
     <div
       className="flex flex-col min-h-[2rem]
-      gap-4 xs:gap-5 sm:gap-6 md:gap-7 lg:gap-8
+      gap-4 xs:gap-5 sm:gap-6 md:gap-12 lg:gap-12
       px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8
       mt-3 xs:mt-4 sm:mt-5 md:mt-6
       mx-auto w-full"
@@ -69,6 +72,7 @@ const HomePageContent = () => {
       <HomeCoreHero />
       <NewsCategoryCarousel
         title={HomePageFeatured.name}
+        backgroundTitle="Featured"
         items={featuredNews?.data}
         isLoading={featuredNewsIsLoading}
         carouselItem={{ itemType: 'news-with-description' }}
@@ -76,7 +80,8 @@ const HomePageContent = () => {
 
       {/* throw in interviews here */}
       <NewsCategoryCarousel
-        title={"Interviews"}
+        title={'Interviews'}
+        backgroundTitle="Honor & Glory"
         items={featuredNews?.data}
         isLoading={featuredNewsIsLoading}
         carouselItem={{ itemType: 'interview' }}
@@ -85,6 +90,7 @@ const HomePageContent = () => {
       <NewsCategoryCarousel
         title={HomePageWithVideos.name}
         items={newsWithVideos?.data}
+        backgroundTitle="Must See"
         isLoading={newsWithVideosIsLoading}
         carouselItem={{ itemType: 'news-overlay' }}
       />

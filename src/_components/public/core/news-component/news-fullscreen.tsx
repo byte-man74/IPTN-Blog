@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { User, Calendar, Eye, MessageSquare } from 'lucide-react'
+import { Calendar, Eye, MessageSquare } from 'lucide-react'
 import { AppImage } from '@/_components/global/app-image'
 import { AppLink } from '@/_components/global/app-link'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
