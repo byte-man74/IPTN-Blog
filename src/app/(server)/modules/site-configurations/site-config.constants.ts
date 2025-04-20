@@ -87,6 +87,12 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     threshold: 3,
     severity: 'warning',
   },
+  sports: {
+    slug: 'sports-news',
+    name: 'Sports',
+    threshold: 6,
+    severity: 'warning',
+  },
   diaspora: {
     slug: 'diaspora',
     name: 'Diaspora',
@@ -250,3 +256,4 @@ export const HomePageInterviews  = getContentCriteriaBySlug(HomePage, 'interview
 
 // Number of days content is considered "fresh"
 export const CONTENT_FRESHNESS_DAYS = 7
+export const DEFAULT_PAGE_NUMBER = 1

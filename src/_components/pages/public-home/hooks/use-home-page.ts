@@ -1,8 +1,14 @@
-"use client"
-import { HomePageFeatured, HomePageArticles, HomePageInterviews, HomePageWithVideos, HomePageDiaspora, HomePageYouMayHaveMissed } from "@/app/(server)/modules/site-configurations/site-config.constants"
-import { useFetchNews } from "@/network/http-service/news.hooks"
-
-const DEFAULT_PAGE_NUMBER = 1
+'use client'
+import {
+  HomePageFeatured,
+  HomePageArticles,
+  HomePageInterviews,
+  HomePageWithVideos,
+  HomePageDiaspora,
+  HomePageYouMayHaveMissed,
+  DEFAULT_PAGE_NUMBER,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
+import { useFetchNews } from '@/network/http-service/news.hooks'
 
 // Custom hook to encapsulate news fetching logic
 export const useHomePageNews = () => {
@@ -47,6 +53,6 @@ export const useHomePageNews = () => {
     interviews,
     newsWithVideos,
     diasporaContent,
-    youMayHaveMissedContent
+    youMayHaveMissedContent,
   }
 }

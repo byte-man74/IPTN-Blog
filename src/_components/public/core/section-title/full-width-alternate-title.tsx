@@ -42,16 +42,16 @@ const FullWidthAlternateTitle: React.FC<FullWidthAlternateTitleProps> = ({ title
 
   return (
     <div className="relative flex items-center w-full my-2 sm:my-4  overflow-y-visible">
-      <div className="h-[2px] sm:h-[3px] bg-primaryGreen flex-grow-0 w-8 sm:w-24"></div>
+      <div className="h-[2px] sm:h-[2px] bg-primaryGreen flex-grow-0 w-8 sm:w-24"></div>
       <h2 className="relative z-10 mx-1 sm:mx-2 font-semibold text-lg sm:text-[30px] whitespace-nowrap overflow-y-visible text-ellipsis">{title ?? "NA"}</h2>
-      <div className="h-[2px] sm:h-[3px] bg-[#CCCCCC] flex-grow"></div>
+      <div className="h-[2px] sm:h-[1px] bg-[#CCCCCC] flex-grow"></div>
       <div className="absolute inset-0 left-[3rem] sm:left-[5.8rem] z-[-1] flex items-center text-black text-[50px] sm:text-[102px] font-bold overflow-y-visible">
         <div
           ref={marqueeRef}
           className="whitespace-nowrap"
         >
           <h2
-            className="font-black tracking-widest text-transparent opacity-15 mt-[-5px] sm:mt-[-10px] inline-block"
+            className="font-black tracking-normal text-transparent opacity-15 mt-[-5px] sm:mt-[-10px] inline-block"
             style={{
               WebkitTextStroke: "1px black",
               WebkitTextStrokeWidth: "1px",
