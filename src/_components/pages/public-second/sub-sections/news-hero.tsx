@@ -44,8 +44,8 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
 
   return (
     // header section
-    <div className="relative flex flex-col lg:flex-row px-4 sm:px-6 lg:px-8 gap-4 h-full items-stretch w-full pb-4 mt-4 sm:mt-0">
-      <div className="w-full lg:w-1/2 h-full relative mb-8 lg:mb-0">
+    <div className="relative flex flex-col lg:flex-row px-4 sm:px-6 lg:px-8 gap-4 h-full items-stretch w-full pb-4 mt-4 sm:mt-2">
+      <div className="w-full lg:w-1/2 h-full relative mb-8 lg:mb-0 overflow-hidden">
         <FullWidthAlternateTitle title={`${CONTENT_CRITERIA.trending.name}`} />
         <div className="mb-4 sm:mb-6 lg:mb-8 w-full" />
         {secondPageTrendingDataIsLoading ? (

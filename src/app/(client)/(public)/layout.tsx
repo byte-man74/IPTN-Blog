@@ -61,7 +61,7 @@ function renderLayout(children: React.ReactNode, dehydratedState?: unknown) {
 // Layout content component to avoid duplication
 function LayoutContent({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="overflow-hidden">
       <GlobalSocialBanner />
       <MainNavBanner />
       <HeroNavigation />
@@ -69,6 +69,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <NewsBanner title="Breaking News" />
       {children}
       <Footer />
-    </>
+    </div>
   )
 }

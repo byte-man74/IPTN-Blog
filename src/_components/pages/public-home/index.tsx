@@ -5,16 +5,15 @@ import HomeCoreHero from '@/_components/pages/public-home/sub-sections/home-core
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { NewsFullScreenCarousel } from '@/_components/public/news-full-screen-carousel'
 import {
-  HomePageArticles,
   HomePageDiaspora,
   HomePageFeatured,
-  HomePageInterviews,
   HomePageWithVideos,
   HomePageYouMayHaveMissed,
 } from '@/app/(server)/modules/site-configurations/site-config.constants'
-import { useFetchNews } from '@/network/http-service/news.hooks'
 import HomePageFreeContent from '@/_components/pages/public-home/sub-sections/you-may-have-missed'
 import { AdsBox } from '@/_components/public/core/ads-box'
+import { NewsDTO } from '@/app/(server)/modules/news/news.types'
+import { useHomePageNews } from './hooks/use-home-page'
 
 /**
  * HomePageContent component
@@ -25,51 +24,23 @@ import { AdsBox } from '@/_components/public/core/ads-box'
  * - Adaptive padding and gap sizing based on viewport width
  * - Optimized content flow for mobile, tablet, and desktop views
  * - Displays various news carousels and content sections
- *
  */
 const HomePageContent = () => {
-  // Perform nullish check for data coming from external source
+  // Use the custom hook to fetch all news data
+  const { featuredNews, interviews, newsWithVideos, diasporaContent, youMayHaveMissedContent } =
+    useHomePageNews()
 
-  //featured news
-  const { data: featuredNews, isLoading: featuredNewsIsLoading } = useFetchNews(
-    {
-      published: true,
-      categorySlugs: [HomePageFeatured.slug, HomePageArticles.slug],
-    },
-    1,
-    HomePageFeatured.maxThreshold
-  )
-
-  //interviews
-  const { data: interviews, isLoading: interviewsIsLoading } = useFetchNews(
-    {
-      published: true,
-      categorySlugs: [HomePageInterviews.slug],
-    },
-    1,
-    HomePageFeatured.maxThreshold
-  )
-
-  //news with videos
-  const { data: newsWithVideos, isLoading: newsWithVideosIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageWithVideos.slug },
-    1,
-    HomePageFeatured.maxThreshold
-  )
-
-  //recommended content news
-  const { data: diasporaContent, isLoading: diasporaContentIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageDiaspora.slug },
-    1,
-    HomePageDiaspora.maxThreshold
-  )
-
-  //you may have missed
-  const { data: youMayHaveMissedFreeContent, isLoading: youMayHaveMissedIsLoading } = useFetchNews(
-    { published: true, categorySlug: HomePageYouMayHaveMissed.slug },
-    1,
-    HomePageYouMayHaveMissed.maxThreshold
-  )
+  // Helper function to render content sections conditionally
+  const renderContentSection = <T extends { data?: NewsDTO[] }>(
+    data: T | undefined,
+    isLoading: boolean,
+    renderComponent: (items: NewsDTO[]) => React.ReactNode
+  ): React.ReactNode => {
+    if (!isLoading && data?.data && data.data.length > 0) {
+      return renderComponent(data.data)
+    }
+    return null
+  }
 
   return (
     <>
@@ -82,54 +53,65 @@ const HomePageContent = () => {
       >
         <HomeCoreHero />
 
-        {!featuredNewsIsLoading && featuredNews?.data && featuredNews.data.length > 5 && (
-          <NewsCategoryCarousel
-            title={HomePageFeatured.name}
-            backgroundTitle="Featured"
-            items={featuredNews.data.slice(5)}
-            isLoading={featuredNewsIsLoading}
-            carouselItem={{ itemType: 'news-with-description' }}
-          />
+        {renderContentSection(
+          featuredNews.data,
+          featuredNews.isLoading,
+          (items: NewsDTO[]) =>
+            items.length > 5 && (
+              <NewsCategoryCarousel
+                title={HomePageFeatured.name}
+                backgroundTitle="Featured"
+                items={items.slice(5)}
+                isLoading={featuredNews.isLoading}
+                carouselItem={{ itemType: 'news-with-description' }}
+              />
+            )
         )}
 
-        {!interviewsIsLoading && interviews?.data && interviews.data.length > 0 && (
+        {renderContentSection(interviews.data, interviews.isLoading, (items: NewsDTO[]) => (
           <NewsCategoryCarousel
-            title={'Interviews'}
+            title="Interviews"
             backgroundTitle="Honor & Glory"
-            items={interviews.data}
-            isLoading={interviewsIsLoading}
+            items={items}
+            isLoading={interviews.isLoading}
             carouselItem={{ itemType: 'interview' }}
           />
-        )}
+        ))}
 
-        {!newsWithVideosIsLoading && newsWithVideos?.data && newsWithVideos.data.length > 0 && (
+        {renderContentSection(newsWithVideos.data, newsWithVideos.isLoading, (items: NewsDTO[]) => (
           <NewsCategoryCarousel
             title={HomePageWithVideos.name}
-            items={newsWithVideos.data}
             backgroundTitle="Must See"
-            isLoading={newsWithVideosIsLoading}
+            items={items}
+            isLoading={newsWithVideos.isLoading}
             carouselItem={{ itemType: 'news-overlay' }}
           />
+        ))}
+
+        {renderContentSection(
+          diasporaContent.data,
+          diasporaContent.isLoading,
+          (items: NewsDTO[]) => (
+            <NewsFullScreenCarousel
+              title={HomePageDiaspora.name}
+              items={items}
+              isLoading={diasporaContent.isLoading}
+              carouselItem={{ itemType: 'news-fullscreen' }}
+            />
+          )
         )}
 
-        {!diasporaContentIsLoading && diasporaContent?.data && diasporaContent.data.length > 0 && (
-          <NewsFullScreenCarousel
-            title={HomePageDiaspora.name}
-            items={diasporaContent.data}
-            isLoading={diasporaContentIsLoading}
-            carouselItem={{ itemType: 'news-fullscreen' }}
-          />
-        )}
-
-        {!youMayHaveMissedIsLoading &&
-          youMayHaveMissedFreeContent?.data &&
-          youMayHaveMissedFreeContent.data.length > 0 && (
+        {renderContentSection(
+          youMayHaveMissedContent.data,
+          youMayHaveMissedContent.isLoading,
+          (items: NewsDTO[]) => (
             <HomePageFreeContent
               title={HomePageYouMayHaveMissed.name}
-              newsItems={youMayHaveMissedFreeContent.data}
-              isLoading={youMayHaveMissedIsLoading}
+              newsItems={items}
+              isLoading={youMayHaveMissedContent.isLoading}
             />
-          )}
+          )
+        )}
       </div>
       <AdsBox />
     </>
