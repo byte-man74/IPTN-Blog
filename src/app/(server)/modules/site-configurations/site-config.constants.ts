@@ -114,7 +114,14 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: false,
     severity: 'warning',
   },
-
+  fashion: {
+    slug: 'fashion',
+    name: 'Fashion',
+    threshold: 8,
+    maxThreshold: 12,
+    requiresFresh: false,
+    severity: 'warning',
+  },
   // Category-specific content types with variations
   secondCategoryFeatured: {
     slug: 'featured',

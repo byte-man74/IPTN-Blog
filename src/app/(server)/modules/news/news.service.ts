@@ -42,7 +42,7 @@ export interface INewsService {
   deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError>
   fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError>
   fetchTags(): Promise<TagDTO[] | null | ApiCustomError>
-  getPopularTags(): Promise<TagDTO[] | null | ApiCustomError> 
+  getPopularTags(): Promise<TagDTO[] | null | ApiCustomError>           
 }
 
 export class NewsService implements INewsService {

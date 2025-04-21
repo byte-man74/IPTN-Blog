@@ -3,7 +3,7 @@ import NewsWithDescription from '@/_components/public/core/news-component/news-w
 import BasicTitle from '@/_components/public/core/section-title/basic-title'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import React from 'react'
-import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import { CONTENT_CRITERIA, DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import { CarouselSkeleton, NewsWithDescriptionSkeleton } from '@/_components/global/skeletons'
 
@@ -24,7 +24,7 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
       categoryIds: [category],
       categorySlug: CONTENT_CRITERIA.secondCategoryTrending.slug,
     },
-    1,
+    DEFAULT_PAGE_NUMBER,
     CONTENT_CRITERIA.secondCategoryTrending.maxThreshold
   )
 
@@ -37,8 +37,8 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
           categoryIds: [category],
           categorySlug: CONTENT_CRITERIA.featured.slug,
         },
-        1,
-        2
+        DEFAULT_PAGE_NUMBER,
+        2 //threshold 
       )
 
 
@@ -56,7 +56,7 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
       </div>
 
       <div className="w-full lg:w-1/2 pt-2 sm:pt-4 lg:pt-6 flex flex-col gap-2 min-h-full justify-end-between">
-        <BasicTitle title={CONTENT_CRITERIA.featured.name} />
+        <BasicTitle title={"Featured"} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full h-full items-end">
           {secondPageFeaturedIsLoading ? (
             <>

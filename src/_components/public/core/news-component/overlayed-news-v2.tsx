@@ -8,13 +8,14 @@ import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
 
 interface OverlayedNewsImageProps {
   newsItem?: NewsDTO;
+  height?: string;
 }
 
 /**
  * OverlayedNewsImageV2 component displays a news item with an overlayed background image and metadata.
  * @param {OverlayedNewsImageProps} props - The props for the component.
  */
-const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
+const OverlayedNewsImageV2 = ({ newsItem, height }: OverlayedNewsImageProps) => {
   if (!newsItem) {
     return null;
   }
@@ -34,8 +35,11 @@ const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
   const comments = 3; // Placeholder until analytics includes comments
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug)} className="relative w-full min-h-[30rem] h-full overflow-hidden group">
-      <div className="">
+    <AppLink
+      href={ClientRoutes.viewNews(slug)}
+      className={`relative w-full overflow-hidden group ${height ? '' : 'min-h-[20rem] md:min-h-[34rem]'}`}
+    >
+      <div className={`w-full h-full ${height ? height : ''}`}>
         {/* Background Image */}
         <div className="absolute inset-0">
           <AppImage src={imageUrl} alt={title || "News image"} priority className="object-cover w-full h-full" />
@@ -46,37 +50,37 @@ const OverlayedNewsImageV2 = ({ newsItem }: OverlayedNewsImageProps) => {
         {/* Additional Overlay */}
         <div className="absolute inset-0 bg-black opacity-30"></div>
 
-        {/* Metadata indicators */}
-        <div className="absolute bottom-[120px] left-6 flex items-center gap-4 text-white">
-          <div className="flex items-center gap-2">
-            <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
-              <Camera size={18} className="text-white" />
+        <div className="relative h-full flex flex-col justify-end p-4 sm:p-6">
+          {/* Metadata indicators */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white mb-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
+                <Camera size={16} className="text-white" />
+              </div>
+              <span className="text-xs sm:text-sm">{readTime}</span>
             </div>
-            <span className="text-sm">{readTime}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
-              <Eye size={18} className="text-white" />
+            <div className="flex items-center gap-2">
+              <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
+                <Eye size={16} className="text-white" />
+              </div>
+              <span className="text-xs sm:text-sm">{views}</span>
             </div>
-            <span className="text-sm">{views}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
-              <MessageSquare size={18} className="text-white" />
+            <div className="flex items-center gap-2">
+              <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
+                <MessageSquare size={16} className="text-white" />
+              </div>
+              <span className="text-xs sm:text-sm">{comments}</span>
             </div>
-            <span className="text-sm">{comments}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
-              <Calendar size={18} className="text-white" />
+            <div className="flex items-center gap-2">
+              <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
+                <Calendar size={16} className="text-white" />
+              </div>
+              <span className="text-xs sm:text-sm">{date}</span>
             </div>
-            <span className="text-sm">{date}</span>
           </div>
-        </div>
 
-        {/* Title */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <h2 className="text-2xl md:text-2xl font-bold text-white leading-tight hover:text-primaryGreen transition-colors">
+          {/* Title */}
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-primaryGreen transition-colors">
             {cleanUpNewsTitle(title)}
           </h2>
         </div>

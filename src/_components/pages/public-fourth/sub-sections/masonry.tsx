@@ -4,14 +4,17 @@ import FullWidthAlternateTitle from '@/_components/public/core/section-title/ful
 import Masonry from 'react-masonry-css'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 
-
 interface MasonryNewsGridProps {
   data?: NewsDTO[]
   isLoading?: boolean
   title?: string
 }
 
-const MasonryNewsGrid = ({ data = [], isLoading = false, title = "Top Picks" }: MasonryNewsGridProps) => {
+const MasonryNewsGrid = ({
+  data = [],
+  isLoading = false,
+  title = 'Fashion',
+}: MasonryNewsGridProps) => {
   // Define breakpoints for responsive columns
   const breakpointColumns = {
     default: 4,
@@ -28,9 +31,11 @@ const MasonryNewsGrid = ({ data = [], isLoading = false, title = "Top Picks" }: 
       <div className="px-4 sm:px-6 md:px-10">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Array(4).fill(0).map((_, index) => (
-              <div key={index} className="bg-gray-100 animate-pulse h-64 rounded-md"></div>
-            ))}
+            {Array(4)
+              .fill(0)
+              .map((_, index) => (
+                <div key={index} className="bg-gray-100 animate-pulse h-64 rounded-md"></div>
+              ))}
           </div>
         ) : (
           <Masonry

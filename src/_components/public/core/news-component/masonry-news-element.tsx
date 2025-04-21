@@ -40,12 +40,14 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
             </div>
             <span className="text-white text-sm p-1 bg-[#1B1B1B]">{pubDate ? calculateTimeStampFromDate(pubDate) : "Date not available"}</span>
           </div>
-          <div className="flex items-center py-1 gap-2">
-            <div className="rounded-full p-2 bg-primaryGreen">
-                <Clock className="text-white w-4 h-4" />
+          {analytics?.readDuration && (
+            <div className="flex items-center py-1 gap-2">
+              <div className="rounded-full p-2 bg-primaryGreen">
+                  <Clock className="text-white w-4 h-4" />
+              </div>
+              <span className="text-white text-sm p-1 bg-[#1B1B1B]">{`${analytics.readDuration} min read`}</span>
             </div>
-            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{analytics?.readDuration ? `${analytics?.readDuration} min read` : "Read time not available"}</span>
-          </div>
+          )}
         </div>
       </div>
     </AppLink>
