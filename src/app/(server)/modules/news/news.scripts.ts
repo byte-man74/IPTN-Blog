@@ -57,8 +57,7 @@ export class NewsScripts {
         if (!savedTags[tag]) {
           logger.info(`Creating new tag: ${tag}`)
           const newlyCreatedTag = await this.repository.createTag({
-            name: tag,
-            slug: tag.toLowerCase().replace(/\s+/g, '-'),
+            name: tag.toLowerCase().replace(/\s+/g, '-'),
           })
 
           if (newlyCreatedTag && !('error' in newlyCreatedTag)) {

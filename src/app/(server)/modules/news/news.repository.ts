@@ -250,9 +250,9 @@ export class NewsRepository {
             },
           },
         },
-        orderBy: {
-          pubDate: 'desc',
-        },
+        orderBy: filters.byPopularity 
+          ? { analytics: { views: 'desc' } } 
+          : { pubDate: 'desc' },
       })
 
       const paginatedResults = await news.withPages({

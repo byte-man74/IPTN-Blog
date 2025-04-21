@@ -1,4 +1,5 @@
 import React from 'react'
+import { Skeleton } from '../skeleton'
 
 
 /**
@@ -101,3 +102,18 @@ export const NewsWithDescriptionSkeleton = () => (
 export const NavigationSkeleton = () => (
   <div className="h-6 w-20 bg-gray-700 animate-pulse rounded"></div>
 )
+
+
+export const NewsItemSkeleton = ({ count = 3 }: { count?: number }) => {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, index) => (
+        <div key={`skeleton-${index}`} className="space-y-4">
+          <Skeleton className="h-[150px] sm:h-[180px] md:h-[200px] w-full rounded-md" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      ))}
+    </>
+  );
+};

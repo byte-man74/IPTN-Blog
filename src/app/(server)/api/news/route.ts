@@ -70,6 +70,10 @@ export async function GET(request: NextRequest) {
       filters.searchTerm = searchParams.get('searchTerm')
     }
 
+    if (searchParams.has('byPopularity')) {
+      filters.byPopularity = searchParams.get('byPopularity') === 'true'
+    }
+
     // Validate filters against schema
     const validationResult = NewsFilterSchema.safeParse(filters)
 

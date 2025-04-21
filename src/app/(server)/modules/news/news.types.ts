@@ -99,6 +99,7 @@ export const NewsFilterSchema = z.object({
   startDate: z.date().nullable().optional(),
   endDate: z.date().nullable().optional(),
   searchTerm: z.string().nullable().optional(),
+  byPopularity: z.boolean().nullable().optional(),
 })
 
 export const NewsCategorySchema = z.object({

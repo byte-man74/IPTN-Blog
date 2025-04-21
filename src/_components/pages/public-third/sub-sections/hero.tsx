@@ -4,14 +4,17 @@ import DarkerBasicNewsWithTag from '@/_components/public/core/news-component/dar
 import NewsCarousel from '@/_components/public/core/news-component/news-carousel'
 import BasicTitle from '@/_components/public/core/section-title/basic-title'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
-import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import {
+  CONTENT_CRITERIA,
+  DEFAULT_PAGE_NUMBER,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
 
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import React from 'react'
 
-const EditorsPick = CONTENT_CRITERIA.editorsPick
+const Politics = CONTENT_CRITERIA.politics
 const TrendingContent = CONTENT_CRITERIA.thirdCategoryTrending
-const TopPicks = CONTENT_CRITERIA.topPicks
+
 
 interface ArticleHeroProps {
   category: number
@@ -19,73 +22,72 @@ interface ArticleHeroProps {
 
 export const ThirdSectionHero = ({ category }: ArticleHeroProps) => {
   //editors pick
-  const { data: editorsPickData, isLoading: editorsPickIsLoading } = useFetchNews(
+  const { data: politicsData, isLoading: politicsIsLoading } = useFetchNews(
     {
       categoryIds: [category],
       published: true,
-      categorySlug: EditorsPick.slug,
+      categorySlug: Politics.slug,
     },
-    1,
-    EditorsPick.maxThreshold
+    DEFAULT_PAGE_NUMBER,
+    Politics.maxThreshold
   )
 
-  //trending news
-  const { data: trendingData, isLoading: trendingIsLoading } = useFetchNews(
+  //popular news
+  const { data: popularData, isLoading: popularIsLoading } = useFetchNews(
     {
       published: true,
-      categorySlug: TrendingContent.slug,
-      categoryIds: [category]
+      byPopularity: true,
+      categoryIds: [category],
     },
-    1,
+    DEFAULT_PAGE_NUMBER,
     TrendingContent.threshold
   )
 
-  //top picks
+  //latest news
   const { data: latestNewsData, isLoading: latestNewsIsLoading } = useFetchNews(
     {
       published: true,
       categoryIds: [category],
-      categorySlug: TopPicks.slug
     },
-    1,
-    TopPicks.maxThreshold
+    DEFAULT_PAGE_NUMBER,
+    4
   )
 
   return (
     <div className="w-full flex flex-col lg:flex-row gap-8 justify-between mt-4 px-2 sm:px-4 md:px-6">
       {/* main news section div */}
       <div className="flex flex-col md:flex-row gap-4 w-full lg:w-[71%]">
-        <div className="w-full md:w-1/2">
-          <FullWidthAlternateTitle title={EditorsPick.name} />
+        <div className="w-full md:w-1/2 overflow-hidden">
+          <FullWidthAlternateTitle title={Politics.name} />
           <div className="mb-4 md:mb-8 w-full" />
-          {editorsPickIsLoading ? (
+          {politicsIsLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-[150px] sm:h-[180px] md:h-[200px] w-full rounded-md" />
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
             </div>
           ) : (
-            <NewsCarousel newsItems={editorsPickData?.data ?? []} />
+            <NewsCarousel newsItems={politicsData?.data ?? []} />
           )}
         </div>
-        <div className="w-full md:w-1/2 mt-6 md:mt-0">
-          <FullWidthAlternateTitle title={TrendingContent.name} />
+        <div className="w-full md:w-1/2 mt-6 md:mt-0 overflow-hidden">
+          <FullWidthAlternateTitle title={'Popular'} />
           <div className="mb-4 md:mb-8 w-full" />
-          {trendingIsLoading ? (
+          {popularIsLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-[150px] sm:h-[180px] md:h-[200px] w-full rounded-md" />
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
             </div>
           ) : (
-            <NewsCarousel newsItems={trendingData?.data ?? []} />
+            <NewsCarousel newsItems={popularData?.data ?? []} />
           )}
         </div>
       </div>
 
       {/* sub news section */}
       <div className="flex gap-2 w-full lg:w-[28%] flex-col mt-6 lg:mt-0">
-        <BasicTitle title={TopPicks.name} />
+        <BasicTitle title={"Latest"} />
         <div className="flex flex-col gap-4">
           {latestNewsIsLoading ? (
             <>

@@ -20,6 +20,7 @@ export function useFetchNews(params?: NewsFilterDTO, page?: number, limit?: numb
         tagIds: params.tagIds?.length ? params.tagIds.join(',') : undefined,
         startDate: params.startDate?.toISOString(),
         endDate: params.endDate?.toISOString(),
+        byPopularity: params.byPopularity ? 'true' : undefined,
         page,
         limit,
       }
