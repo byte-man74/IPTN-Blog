@@ -122,6 +122,15 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     requiresFresh: false,
     severity: 'warning',
   },
+  movies: {
+    slug: 'movie-top-ten',
+    name: 'Movies',
+    threshold: 8,
+    maxThreshold: 10,
+    requiresFresh: false,
+    severity: 'warning',
+
+  },
   // Category-specific content types with variations
   secondCategoryFeatured: {
     slug: 'featured',
@@ -264,3 +273,14 @@ export const HomePageInterviews  = getContentCriteriaBySlug(HomePage, 'interview
 // Number of days content is considered "fresh"
 export const CONTENT_FRESHNESS_DAYS = 7
 export const DEFAULT_PAGE_NUMBER = 1
+
+
+// Default site configuration order by content type
+export const DEFAULT_SITE_CONFIG_ORDER = {
+  contentTypes: [
+    'news',     // News content first
+    'article',  // Articles second
+    'lifestyle', // Lifestyle content third
+    'entertainment' // Entertainment content fourth
+  ]
+}

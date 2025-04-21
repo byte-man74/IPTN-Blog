@@ -9,7 +9,7 @@ import React from 'react'
 import { FeaturedNewsItemSkeleton, StandardNewsItemSkeleton } from '@/_components/global/skeletons'
 
 // Constants for content types
-const TrendingContent = CONTENT_CRITERIA.trending
+const FeaturedContent = CONTENT_CRITERIA.featured
 const TopPicksContent = CONTENT_CRITERIA.topPicks
 
 interface EntertainmentHeroProps {
@@ -17,15 +17,15 @@ interface EntertainmentHeroProps {
 }
 
 export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
-  // Fetch trending news
-  const { data: trendingData, isLoading: trendingIsLoading } = useFetchNews(
+  // Fetch featured news
+  const { data: featuredData, isLoading: featuredIsLoading } = useFetchNews(
     {
       published: true,
       categoryIds: [category],
-      categorySlug: TrendingContent.slug,
+      categorySlug: FeaturedContent.slug,
     },
     1,
-    TrendingContent.threshold
+    1
   )
 
   // Fetch top picks news
@@ -39,26 +39,26 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
     TopPicksContent.maxThreshold
   )
 
-  // Get the news items for trending and top picks
-  const trendingItems = trendingData?.data || []
+  // Get the news items for featured and top picks
+  const featuredItems = featuredData?.data || []
   const topPicksItems = topPicksData?.data || []
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 md:px-8 mt-6">
-      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8 items-stretch mb-8 lg:mb-0">
-        <FullWidthAlternateTitle title="Trending" />
-        {trendingIsLoading ? (
+      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8 items-stretch mb-8 lg:mb-0 overflow-hidden">
+        <FullWidthAlternateTitle title="Featured" />
+        {featuredIsLoading ? (
           <FeaturedNewsItemSkeleton />
-        ) : trendingItems.length > 0 ? (
-          <OverlayedNewsImageV2 newsItem={trendingItems[0]} />
+        ) : featuredItems.length > 0 ? (
+          <OverlayedNewsImageV2 newsItem={featuredItems[0]} fullHeight/>
         ) : (
           <div className="h-[20rem] sm:h-[25rem] md:h-[30rem] flex items-center justify-center border border-gray-200">
-            <p className="text-gray-500">No trending content available</p>
+            <p className="text-gray-500">No featured content available</p>
           </div>
         )}
       </div>
 
-      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8">
+      <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8 overflow-hidden">
         <FullWidthAlternateTitle title="Top Picks" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {topPicksIsLoading

@@ -9,23 +9,23 @@ interface FifthSectionFeaturedCategoryProps {
 }
 
 /**
- * This component renders the featured news for the fifth section.
+ * This component renders the movies news for the fifth section.
  * It fetches and displays news items in a responsive grid layout.
  * Fully responsive across all device sizes.
  */
 export const FifthSectionFeaturedCategory = ({ category }: FifthSectionFeaturedCategoryProps) => {
 
-  const { data: featuredData, isLoading } = useFetchNews(
+  const { data: moviesData, isLoading } = useFetchNews(
     {
       published: true,
       categoryIds: [category],
-      categorySlug: CONTENT_CRITERIA.fifthCategoryFeatured.slug,
+      categorySlug: CONTENT_CRITERIA.movies.slug,
     },
     1,
-    9 // Show up to 9 items
+    CONTENT_CRITERIA.movies.maxThreshold || 10 // Use maxThreshold from config or default to 10
   )
 
-  const newsItems = featuredData?.data || []
+  const newsItems = moviesData?.data || []
 
   // Skeleton for loading state
   const FifthSectionFeaturedCategorySkeleton = () => (
@@ -33,9 +33,9 @@ export const FifthSectionFeaturedCategory = ({ category }: FifthSectionFeaturedC
   )
 
   return (
-    <section className="mt-10 md:mt-16 lg:mt-20 px-4 sm:px-6 md:px-8 max-w-screen-2xl mx-auto">
-      <FullWidthAlternateTitle title={CONTENT_CRITERIA.fifthCategoryFeatured.name} />
-      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mt-4">
+    <section className="mt-10 md:mt-16 lg:mt-20 px-4 sm:px-6 md:px-8 max-w-screen-2xl mx-auto mb-10">
+      <FullWidthAlternateTitle title={"Movies"} backgroundTitle="Movies top 10" />
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-12 md:mt-16">
         {isLoading ? (
           // Show skeletons while loading
           Array(6)
@@ -55,7 +55,7 @@ export const FifthSectionFeaturedCategory = ({ category }: FifthSectionFeaturedC
         ) : (
           // Show message if no items
           <div className="col-span-full py-12 text-center">
-            <p className="text-gray-500 text-lg">No featured content available</p>
+            <p className="text-gray-500 text-lg">No movie content available</p>
           </div>
         )}
       </div>

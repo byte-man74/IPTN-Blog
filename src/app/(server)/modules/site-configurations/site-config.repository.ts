@@ -8,11 +8,12 @@ import {
   HealthStatus,
   SiteConfigurationDTO,
   SiteHealthReport,
-} from './site-config.types'
+} from '@/app/(server)/modules/site-configurations/site-config.types'
 import {
   CATEGORY_CRITERIA,
   CONTENT_CRITERIA,
   CONTENT_FRESHNESS_DAYS,
+  DEFAULT_SITE_CONFIG_ORDER,
 } from './site-config.constants'
 import { logger } from '@/lib/utils/logger'
 
@@ -101,10 +102,34 @@ export class SiteConfigRepository {
    */
   async getSiteConfiguration(): Promise<ApiCustomError | null | SiteConfigurationDTO> {
     return tryCatchHandler(async () => {
-      return await this.siteConfiguration.findUnique({
+      const config = await this.siteConfiguration.findUnique({
         where: { id: 1 },
         include: this.getNavigationInclude(),
-      })
+      });
+
+      // Apply default ordering from constants if config exists
+      if (config && !(config instanceof ApiCustomError)) {
+        // Sort navBarKeyCategories based on DEFAULT_SITE_CONFIG_ORDER
+        if (config.navBarKeyCategories && config.navBarKeyCategories.length > 0) {
+          const { contentTypes } = DEFAULT_SITE_CONFIG_ORDER;
+          config.navBarKeyCategories.sort((a, b) => {
+            const indexA = contentTypes.indexOf(a.slug);
+            const indexB = contentTypes.indexOf(b.slug);
+
+            // If both items are in the predefined order, sort by that order
+            if (indexA !== -1 && indexB !== -1) {
+              return indexA - indexB;
+            }
+            // If only one item is in the predefined order, prioritize it
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            // Otherwise, keep original order
+            return 0;
+          });
+        }
+      }
+
+      return config;
     })
   }
 

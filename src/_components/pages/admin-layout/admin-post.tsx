@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ArrowLeft, Edit, Filter, X } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { useFetchCategories, useFetchNews, useFetchTags } from '@/network/http-service/news.hooks'
@@ -31,86 +31,173 @@ import {
 } from '@/components/ui/dialog'
 import { toast } from '@/hooks/use-toast'
 import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const AdminPostMainComponent = () => {
-  const [page, setPage] = useState(1)
-  const [showFilters, setShowFilters] = useState(false)
-  const [filters, setFilters] = useState<NewsFilterDTO>({
-    published: null,
-    searchTerm: null,
-    categoryIds: [],
-    tagIds: [],
-  })
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Initialize from URL parameters with useCallback
+  const getInitialPage = useCallback(() => {
+    return parseInt(searchParams.get('page') || '1')
+  }, [searchParams])
+
+  const getInitialShowFilters = useCallback(() => {
+    return !!searchParams.get('showFilters')
+  }, [searchParams])
+
+  const getInitialFilters = useCallback((): NewsFilterDTO => {
+    return {
+      published:
+        searchParams.get('published') === 'true'
+          ? true
+          : searchParams.get('published') === 'false'
+            ? false
+            : null,
+      searchTerm: searchParams.get('search') || null,
+      categoryIds: searchParams.get('categories')
+        ? searchParams.get('categories')!.split(',').map(Number)
+        : [],
+      tagIds: searchParams.get('tags') ? searchParams.get('tags')!.split(',').map(Number) : [],
+    }
+  }, [searchParams])
+
+  const [page, setPageInternal] = useState(getInitialPage())
+  const [showFilters, setShowFiltersInternal] = useState(getInitialShowFilters())
+  const [filters, setFiltersInternal] = useState<NewsFilterDTO>(getInitialFilters())
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [postToDelete, setPostToDelete] = useState<{ slug: string; title: string } | null>(null)
   const limit = 20
+
+  // Listen for URL changes from browser navigation
+  useEffect(() => {
+    const handleUrlChange = () => {
+      // Reinitialize state from current URL without triggering updates
+      setPageInternal(getInitialPage())
+      setShowFiltersInternal(getInitialShowFilters())
+      setFiltersInternal(getInitialFilters())
+    }
+
+    // Add event listener for popstate (browser back/forward)
+    window.addEventListener('popstate', handleUrlChange)
+
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange)
+    }
+  }, [searchParams, getInitialPage, getInitialShowFilters, getInitialFilters])
+
+  // Update URL and state together
+  const updateUrlAndState = (
+    newPage = page,
+    newFilters = filters,
+    newShowFilters = showFilters
+  ) => {
+    const params = new URLSearchParams()
+
+    // Add pagination
+    params.set('page', newPage.toString())
+
+    // Add filters - safely handle potentially undefined properties
+    if (newFilters.searchTerm) params.set('search', newFilters.searchTerm)
+    if (newFilters.published !== null && newFilters.published !== undefined) {
+      params.set('published', newFilters.published.toString())
+    }
+
+    const categoryIds = newFilters.categoryIds || []
+    if (categoryIds.length > 0) {
+      params.set('categories', categoryIds.join(','))
+    }
+
+    const tagIds = newFilters.tagIds || []
+    if (tagIds.length > 0) {
+      params.set('tags', tagIds.join(','))
+    }
+
+    // Add showFilters state
+    if (newShowFilters) params.set('showFilters', 'true')
+
+    // Update the URL without refreshing the page
+    router.push(`?${params.toString()}`, { scroll: false })
+  }
+
+  // Wrapped state setters that also update URL
+  const setPage = (newPage: number) => {
+    setPageInternal(newPage)
+    updateUrlAndState(newPage, filters, showFilters)
+  }
+
+  const setFilters = (newFilters: NewsFilterDTO) => {
+    setFiltersInternal(newFilters)
+    updateUrlAndState(page, newFilters, showFilters)
+  }
+
+  const setShowFilters = (newShowFilters: boolean) => {
+    setShowFiltersInternal(newShowFilters)
+    updateUrlAndState(page, filters, newShowFilters)
+  }
 
   // Fetch news with pagination and filters
   const { data: newsData, isLoading, error } = useFetchNews(filters, page, limit)
   const { data: categoryData, isLoading: categoriesIsLoading } = useFetchCategories()
   const { data: tagsData, isLoading: tagsIsLoading } = useFetchTags()
-  const { mutateAsync: deleteNews, isPending: isDeleting } = useDeleteNews(postToDelete?.slug ?? "")
+  const { mutateAsync: deleteNews, isPending: isDeleting } = useDeleteNews(postToDelete?.slug ?? '')
 
   const posts = newsData?.data || []
   const meta = newsData?.meta
 
   // Filter handlers
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({ ...prev, searchTerm: e.target.value || null }))
+    setFilters({ ...filters, searchTerm: e.target.value || null })
     setPage(1)
   }
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
-    setFilters((prev) => ({
-      ...prev,
+    setFilters({
+      ...filters,
       published: value === 'published' ? true : value === 'draft' ? false : null,
-    }))
+    })
     setPage(1)
   }
 
   const handleAuthorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters((prev) => ({ ...prev, authorId: e.target.value || null }))
+    setFilters({ ...filters, authorId: e.target.value || null })
     setPage(1)
   }
 
   const handleCategorySelect = (categoryId: number) => {
-    setFilters((prev) => {
-      const currentCategoryIds = prev.categoryIds || []
-      const newCategoryIds = currentCategoryIds.includes(categoryId)
-        ? currentCategoryIds.filter((id) => id !== categoryId)
-        : [...currentCategoryIds, categoryId]
+    const currentCategoryIds = filters.categoryIds || []
+    const newCategoryIds = currentCategoryIds.includes(categoryId)
+      ? currentCategoryIds.filter((id) => id !== categoryId)
+      : [...currentCategoryIds, categoryId]
 
-      return { ...prev, categoryIds: newCategoryIds }
-    })
+    setFilters({ ...filters, categoryIds: newCategoryIds })
     setPage(1)
   }
 
   const handleTagSelect = (tagId: number) => {
-    setFilters((prev) => {
-      const currentTagIds = prev.tagIds || []
-      const newTagIds = currentTagIds.includes(tagId)
-        ? currentTagIds.filter((id) => id !== tagId)
-        : [...currentTagIds, tagId]
+    const currentTagIds = filters.tagIds || []
+    const newTagIds = currentTagIds.includes(tagId)
+      ? currentTagIds.filter((id) => id !== tagId)
+      : [...currentTagIds, tagId]
 
-      return { ...prev, tagIds: newTagIds }
-    })
+    setFilters({ ...filters, tagIds: newTagIds })
     setPage(1)
   }
 
   const removeCategory = (categoryId: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      categoryIds: (prev.categoryIds || []).filter((id) => id !== categoryId),
-    }))
+    setFilters({
+      ...filters,
+      categoryIds: (filters.categoryIds || []).filter((id) => id !== categoryId),
+    })
     setPage(1)
   }
 
   const removeTag = (tagId: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      tagIds: (prev.tagIds || []).filter((id) => id !== tagId),
-    }))
+    setFilters({
+      ...filters,
+      tagIds: (filters.tagIds || []).filter((id) => id !== tagId),
+    })
     setPage(1)
   }
 
@@ -137,7 +224,7 @@ const AdminPostMainComponent = () => {
     if (!postToDelete) return
 
     try {
-      await deleteNews({data: postToDelete.slug})
+      await deleteNews({ data: postToDelete.slug })
       toast({
         title: 'Post deleted',
         description: `"${postToDelete.title}" has been successfully deleted.`,
@@ -480,7 +567,12 @@ const AdminPostMainComponent = () => {
                             </AppLink>
                             <button
                               className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded"
-                              onClick={() => openDeleteDialog({ slug: post.slug, title: cleanUpNewsTitle(post.title) })}
+                              onClick={() =>
+                                openDeleteDialog({
+                                  slug: post.slug,
+                                  title: cleanUpNewsTitle(post.title),
+                                })
+                              }
                             >
                               Delete
                             </button>
@@ -513,18 +605,15 @@ const AdminPostMainComponent = () => {
           <DialogHeader>
             <DialogTitle>Delete Post</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{postToDelete?.title}&quot;? This action cannot be undone.
+              Are you sure you want to delete &quot;{postToDelete?.title}&quot;? This action cannot
+              be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex space-x-2 justify-end">
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeletePost}
-              disabled={isDeleting}
-            >
+            <Button variant="destructive" onClick={handleDeletePost} disabled={isDeleting}>
               {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>

@@ -8,14 +8,14 @@ import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
 
 interface OverlayedNewsImageProps {
   newsItem?: NewsDTO;
-  height?: string;
+  fullHeight?: boolean;
 }
 
 /**
  * OverlayedNewsImageV2 component displays a news item with an overlayed background image and metadata.
  * @param {OverlayedNewsImageProps} props - The props for the component.
  */
-const OverlayedNewsImageV2 = ({ newsItem, height }: OverlayedNewsImageProps) => {
+const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps) => {
   if (!newsItem) {
     return null;
   }
@@ -37,9 +37,9 @@ const OverlayedNewsImageV2 = ({ newsItem, height }: OverlayedNewsImageProps) => 
   return (
     <AppLink
       href={ClientRoutes.viewNews(slug)}
-      className={`relative w-full overflow-hidden group ${height ? '' : 'min-h-[20rem] md:min-h-[34rem]'}`}
+      className={`relative w-full overflow-hidden group ${fullHeight ? 'h-full' : 'min-h-[20rem] md:min-h-[34rem]'}`}
     >
-      <div className={`w-full h-full ${height ? height : ''}`}>
+      <div className="w-full h-full">
         {/* Background Image */}
         <div className="absolute inset-0">
           <AppImage src={imageUrl} alt={title || "News image"} priority className="object-cover w-full h-full" />
