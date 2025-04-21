@@ -80,7 +80,7 @@ export class SiteConfigRepository {
         },
       })
 
-      // Then connect the new categories in the specified order
+      // Then connect the new categories
       return await this.siteConfiguration.update({
         where: { id: 1 },
         data: {
