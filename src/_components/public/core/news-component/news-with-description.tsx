@@ -41,7 +41,7 @@ const NewsWithDescription: React.FC<{ newsItem?: NewsDTO, maxDescriptionLength?:
 
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug)} className={"w-full"}>
+    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`}  className={"w-full"}>
       <div className={`w-full overflow-hidden border border-gray-200 bg-white shadow-md h-auto sm:h-[28rem] ${allowMargin ? 'mx-4' : ''}`}>
         <div className="relative h-48 sm:h-60 w-full overflow-hidden">
           <AppImage src={coverImage as string} alt={title ?? "News image"} className='w-full h-full sm:h-[16rem] object-cover' />

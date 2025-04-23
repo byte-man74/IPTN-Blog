@@ -35,7 +35,7 @@ const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImagePr
 //   const comments = analytics?.comments;
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug ?? "#")} className='w-full'>
+    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`} className='w-full'>
       <div className="relative w-full overflow-hidden group flex rounded-none shadow-md transition-all duration-300 hover:shadow-xl" style={{ height }}>
         {imageUrl ? (
           <>

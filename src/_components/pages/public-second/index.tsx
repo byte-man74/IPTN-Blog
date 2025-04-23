@@ -6,7 +6,10 @@ import { AdsBox } from '@/_components/public/core/ads-box'
 import Sports from '@/_components/pages/public-second/sub-sections/sports'
 import SecondCategoryFeatured from './sub-sections/politics'
 import { useFetchNews } from '@/network/http-service/news.hooks'
-import { CONTENT_CRITERIA, DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import {
+  CONTENT_CRITERIA,
+  DEFAULT_PAGE_NUMBER,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 
 interface SecondPageContentProps {
@@ -28,12 +31,14 @@ export const SecondPageContent = ({ category }: SecondPageContentProps) => {
     <div className="flex gap-6 flex-col min-h-[2rem]">
       <SecondPageContentHero category={category} />
       <AdsBox position="second-page" />
-      <NewsCategoryCarousel
-        title={CONTENT_CRITERIA.topNews.name}
-        items={topNewsData?.data}
-        isLoading={topNewsDataIsLoading}
-        carouselItem={{ itemType: 'news-overlay' }}
-      />
+      <div className="relative px-8 py-5 flex flex-col gap-8">
+        <NewsCategoryCarousel
+          title={CONTENT_CRITERIA.topNews.name}
+          items={topNewsData?.data}
+          isLoading={topNewsDataIsLoading}
+          carouselItem={{ itemType: 'news-overlay' }}
+        />
+      </div>
       <SecondCategoryFeatured category={category} />
       <Sports />
     </div>

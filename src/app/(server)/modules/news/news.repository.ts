@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import {
+    CommentDTO,
+    CreateCommentSchemaDTO,
   CreateNewsCategoryDTO,
   CreateNewsDTO,
   CreateTagDTO,
@@ -16,6 +18,7 @@ import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news
 import { paginate } from 'prisma-extension-pagination'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 
+
 const prisma = new PrismaClient().$extends({
   model: {
     news: {
@@ -28,6 +31,7 @@ export class NewsRepository {
   private readonly news = prisma.news
   private readonly category = prisma.category
   private readonly tag = prisma.tag
+  private readonly comment = prisma.comment
 
   async createNews(news: CreateNewsDTO): Promise<NewsDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
@@ -250,8 +254,8 @@ export class NewsRepository {
             },
           },
         },
-        orderBy: filters.byPopularity 
-          ? { analytics: { views: 'desc' } } 
+        orderBy: filters.byPopularity
+          ? { analytics: { views: 'desc' } }
           : { pubDate: 'desc' },
       })
 
@@ -521,5 +525,65 @@ export class NewsRepository {
     }
 
     return false
+  }
+
+  
+  async fetchRelatedNews(slug: string): Promise<NewsDTO[] | null | ApiCustomError> {
+    return tryCatchHandler(async() => {
+      // First get the current news to find its categories
+      const currentNews = await this.news.findUnique({
+        where: { slug },
+        include: {
+          categories: true,
+        },
+      });
+
+      if (!currentNews) {
+        return [];
+      }
+
+      // Extract category IDs from the current news
+      const categoryIds = currentNews.categories.map(category => category.id);
+
+      // Find related news that share categories with the current news
+      // but exclude the current news itself
+      const relatedNews = await this.news.findMany({
+        where: {
+          id: { not: currentNews.id },
+          published: true,
+          categories: {
+            some: {
+              id: { in: categoryIds }
+            }
+          }
+        },
+        include: {
+          categories: true,
+          tags: true,
+          analytics: true,
+        },
+        orderBy: {
+          pubDate: 'desc'
+        },
+        take: 5, // Limit to 5 related articles
+      });
+
+      return relatedNews
+    });
+  }
+
+  async createNewsComment(
+    data: CreateCommentSchemaDTO
+  ): Promise<CommentDTO | null | ApiCustomError> {
+    return tryCatchHandler(async () => {
+      return await this.comment.create({
+        data: {
+          content: data.content,
+          newsId: data.newsId,
+          userId: data.userId || null,
+          isAnonymous: data.isAnonymous || false,
+        },
+      });
+    });
   }
 }

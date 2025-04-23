@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { routes } from '@/network/route'
 import {
+    CommentDTO,
+  CreateCommentSchemaDTO,
   CreateNewsCategoryDTO,
   CreateNewsDTO,
   CreateTagDTO,
@@ -81,6 +83,24 @@ export function useCreateTag() {
     method: 'POST',
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [NewsQueryKey.TAGS] })
+    },
+  })
+}
+
+
+/**
+ * Hook for creating a comment on a news article
+ * @param slug The slug of the news article to comment on
+ * @returns Mutation object for creating a comment
+ */
+export function useCreateComment(slug: string) {
+  const queryClient = useQueryClient()
+
+  return useAppMutation<CommentDTO, unknown, CreateCommentSchemaDTO>({
+    apiRoute: routes.news.comments(slug),
+    method: 'POST',
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [NewsQueryKey.NEWS_DETAILS, slug] })
     },
   })
 }

@@ -10,6 +10,8 @@ import {
   NewsCategoryDTO,
   TagDTO,
   UpdateNewsDTO,
+  CreateCommentSchemaDTO,
+  CommentDTO,
 } from '@/app/(server)/modules/news/news.types'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 import { SeoService } from '@/app/(server)/modules/seo/seo.service'
@@ -42,7 +44,7 @@ export interface INewsService {
   deleteNews(slug: string): Promise<NewsDTO | null | ApiCustomError>
   fetchCategories(): Promise<NewsCategoryDTO[] | null | ApiCustomError>
   fetchTags(): Promise<TagDTO[] | null | ApiCustomError>
-  getPopularTags(): Promise<TagDTO[] | null | ApiCustomError>           
+  getPopularTags(): Promise<TagDTO[] | null | ApiCustomError>
 }
 
 export class NewsService implements INewsService {
@@ -231,5 +233,26 @@ export class NewsService implements INewsService {
    */
   async getPopularTags(): Promise<TagDTO[] | null | ApiCustomError> {
     return await this.repository.getPopularTags()
+  }
+
+
+  /**
+   * Fetches news articles related to a specific news article
+   * @param slug - The slug of the news article to find related articles for
+   * @returns Array of related news articles or error
+   */
+  async fetchRelatedNews(slug: string): Promise<NewsDTO[] | null | ApiCustomError> {
+    return await this.repository.fetchRelatedNews(slug);
+  }
+
+  /**
+   * Creates a comment for a news article
+   * @param data - The comment data including content, newsId, userId, and isAnonymous flag
+   * @returns The created comment or error
+   */
+  async createNewsComment(
+    data: CreateCommentSchemaDTO
+  ): Promise<CommentDTO | null | ApiCustomError> {
+    return await this.repository.createNewsComment(data);
   }
 }

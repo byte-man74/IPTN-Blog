@@ -46,7 +46,7 @@ export default function ImagePreviewNews({
 
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug)} className="w-full group">
+    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`} className="w-full group">
       <div className="w-full h-[280px] relative overflow-hidden rounded-none shadow-lg">
         {/* Base image layer */}
         <AppImage

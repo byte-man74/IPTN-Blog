@@ -63,3 +63,11 @@ export function useFetchNewsDetail(slug: string) {
     apiRoute: routes.news.detail(slug),
   })
 }
+
+export function useFetchRelatedNews(slug: string) {
+  return useAppQuery<NewsDTO[]>({
+    queryKey: [NewsQueryKey.RELATED, slug],
+    apiRoute: routes.news.related(slug),
+  })
+}
+

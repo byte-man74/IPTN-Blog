@@ -36,7 +36,7 @@ export default function BasicNewsWithTagV2({ newsItem }: BasicNewsWithTagV2Props
   const readTime = analytics?.readDuration;
 
   return (
-    <AppLink href={ClientRoutes.viewNews(slug)} className="w-full group">
+    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`} className="w-full group">
       <div className="w-full overflow-hidden  bg-white shadow-sm hover:shadow-md transition-all duration-300 flex flex-col md:flex-row border-l-0 group-hover:border-l-2 group-hover:border-l-primaryGreen">
         {/* Left side - Image */}
         <div className="relative h-[12rem] w-full md:w-2/5 lg:w-1/3 overflow-hidden">

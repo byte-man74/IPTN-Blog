@@ -31,6 +31,16 @@ export const SimplifiedNewsSchema = z.object({
 })
 
 
+export const CommentSchema = z.object({
+    id: z.number(),
+    content: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    userId: z.string().nullable().optional(),
+    newsId: z.string(),
+    isAnonymous: z.boolean().default(false),
+  })
+
 export const FullNewsSchema = z.object({
     id: z.string(),
     title: z.string(),
@@ -62,7 +72,8 @@ export const FullNewsSchema = z.object({
       likes: z.number().default(0),
       shares: z.number().default(0),
       readDuration: z.string().nullable().optional(),
-    }).nullable().optional()
+    }).nullable().optional(),
+    comments: z.array(CommentSchema).optional()
   })
 
 // Schema for creating news
@@ -122,6 +133,17 @@ export const CreateTagSchema = TagSchema.omit({
   id: true,
 })
 
+
+
+
+
+export const CreateCommentSchema = CommentSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+
 // Types derived from schemas
 export type NewsDTO = z.infer<typeof SimplifiedNewsSchema>
 export type FullNewsDTO = z.infer<typeof FullNewsSchema>
@@ -132,3 +154,5 @@ export type NewsCategoryDTO = z.infer<typeof NewsCategorySchema>
 export type CreateNewsCategoryDTO = z.infer<typeof CreateNewsCategorySchema>
 export type TagDTO = z.infer<typeof TagSchema>
 export type CreateTagDTO = z.infer<typeof CreateTagSchema>
+export type CreateCommentSchemaDTO = z.infer<typeof CreateCommentSchema>
+export type CommentDTO = z.infer<typeof CommentSchema>

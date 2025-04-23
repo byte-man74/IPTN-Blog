@@ -9,6 +9,8 @@ export const routes = {
     tags: '/news/tags',
     popularTags: "news/tags/popular",
     analytics: (id: string) => `/news/internal/${id}/analytics`,
+    comments: (slug: string) => `/news/${slug}/create-comment`,
+    related: (slug: string) => `/news/${slug}/related`,
   },
   users: {
     list: '/users',
