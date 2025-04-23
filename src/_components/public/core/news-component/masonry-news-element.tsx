@@ -6,6 +6,7 @@ import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { AppLink } from '@/_components/global/app-link'
 import { Calendar, Clock, MessageCircle } from 'lucide-react'
 import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.utils";
+import { ClientRoutes } from '@/lib/routes/client'
 
 
 // Threshold for showing views
@@ -20,7 +21,7 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
   const commentCount = comments?.length || 0;
 
   return (
-    <AppLink href={`/news/${slug}`} className="mb-8 relative overflow-hidden rounded-md group">
+    <AppLink href={`/${ClientRoutes.viewNews(slug)}`} className="mb-8 relative overflow-hidden rounded-md group">
       {/* Use a random aspect ratio for each card */}
       <div className="relative" style={{
         height: `${Math.floor(Math.random() * (500 - 300) + 300)}px`,
