@@ -9,7 +9,7 @@ import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.uti
 import { ClientRoutes } from '@/lib/routes/client'
 
 
-// Threshold for showing views
+
 
 
 /**
