@@ -7,6 +7,7 @@ import { AppLink } from "@/_components/global/app-link"
 import type { NewsDTO } from "@/app/(server)/modules/news/news.types"
 import { ClientRoutes } from "@/lib/routes/client"
 import { cleanUpNewsTitle } from "@/app/(server)/modules/news/news.utils"
+import { ViewsThreshold } from "@/app/(server)/modules/site-configurations/site-config.constants"
 
 /**
  * AlternateNewsWithDescription component displays a news article card with an image, metadata, and description.
@@ -23,14 +24,15 @@ const AlternateNewsWithDescription: React.FC<{ newsItem?: NewsDTO; allowMargin?:
     return null
   }
 
-  const { coverImage, title, pubDate, slug, analytics} = newsItem
+  const { coverImage, title, pubDate, slug, analytics, comments } = newsItem
 
   const date = pubDate
     ? new Date(pubDate).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "2-digit" })
     : undefined
-  const views = analytics?.views || 72
-  const comments =  30
+  const views = analytics?.views || 0
+  const commentsCount = comments?.length || 0
   const authorName = "Admin"
+  const shouldShowViews = views >= ViewsThreshold
 
   return (
     <AppLink href={ClientRoutes.viewNews(slug)} className="w-full h-full block">
@@ -69,20 +71,22 @@ const AlternateNewsWithDescription: React.FC<{ newsItem?: NewsDTO; allowMargin?:
           {/* Metrics */}
           <div className="flex items-center justify-between mt-3 sm:mt-4 flex-wrap gap-2">
             <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-              <div className="flex items-center gap-1">
-                <div className="bg-primaryGreen p-1 sm:p-1.5 rounded-full flex items-center justify-center
-                group-hover:bg-primaryDark transition-colors duration-300">
-                  <Eye size={12} className="text-white" />
+              {shouldShowViews && (
+                <div className="flex items-center gap-1">
+                  <div className="bg-primaryGreen p-1 sm:p-1.5 rounded-full flex items-center justify-center
+                  group-hover:bg-primaryDark transition-colors duration-300">
+                    <Eye size={12} className="text-white" />
+                  </div>
+                  <span className="text-xs font-medium">{views}</span>
                 </div>
-                <span className="text-xs font-medium">{views}</span>
-              </div>
+              )}
 
               <div className="flex items-center gap-1">
                 <div className="bg-primaryGreen p-1 sm:p-1.5 rounded-full flex items-center justify-center
                 group-hover:bg-primaryDark transition-colors duration-300">
                   <MessageSquare size={12} className="text-white" />
                 </div>
-                <span className="text-xs font-medium">{comments}</span>
+                <span className="text-xs font-medium">{commentsCount}</span>
               </div>
 
               <div className="flex items-center gap-1">

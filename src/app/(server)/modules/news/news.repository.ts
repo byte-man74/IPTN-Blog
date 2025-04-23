@@ -246,6 +246,11 @@ export class NewsRepository {
               readDuration: true,
             },
           },
+          comments: {
+            select: {
+              id: true,
+            },
+          },
           author: {
             select: {
               id: true,
@@ -527,7 +532,7 @@ export class NewsRepository {
     return false
   }
 
-  
+
   async fetchRelatedNews(slug: string): Promise<NewsDTO[] | null | ApiCustomError> {
     return tryCatchHandler(async() => {
       // First get the current news to find its categories

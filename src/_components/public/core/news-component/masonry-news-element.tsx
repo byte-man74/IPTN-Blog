@@ -4,8 +4,11 @@ import { AppImage } from '@/_components/global/app-image'
 import React from 'react'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { AppLink } from '@/_components/global/app-link'
-import { Calendar, Clock } from 'lucide-react'
+import { Calendar, Clock, MessageCircle } from 'lucide-react'
 import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.utils";
+
+
+// Threshold for showing views
 
 
 /**
@@ -13,7 +16,8 @@ import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.uti
  * @param {NewsDTO} newsItem - The news item data for the component.
  */
 const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
-  const { coverImage, title, pubDate, analytics, slug } = newsItem ?? {}
+  const { coverImage, title, pubDate, analytics, slug, comments } = newsItem ?? {}
+  const commentCount = comments?.length || 0;
 
   return (
     <AppLink href={`/news/${slug}`} className="mb-8 relative overflow-hidden rounded-md group">
@@ -35,7 +39,7 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
         <h3 className="text-white font-bold text-lg mb-2">{title ?? "Untitled"}</h3>
         <div className="flex items-center space-x-3">
           <div className="flex items-center px-2 py-1 gap-2">
-          <div className="rounded-full p-2 bg-primaryGreen">
+            <div className="rounded-full p-2 bg-primaryGreen">
                 <Calendar className="text-white w-4 h-4" />
             </div>
             <span className="text-white text-sm p-1 bg-[#1B1B1B]">{pubDate ? calculateTimeStampFromDate(pubDate) : "Date not available"}</span>
@@ -46,6 +50,14 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
                   <Clock className="text-white w-4 h-4" />
               </div>
               <span className="text-white text-sm p-1 bg-[#1B1B1B]">{`${analytics.readDuration} min read`}</span>
+            </div>
+          )}
+          {commentCount > 0 && (
+            <div className="flex items-center py-1 gap-2">
+              <div className="rounded-full p-2 bg-primaryGreen">
+                  <MessageCircle className="text-white w-4 h-4" />
+              </div>
+              <span className="text-white text-sm p-1 bg-[#1B1B1B]">{`${commentCount} comment${commentCount !== 1 ? 's' : ''}`}</span>
             </div>
           )}
         </div>

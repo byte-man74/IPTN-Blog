@@ -7,17 +7,23 @@ import { AppLink } from '@/_components/global/app-link'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { ClientRoutes } from '@/lib/routes/client'
 import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
+import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
 /**
  * NewsWithDescription component displays a news article card with an image, metadata, and description.
  * @param {NewsDTO} newsItem - The news item data for the component.
  * @param {number} maxDescriptionLength - Optional maximum length for the description.
- * @param {boolean} allowMargin - Optional flag to allow margin on the component.
+ * @param {boolean} allowMargin - Optional flag to allow margin on the component.l threshold for displaying view count.
  * @returns {JSX.Element} The rendered NewsWithDescription component.
  */
-const NewsWithDescription: React.FC<{ newsItem?: NewsDTO, maxDescriptionLength?: number, allowMargin?: boolean }> = ({
+const NewsWithDescription: React.FC<{
+  newsItem?: NewsDTO,
+  maxDescriptionLength?: number,
+  allowMargin?: boolean,
+}> = ({
   newsItem,
   allowMargin = false,
+
 }) => {
   if (!newsItem) {
     return null;
@@ -30,6 +36,7 @@ const NewsWithDescription: React.FC<{ newsItem?: NewsDTO, maxDescriptionLength?:
     pubDate,
     slug,
     analytics,
+    comments,
     tags
   } = newsItem;
 
@@ -37,19 +44,18 @@ const NewsWithDescription: React.FC<{ newsItem?: NewsDTO, maxDescriptionLength?:
   const date = pubDate ? new Date(pubDate).toLocaleDateString() : undefined;
   const readTime = analytics?.readDuration;
   const views = analytics?.views;
-  const comments = 3; // Placeholder until analytics includes comments
-
+  const shouldShowViews = views !== undefined && views >= ViewsThreshold;
 
   return (
-    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`}  className={"w-full"}>
+    <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`} className={"w-full"}>
       <div className={`w-full overflow-hidden border border-gray-200 bg-white shadow-md h-auto sm:h-[28rem] ${allowMargin ? 'mx-4' : ''}`}>
         <div className="relative h-48 sm:h-60 w-full overflow-hidden">
           <AppImage src={coverImage as string} alt={title ?? "News image"} className='w-full h-full sm:h-[16rem] object-cover' />
-          <div className="absolute inset-0 bg-black opacity-50"></div> {/* Overlay added */}
+          <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="absolute bottom-4 left-4 flex flex-wrap items-center gap-2">
             {readTime && <div className="bg-gray-800/70 px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">{readTime}</div>}
             {category && <div className="bg-primaryGreen px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">{category}</div>}
-            {views !== undefined && (
+            {shouldShowViews && (
               <div className="flex items-center gap-1 bg-gray-800/70 px-2 py-1 text-xs sm:text-sm text-white">
                 <Eye size={14} />
                 <span>{views}</span>
@@ -57,7 +63,7 @@ const NewsWithDescription: React.FC<{ newsItem?: NewsDTO, maxDescriptionLength?:
             )}
             <div className="flex items-center gap-1 bg-gray-800/70 px-2 py-1 text-xs sm:text-sm text-white">
               <MessageSquare size={14} />
-              <span>{comments}</span>
+              <span>{comments?.length}</span>
             </div>
           </div>
         </div>

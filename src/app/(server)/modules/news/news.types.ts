@@ -28,6 +28,9 @@ export const SimplifiedNewsSchema = z.object({
     shares: z.number().default(0),
     readDuration: z.string().nullable().optional(),
   }).nullable().optional(),
+  comments: z.array(z.object({
+    id: z.number(),
+  })).optional(),
 })
 
 

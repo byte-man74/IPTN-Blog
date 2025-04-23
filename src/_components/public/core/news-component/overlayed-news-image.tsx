@@ -4,26 +4,35 @@ import { AppImage } from '@/_components/global/app-image';
 import { AppLink } from '@/_components/global/app-link';
 import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 import { ClientRoutes } from '@/lib/routes/client';
+import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants';
 
 interface OverlayedNewsImageProps {
     newsItem?: NewsDTO;
     height?: string;
+
 }
 
 /**
  * This is a news component that has the component overlayed as the bg image with its meta data above it.
  * @param {OverlayedNewsImageProps} props - The props for the component.
  * @param {string} props.height - Optional height for the component, defaults to 21rem.
+ * @param {number} props.viewsThreshold - Optional threshold for showing views count, defaults to 10.
  */
-const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImageProps) => {
+const OverlayedNewsImage = ({
+  newsItem,
+  height = "21rem",
+}: OverlayedNewsImageProps) => {
   const {
     coverImage,
     title,
     pubDate,
     slug,
     analytics,
+    comments,
     tags
   } = newsItem ?? {};
+
+
 
   // Extract needed data from the news item
   const imageUrl = coverImage;
@@ -31,8 +40,7 @@ const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImagePr
   const date = pubDate ? new Date(pubDate).toLocaleDateString() : undefined;
   const readTime = analytics?.readDuration;
   const views = analytics?.views;
-  const comments = 3
-//   const comments = analytics?.comments;
+  const shouldShowViews = views !== undefined && views !== null && views >= ViewsThreshold;
 
   return (
     <AppLink href={`/${ClientRoutes.viewNews(slug ?? "#")}`} className='w-full'>
@@ -82,7 +90,7 @@ const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImagePr
                 </div>
               )}
 
-              {views !== undefined && views !== null && (
+              {shouldShowViews && (
                 <div className="flex items-center gap-1 transition-transform duration-300 hover:scale-105">
                   <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md group-hover:ring-2 group-hover:ring-white/30 transition-all duration-300">
                     <Eye className="w-3 h-3" />
@@ -91,14 +99,12 @@ const OverlayedNewsImage = ({ newsItem, height = "21rem" }: OverlayedNewsImagePr
                 </div>
               )}
 
-              {comments !== undefined && comments !== null && (
-                <div className="flex items-center gap-1 transition-transform duration-300 hover:scale-105">
-                  <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md group-hover:ring-2 group-hover:ring-white/30 transition-all duration-300">
-                    <MessageSquare className="w-3 h-3" />
-                  </div>
-                  <span className="text-white text-xs font-medium drop-shadow-md">{comments}</span>
+              <div className="flex items-center gap-1 transition-transform duration-300 hover:scale-105">
+                <div className="bg-primaryGreen rounded-full p-1.5 text-white flex items-center justify-center shadow-md group-hover:ring-2 group-hover:ring-white/30 transition-all duration-300">
+                  <MessageSquare className="w-3 h-3" />
                 </div>
-              )}
+                <span className="text-white text-xs font-medium drop-shadow-md">{comments?.length}</span>
+              </div>
             </div>
 
             {/* Headline */}

@@ -284,3 +284,6 @@ export const DEFAULT_SITE_CONFIG_ORDER = {
     'entertainment' // Entertainment content fourth
   ]
 }
+
+
+export const ViewsThreshold = 500

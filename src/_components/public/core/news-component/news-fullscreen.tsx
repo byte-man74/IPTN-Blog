@@ -1,11 +1,14 @@
 "use client"
 import React from 'react'
-import { Calendar, Eye, MessageSquare } from 'lucide-react'
+import { Calendar, Eye, MessageSquare, Clock } from 'lucide-react'
 import { AppImage } from '@/_components/global/app-image'
 import { AppLink } from '@/_components/global/app-link'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { ClientRoutes } from '@/lib/routes/client'
-import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
+import { cleanUpNewsTitle, calculateTimeStampFromDate } from '@/app/(server)/modules/news/news.utils'
+import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants'
+
+
 
 interface NewsFullScreenProps {
   newsItem?: NewsDTO
@@ -30,14 +33,17 @@ export default function NewsFullScreen({
     pubDate,
     slug,
     analytics,
-    tags
+    tags,
+    comments
   } = newsItem;
 
   const category = tags?.[0]?.name;
-  const date = pubDate ? new Date(pubDate).toLocaleDateString() : undefined;
+  const date = pubDate ? calculateTimeStampFromDate(pubDate) : undefined;
   const readTime = analytics?.readDuration;
   const views = analytics?.views;
-  const comments = 3; // Placeholder until analytics includes comments
+  const commentCount = comments?.length || 0;
+  const showViews = views !== undefined && views >= ViewsThreshold;
+  const showComments = commentCount > 0 && !showViews;
 
   return (
     <AppLink href={ClientRoutes.viewNews(slug)} className="block hover:shadow-lg transition-shadow duration-300 w-full">
@@ -47,18 +53,25 @@ export default function NewsFullScreen({
           {/* Black overlay on top of the image */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
-            {readTime && <div className="rounded bg-gray-800/70 px-3 py-1 text-sm text-white">{readTime}</div>}
+            {readTime && (
+              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
+                <Clock size={16} />
+                <span>{readTime} read</span>
+              </div>
+            )}
             {category && <div className="rounded bg-primaryGreen px-3 py-1 text-sm text-white">{category}</div>}
-            {views !== undefined && (
+            {showViews && (
               <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
                 <Eye size={16} />
                 <span>{views}</span>
               </div>
             )}
-            <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
-              <MessageSquare size={16} />
-              <span>{comments}</span>
-            </div>
+            {showComments && (
+              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
+                <MessageSquare size={16} />
+                <span>{commentCount}</span>
+              </div>
+            )}
           </div>
         </div>
 

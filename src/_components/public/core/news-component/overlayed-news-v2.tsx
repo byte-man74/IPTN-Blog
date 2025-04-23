@@ -5,6 +5,7 @@ import { AppImage } from '@/_components/global/app-image';
 import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 import { ClientRoutes } from '@/lib/routes/client';
 import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
+import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants';
 
 interface OverlayedNewsImageProps {
   newsItem?: NewsDTO;
@@ -26,13 +27,14 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
     pubDate,
     slug,
     analytics,
+    comments
   } = newsItem;
 
   const imageUrl = coverImage || "/placeholder.svg";
   const date = pubDate ? new Date(pubDate).toLocaleDateString() : "Date not available";
   const readTime = analytics?.readDuration || "3 mins read";
   const views = analytics?.views || 0;
-  const comments = 3; // Placeholder until analytics includes comments
+
 
   return (
     <AppLink
@@ -63,18 +65,23 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
               </div>
               <span className="text-xs sm:text-sm">{readTime}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
-                <Eye size={16} className="text-white" />
+
+            {views >= ViewsThreshold && (
+              <div className="flex items-center gap-2">
+                <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
+                  <Eye size={16} className="text-white" />
+                </div>
+                <span className="text-xs sm:text-sm">{views}</span>
               </div>
-              <span className="text-xs sm:text-sm">{views}</span>
-            </div>
+            )}
+
             <div className="flex items-center gap-2">
               <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
                 <MessageSquare size={16} className="text-white" />
               </div>
-              <span className="text-xs sm:text-sm">{comments}</span>
+              <span className="text-xs sm:text-sm">{comments?.length}</span>
             </div>
+
             <div className="flex items-center gap-2">
               <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
                 <Calendar size={16} className="text-white" />
