@@ -117,3 +117,16 @@ export const NewsItemSkeleton = ({ count = 3 }: { count?: number }) => {
     </>
   );
 };
+
+
+export const ViewNewsMainSkeleton = () => {
+    return(
+        <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+        <Skeleton className="h-5 md:h-6 w-full" />
+        <Skeleton className="h-5 md:h-6 w-full" />
+        <Skeleton className="h-5 md:h-6 w-3/4" />
+        <Skeleton className="h-5 md:h-6 w-full" />
+        <Skeleton className="h-5 md:h-6 w-5/6" />
+      </div>
+    )
+}

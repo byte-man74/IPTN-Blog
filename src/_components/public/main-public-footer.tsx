@@ -1,8 +1,15 @@
+"use client"
+
 import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from "lucide-react"
 import Link from "next/link"
-import { AppLogo } from "../global/app-logo"
+import { AppLogo } from "@/_components/global/app-logo"
+import { useFetchPopularTags } from "@/network/http-service/news.hooks"
+import { DEFAULT_SITE_CONFIG_ORDER } from "@/app/(server)/modules/site-configurations/site-config.constants"
+import { ClientRoutes } from "@/lib/routes/client"
 
 export default function Footer() {
+  const { data: popularTags } = useFetchPopularTags()
+
   return (
     <footer className="bg-[#171717] text-white py-4 sm:py-6 px-4 sm:px-6 md:px-12 mt-10">
       <div className="mx-auto bg-[#1D1D1D] p-6 sm:p-8 md:p-12 px-4 sm:px-10 md:px-20">
@@ -49,6 +56,24 @@ export default function Footer() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-primaryGreen">Links</h3>
               <ul className="space-y-3 sm:space-y-4">
+                {DEFAULT_SITE_CONFIG_ORDER.contentTypes.map((contentType, index) => (
+                  <li key={index} className="flex items-center group">
+                    <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
+                      <svg
+                        className="w-2 h-2 sm:w-3 sm:h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                    <Link href={`/${contentType}`} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300 capitalize">
+                      {contentType}
+                    </Link>
+                  </li>
+                ))}
                 <li className="flex items-center group">
                   <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
                     <svg
@@ -61,56 +86,8 @@ export default function Footer() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    News
-                  </Link>
-                </li>
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Blogs
-                  </Link>
-                </li>
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Articles
-                  </Link>
-                </li>
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Entertainment
+                  <Link href={ClientRoutes.explore} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
+                    Explore
                   </Link>
                 </li>
               </ul>
@@ -118,56 +95,29 @@ export default function Footer() {
 
             {/* Topics Section */}
             <div>
-              <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-primaryGreen">Topics</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-primaryGreen">Popular Tags</h3>
               <ul className="space-y-3 sm:space-y-4">
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Politics
-                  </Link>
-                </li>
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Entertainment
-                  </Link>
-                </li>
-                <li className="flex items-center group">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
-                    <svg
-                      className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <Link href="#" className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
-                    Lifestyle
-                  </Link>
-                </li>
+                {popularTags?.slice(0, 5).map((tag, index) => (
+                  <li key={index} className="flex items-center group">
+                    <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primaryGreen flex items-center justify-center mr-2 group-hover:bg-primaryGreen/80 transition-colors duration-300">
+                      <svg
+                        className="w-2 h-2 sm:w-3 sm:h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                    <Link href={`${ClientRoutes.explore}?tag=${tag.name}`} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
+                      {tag.name}
+                    </Link>
+                  </li>
+                ))}
+                {(!popularTags || popularTags.length === 0) && (
+                  <li className="text-sm sm:text-base text-gray-400">No tags available</li>
+                )}
               </ul>
             </div>
           </div>
@@ -204,7 +154,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="text-center mt-8 sm:mt-10 text-gray-500 text-xs sm:text-sm">© Copyright 2025. All rights reserved.</div>
+        <div className="text-center mt-8 sm:mt-10 text-gray-500 text-xs sm:text-sm">© Copyright {new Date().getFullYear()}. All rights reserved.</div>
       </div>
     </footer>
   )

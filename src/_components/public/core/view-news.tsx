@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Clock } from 'lucide-react'
 import { useFetchNewsDetail, useFetchRelatedNews, useFetchNews } from '@/network/http-service/news.hooks'
 import { Skeleton } from '@/_components/global/skeleton'
@@ -12,10 +12,11 @@ import Youtube from '@tiptap/extension-youtube'
 import { AppImage } from '@/_components/global/app-image'
 import { useIncrementNewsMetric } from '@/network/http-service/analytics.mutations'
 import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
-import { NewsDTO, NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
+import { NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
 import { NewsComments } from '@/_components/public/core/news-comment'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import { ViewNewsMainSkeleton } from '@/_components/global/skeletons'
 
 /**
  * ViewNews component displays a news article in a Medium-style layout
@@ -24,11 +25,8 @@ import { DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/
 const ViewNews = ({ slug }: { slug: string }) => {
   const { data, isLoading: isNewsLoading } = useFetchNewsDetail(slug)
   const { data: relatedNewsData, isLoading: isRelatedLoading } = useFetchRelatedNews(slug)
-  const [loading, setLoading] = useState(isNewsLoading)
-  const [relatedArticles, setRelatedArticles] = useState<NewsDTO[]>([])
-  const [relatedByTags, setRelatedByTags] = useState<NewsDTO[]>([])
-  const incrementMetric = useIncrementNewsMetric(slug, data?.id)
   const hasIncrementedView = useRef(false)
+  const incrementMetric = useIncrementNewsMetric(slug, data?.id)
 
   // Fetch news by tags when data is available
   const tagIds = data?.tags?.map(tag => typeof tag === 'object' ? tag.id : null).filter(Boolean) || []
@@ -42,6 +40,9 @@ const ViewNews = ({ slug }: { slug: string }) => {
     DEFAULT_PAGE_NUMBER,
     8
   )
+
+  // Filter out the current article from tag-related news
+  const filteredTagNews = tagRelatedNews?.data?.filter(item => item.id !== data?.id).slice(0, 4) || []
 
   const editor = useEditor({
     extensions: [
@@ -69,51 +70,22 @@ const ViewNews = ({ slug }: { slug: string }) => {
     editable: false,
   }, [data?.contentEncoded])
 
-  useEffect(() => {
-    // Update loading state when data is fetched
-    setLoading(isNewsLoading)
-  }, [isNewsLoading])
-
-  useEffect(() => {
-    if (editor && data?.contentEncoded) {
-      editor.commands.setContent(data.contentEncoded)
+  // Handle view increment
+  if (data?.id && !hasIncrementedView.current) {
+    const viewedNews = JSON.parse(sessionStorage.getItem('viewedNews') || '{}')
+    if (!viewedNews[slug]) {
+      incrementMetric.mutate({
+        data: { metricType: 'views' }
+      })
+      hasIncrementedView.current = true
     }
-  }, [data?.contentEncoded, editor])
-
-  useEffect(() => {
-    if (data?.id && !hasIncrementedView.current) {
-      const viewedNews = JSON.parse(sessionStorage.getItem('viewedNews') || '{}')
-      if (!viewedNews[slug]) {
-        incrementMetric.mutate({
-          data: { metricType: 'views' }
-        })
-        hasIncrementedView.current = true
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.id, slug])
-
-  useEffect(() => {
-    // Process related articles when data is loaded
-    if (relatedNewsData && !isRelatedLoading) {
-      setRelatedArticles(relatedNewsData)
-    }
-  }, [relatedNewsData, isRelatedLoading])
-
-  useEffect(() => {
-    // Process tag-related articles when data is loaded
-    if (tagRelatedNews?.data && !isTagRelatedLoading) {
-      // Filter out the current article
-      const filteredNews = tagRelatedNews.data.filter(item => item.id !== data?.id)
-      setRelatedByTags(filteredNews.slice(0, 4)) // Limit to 4 items
-    }
-  }, [tagRelatedNews, isTagRelatedLoading, data?.id])
+  }
 
   return (
     <article className="max-w-full w-full flex flex-col items-center ">
       {/* Header Section */}
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8 flex flex-col items-center">
-        {loading ? (
+        {isNewsLoading ? (
           <Skeleton className="h-12 md:h-16 w-full md:w-3/4 mb-3 md:mb-4" />
         ) : (
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight text-center">
@@ -121,7 +93,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
           </h1>
         )}
 
-        {loading ? (
+        {isNewsLoading ? (
           <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6">
             <Skeleton className="h-5 md:h-6 w-24 md:w-32" />
             <Skeleton className="h-5 md:h-6 w-24 md:w-32" />
@@ -141,7 +113,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
 
       {/* Cover Image */}
       <div className="w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[450px] relative mb-6 md:mb-8">
-        {loading ? (
+        {isNewsLoading ? (
           <Skeleton className="w-full h-full" />
         ) : (
           <AppImage
@@ -155,14 +127,8 @@ const ViewNews = ({ slug }: { slug: string }) => {
 
       {/* Content */}
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        {loading ? (
-          <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-            <Skeleton className="h-5 md:h-6 w-full" />
-            <Skeleton className="h-5 md:h-6 w-full" />
-            <Skeleton className="h-5 md:h-6 w-3/4" />
-            <Skeleton className="h-5 md:h-6 w-full" />
-            <Skeleton className="h-5 md:h-6 w-5/6" />
-          </div>
+        {isNewsLoading ? (
+            <ViewNewsMainSkeleton />
         ) : (
           <div className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none mb-6 md:mb-8 font-tiro-devanagari text-base sm:text-lg md:text-xl p-6 rounded-lg shadow-sm">
             {editor && <EditorContent editor={editor} className="prose max-w-none font-tiro-devanagari text-base sm:text-lg md:text-xl" />}
@@ -171,7 +137,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
 
 
         {/* Comments Section */}
-        {!loading && data && (
+        {!isNewsLoading && data && (
           <NewsComments
             slug={slug}
             newsId={data.id}
@@ -193,13 +159,13 @@ const ViewNews = ({ slug }: { slug: string }) => {
           </div>
         </div>
       ) : (
-        relatedByTags.length > 0 && (
+        filteredTagNews.length > 0 && (
           <div className="w-full mt-16 mb-12 py-10">
             <div className="container mx-auto px-2">
               <NewsCategoryCarousel
                 title="Related Topics"
                 backgroundTitle="Explore"
-                items={relatedByTags}
+                items={filteredTagNews}
                 isLoading={false}
                 carouselItem={{ itemType: 'news-overlay' }}
               />
@@ -221,13 +187,13 @@ const ViewNews = ({ slug }: { slug: string }) => {
           </div>
         </div>
       ) : (
-        relatedArticles.length > 0 && (
+        relatedNewsData && relatedNewsData.length > 0 && (
           <div className="w-full mb-16  py-10">
             <div className="container mx-auto px-2">
               <NewsCategoryCarousel
                 title="Recommended Reading"
                 backgroundTitle="Discover"
-                items={relatedArticles}
+                items={relatedNewsData}
                 isLoading={false}
                 carouselItem={{ itemType: 'overlay-v2' }}
               />

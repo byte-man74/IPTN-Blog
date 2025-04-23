@@ -7,7 +7,7 @@ import {
   useFetchPopularTags,
   useFetchCategories,
 } from '@/network/http-service/news.hooks'
-import { NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
+import { NewsDTO, NewsFilterDTO } from '@/app/(server)/modules/news/news.types'
 import { AppLink } from '@/_components/global/app-link'
 import { Button } from '@/components/ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -16,6 +16,8 @@ import NewsScreenFullWidthHero from '@/_components/public/core/news-component/ne
 import { Badge } from '@/components/ui/badge'
 import { debounce } from 'lodash'
 import { ClientRoutes } from '@/lib/routes/client'
+import { useInView } from 'react-intersection-observer'
+
 
 type SearchPageClientProps = {
   initialQuery: string
@@ -35,6 +37,7 @@ export default function SearchPageClient({
   const router = useRouter()
   const searchParams = useSearchParams()
   const searchBarRef = useRef<HTMLDivElement>(null)
+  const { ref: loadMoreRef, inView } = useInView()
 
   // State for search and pagination
   const [query, setQuery] = useState(initialQuery)
@@ -44,6 +47,8 @@ export default function SearchPageClient({
   const [selectedTag, setSelectedTag] = useState<string | null>(initialTag || null)
   const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
   const [showFilters, setShowFilters] = useState(false)
+  const [allResults, setAllResults] = useState<NewsDTO[]>([])
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   // Fetch categories from API
   const { data: categories = [], isLoading: isLoadingCategories } = useFetchCategories()
@@ -65,14 +70,32 @@ export default function SearchPageClient({
     isLoading,
     error,
   } = useFetchNews(
-    query || selectedCategory || selectedTagId
-      ? filter
-      : { published: true, searchTerm: 'no-results-placeholder' },
+    query || selectedCategory || selectedTagId ? filter : { published: true },
     page,
     limit
   )
 
-  const results = newsData?.data || []
+  const hasNextPage = newsData?.meta?.nextPage ?? false
+  // Update allResults when new data is fetched
+  useEffect(() => {
+    if (newsData?.data) {
+      if (page === 1) {
+        setAllResults(newsData.data)
+      } else {
+        setAllResults((prev) => [...prev, ...newsData.data])
+      }
+      setIsLoadingMore(false)
+    }
+  }, [newsData, page, hasNextPage])
+
+  // Load more when scrolling to the bottom
+  useEffect(() => {
+    if (inView && !isLoading && !isLoadingMore) {
+      setIsLoadingMore(true)
+      setPage((prevPage) => prevPage + 1)
+    }
+  }, [inView, isLoading, isLoadingMore])
+
   const meta = newsData?.meta || {
     pageCount: 1,
     totalCount: 0,
@@ -138,15 +161,8 @@ export default function SearchPageClient({
     setSelectedCategory(null)
     setSelectedTag(null)
     setSelectedTagId(null)
+    setAllResults([])
     updateUrlParams('', 1, null, null)
-  }
-
-  // Handle page change
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage)
-    updateUrlParams(query, newPage, selectedCategory, selectedTag)
-    // Scroll to top when changing pages
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Handle category selection
@@ -154,6 +170,7 @@ export default function SearchPageClient({
     const newCategory = selectedCategory === category ? null : category
     setSelectedCategory(newCategory)
     setPage(1)
+    setAllResults([])
     updateUrlParams(query, 1, newCategory, selectedTag)
   }
 
@@ -164,6 +181,7 @@ export default function SearchPageClient({
     setSelectedTag(newTag)
     setSelectedTagId(newTagId)
     setPage(1)
+    setAllResults([])
     updateUrlParams(query, 1, selectedCategory, newTag)
   }
 
@@ -206,7 +224,25 @@ export default function SearchPageClient({
   }, [initialTag, popularTags])
 
   // Determine if we should show a featured article
-  const showFeatured = results.length > 0 && page === 1 && !isLoading && !error
+  const showFeatured = allResults.length > 0 && !isLoading && !error
+
+  // Function to render news item based on index
+  const renderNewsItem = (item: NewsDTO, index: number) => {
+    const componentType = index % 5
+
+    switch (componentType) {
+      case 0:
+        return <NewsWithDescription newsItem={item} maxDescriptionLength={120} />
+      case 1:
+        return <NewsWithDescription newsItem={item} maxDescriptionLength={100} />
+      case 2:
+        return <NewsWithDescription newsItem={item} maxDescriptionLength={130} />
+      case 4:
+        return <NewsWithDescription newsItem={item} maxDescriptionLength={150} />
+      default:
+        return <NewsWithDescription newsItem={item} maxDescriptionLength={120} />
+    }
+  }
 
   return (
     <div className="w-full p-4 sm:p-6 lg:p-8 flex flex-col relative">
@@ -377,7 +413,7 @@ export default function SearchPageClient({
         {(query || selectedCategory || selectedTag) && (
           <div className="mb-6 border-b border-gray-200 pb-4">
             <h2 className="text-2xl font-semibold text-gray-800">
-              {isLoading
+              {isLoading && page === 1
                 ? 'Searching...'
                 : error
                   ? 'Error searching'
@@ -397,7 +433,7 @@ export default function SearchPageClient({
 
         {/* Content */}
         {query || selectedCategory || selectedTag ? (
-          isLoading ? (
+          isLoading && page === 1 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse w-full">
               {Array(6)
                 .fill(0)
@@ -424,7 +460,7 @@ export default function SearchPageClient({
                 Reset Search
               </Button>
             </div>
-          ) : results.length === 0 ? (
+          ) : allResults.length === 0 ? (
             <div className="p-10 text-center bg-white rounded-lg shadow-md border border-gray-200 w-full">
               <h3 className="text-xl font-medium text-gray-800 mb-3">
                 No results found {query ? `for "${query}"` : ''}{' '}
@@ -445,23 +481,45 @@ export default function SearchPageClient({
           ) : (
             <>
               {/* Featured article for first page */}
-              {showFeatured && results.length > 0 && (
+              {showFeatured && allResults.length > 0 && page === 1 && (
                 <div className="mb-10 rounded-lg overflow-hidden shadow-lg w-full">
-                  <NewsScreenFullWidthHero newsItems={[results[0]]} isLoading={false} />
+                  <NewsScreenFullWidthHero newsItems={[allResults[0]]} isLoading={false} />
                 </div>
               )}
 
-              {/* Grid of remaining results */}
+              {/* Grid of results with alternating styles */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-                {results.slice(showFeatured ? 1 : 0).map((post) => (
+                {allResults.slice(showFeatured && page === 1 ? 1 : 0).map((post, index) => (
                   <div
-                    key={post.id}
+                    key={`${post.id}-${index}`}
                     className="transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg rounded-lg overflow-hidden"
                   >
-                    <NewsWithDescription newsItem={post} maxDescriptionLength={120} />
+                    {renderNewsItem(post, index)}
                   </div>
                 ))}
               </div>
+
+              {/* Loading more indicator */}
+              {isLoadingMore && (
+                <div className="mt-8 flex justify-center w-full">
+                  <div className="animate-pulse flex flex-col items-center">
+                    <div className="h-10 w-40 bg-gray-200 rounded-md mb-2"></div>
+                    <div className="h-4 w-24 bg-gray-200 rounded-md"></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Load more trigger element */}
+              {hasNextPage && !isLoadingMore && (
+                <div ref={loadMoreRef} className="h-10 w-full mt-8"></div>
+              )}
+
+              {/* End of results message */}
+              {!hasNextPage && allResults.length > 0 && (
+                <div className="mt-10 text-center text-gray-500 pb-4">
+                  <p>You&apos;ve reached the end of the results</p>
+                </div>
+              )}
             </>
           )
         ) : (
@@ -487,64 +545,6 @@ export default function SearchPageClient({
         )}
       </div>
 
-      {/* Pagination */}
-      {(query || selectedCategory || selectedTag) &&
-        !isLoading &&
-        !error &&
-        results.length > 0 &&
-        meta.pageCount > 1 && (
-          <div className="mt-12 flex justify-center w-full">
-            <div className="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm">
-              <Button
-                variant="outline"
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page === 1 || isLoading}
-                className="text-sm font-medium transition-colors duration-200 hover:bg-gray-100"
-              >
-                Previous
-              </Button>
-
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, meta.pageCount) }, (_, i) => {
-                  // Show at most 5 page buttons centered around current page
-                  let pageNum = page
-                  if (page <= 3) {
-                    pageNum = i + 1
-                  } else if (page >= meta.pageCount - 2) {
-                    pageNum = meta.pageCount - 4 + i
-                  } else {
-                    pageNum = page - 2 + i
-                  }
-
-                  // Only show valid page numbers
-                  if (pageNum <= 0 || pageNum > meta.pageCount) return null
-
-                  return (
-                    <Button
-                      key={i}
-                      variant={pageNum === page ? 'default' : 'outline'}
-                      onClick={() => handlePageChange(pageNum)}
-                      disabled={isLoading}
-                      className={`w-10 h-10 transition-colors duration-200 ${pageNum === page ? 'bg-primaryGreen hover:bg-primaryGreen/90 shadow-sm' : 'hover:bg-gray-100'}`}
-                    >
-                      {pageNum}
-                    </Button>
-                  )
-                })}
-              </div>
-
-              <Button
-                variant="outline"
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page === meta.pageCount || isLoading}
-                className="text-sm font-medium transition-colors duration-200 hover:bg-gray-100"
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        )}
-
       {/* CSS for sticky search bar */}
       <style jsx global>{`
         .sticky-search-bar {
@@ -555,7 +555,7 @@ export default function SearchPageClient({
           background: white;
           z-index: 100;
           border-bottom: 1px solid #e5e7eb;
-          width: "100%"
+          width: 100%;
           border-radius: 0;
         }
       `}</style>
