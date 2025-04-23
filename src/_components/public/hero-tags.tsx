@@ -2,6 +2,7 @@
 import React from 'react'
 import { AppLink } from '@/_components/global/app-link'
 import { useFetchPopularTags } from '@/network/http-service/news.hooks'
+import { ClientRoutes } from '@/lib/routes/client'
 
 /**
  * HeroTags component displays popular tags or categories in the hero section
@@ -28,7 +29,7 @@ const HeroTags = () => {
             tags.map((tag) => (
               <AppLink
                 key={tag.id}
-                href={`/news?tagIds=${tag.id}`}
+                href={`${ClientRoutes.explore}?tag=${tag.name}`}
                 className="text-gray-700 hover:text-primaryGreen hover:font-medium transition-all duration-300 transform hover:scale-110 hover:underline px-2 py-1 rounded hover:bg-gray-100"
               >
                 {`#${tag.name || 'tag'}`}

@@ -37,7 +37,11 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
   return (
     <AppLink
       href={ClientRoutes.viewNews(slug)}
-      className={`relative w-full overflow-hidden group ${fullHeight ? 'h-full' : 'min-h-[20rem] md:min-h-[34rem]'}`}
+      className={`relative w-full overflow-hidden group ${
+        fullHeight
+          ? 'h-[300px] sm:h-[400px] md:h-[500px] lg:h-full'
+          : 'min-h-[20rem] md:min-h-[34rem]'
+      }`}
     >
       <div className="w-full h-full">
         {/* Background Image */}

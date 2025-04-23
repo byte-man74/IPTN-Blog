@@ -12,11 +12,11 @@ interface FifthNavPageContentProps {
 
 export const FifthNavPageContent = ({ category }: FifthNavPageContentProps) => {
   return (
-    <>
+    <div className="flex w-full flex-col gap-4">
       <FifthSectionHero category={category} />
       <FifthSectionFullWidthSubArticle category={category} />
       <AdsBox position="fourth-page"/>
       <FifthSectionFeaturedCategory category={category} />
-    </>
+    </div>
   )
 }
