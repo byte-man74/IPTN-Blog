@@ -18,7 +18,7 @@ export const useHomePageNews = () => {
       categorySlugs: [HomePageFeatured.slug, HomePageArticles.slug],
     },
     DEFAULT_PAGE_NUMBER,
-    HomePageFeatured.maxThreshold
+    12 // just make this 
   )
 
   const interviews = useFetchNews(

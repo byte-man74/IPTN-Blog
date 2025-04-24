@@ -2,7 +2,7 @@ import React from 'react'
 import OverlayedNewsImage from '@/_components/public/core/news-component/overlayed-news-image'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import { useFetchNews } from '@/network/http-service/news.hooks'
-import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import { CONTENT_CRITERIA, DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
 interface FifthSectionFeaturedCategoryProps {
   category: number
@@ -21,8 +21,8 @@ export const FifthSectionFeaturedCategory = ({ category }: FifthSectionFeaturedC
       categoryIds: [category],
       categorySlug: CONTENT_CRITERIA.movies.slug,
     },
-    1,
-    CONTENT_CRITERIA.movies.maxThreshold || 10 // Use maxThreshold from config or default to 10
+    DEFAULT_PAGE_NUMBER,
+    10 // Use maxThreshold from config or default to 10
   )
 
   const newsItems = moviesData?.data || []

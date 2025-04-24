@@ -9,23 +9,18 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'editors-pick',
     name: "Editor's Picks",
     threshold: 2,
-    maxThreshold: 2,
-    requiresFresh: true,
     severity: 'warning',
   },
   interviews: {
     slug: 'interview',
-    name: "Interviews",
+    name: 'Interviews',
     threshold: 2,
-    maxThreshold: 2,
-    requiresFresh: true,
     severity: 'warning',
   },
   featured: {
     slug: 'featured',
     name: 'Featured Articles',
-    threshold: 5,
-    requiresFresh: true,
+    threshold: 10,
     severity: 'warning',
   },
   breaking: {
@@ -52,7 +47,6 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'top-news',
     name: 'Top News',
     threshold: 4,
-    maxThreshold: 8,
     requiresFresh: true,
     severity: 'warning',
   },
@@ -84,7 +78,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   politics: {
     slug: 'politics',
     name: 'Politics',
-    threshold: 3,
+    threshold: 6,
     severity: 'warning',
   },
   sports: {
@@ -103,7 +97,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   youMayHaveMissed: {
     slug: 'you-may-have-missed',
     name: 'You may have missed',
-    threshold: 3,
+    threshold: 8,
     requiresFresh: false,
     severity: 'warning',
   },
@@ -118,18 +112,15 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     slug: 'fashion',
     name: 'Fashion',
     threshold: 8,
-    maxThreshold: 12,
     requiresFresh: false,
     severity: 'warning',
   },
   movies: {
     slug: 'movie-top-ten',
-    name: 'Movies',
+    name: 'Movies Top 10',
     threshold: 8,
-    maxThreshold: 10,
     requiresFresh: false,
     severity: 'warning',
-
   },
   // Category-specific content types with variations
   secondCategoryFeatured: {
@@ -145,14 +136,6 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     name: 'Trending News',
     threshold: 0,
     maxThreshold: 2,
-    severity: 'warning',
-  },
-  secondCategoryTopNews: {
-    slug: 'top-news',
-    name: 'Top News',
-    threshold: 4,
-    maxThreshold: 8,
-    requiresFresh: true,
     severity: 'warning',
   },
   thirdCategoryTrending: {
@@ -201,8 +184,9 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
       CONTENT_CRITERIA.breaking,
       CONTENT_CRITERIA.trending,
       CONTENT_CRITERIA.video,
-      CONTENT_CRITERIA.interviews
-
+      CONTENT_CRITERIA.interviews,
+      CONTENT_CRITERIA.diaspora,
+      CONTENT_CRITERIA.youMayHaveMissed,
     ],
   },
   {
@@ -210,80 +194,78 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     index: 1,
     name: SECOND_CATEGORY,
     criteria: [
-      CONTENT_CRITERIA.featured,
+      { ...CONTENT_CRITERIA.featured, name: 'Featured News' },
       CONTENT_CRITERIA.secondCategoryTrending,
       CONTENT_CRITERIA.topNews,
-      CONTENT_CRITERIA.editorsPick,
+      CONTENT_CRITERIA.politics,
+      CONTENT_CRITERIA.sports,
     ],
   },
   {
     // Third category (index 2)
     index: 2,
     name: THIRD_CATEGORY,
-    criteria: [
-      CONTENT_CRITERIA.thirdCategoryTrending,
-      CONTENT_CRITERIA.topPicks,
-      CONTENT_CRITERIA.editorsPick,
-      CONTENT_CRITERIA.featured,
-    ],
+    criteria: [{ ...CONTENT_CRITERIA.politics, threshold: 2 }, CONTENT_CRITERIA.featured],
   },
   {
     // Fourth category (index 3)
     index: 3,
     name: FOURTH_CATEGORY,
-    criteria: [
-      { ...CONTENT_CRITERIA.featured, threshold: 1 },
-      CONTENT_CRITERIA.topPicks,
-      CONTENT_CRITERIA.editorsPick,
-    ],
+    criteria: [{ ...CONTENT_CRITERIA.featured, threshold: 1 }, CONTENT_CRITERIA.fashion],
   },
   {
     // Fifth category (index 4)
     index: 4,
     name: FIFTH_CATEGORY,
     criteria: [
-      CONTENT_CRITERIA.fifthCategoryFeatured,
+      { ...CONTENT_CRITERIA.featured, threshold: 0 },
       CONTENT_CRITERIA.topPicks,
-      CONTENT_CRITERIA.trending,
+      CONTENT_CRITERIA.movies ,
     ],
   },
 ]
 
 // Helper functions for accessing content criteria
 const getCategoryByName = (name: string): CategoryCriteria | undefined =>
-  CATEGORY_CRITERIA.find(category => category.name === name)
+  CATEGORY_CRITERIA.find((category) => category.name === name)
 
-const getContentCriteriaBySlug = (category: CategoryCriteria, slug: string): ContentCriteria | undefined =>
-  category.criteria.find(criteria => criteria.slug === slug)
+const getContentCriteriaBySlug = (
+  category: CategoryCriteria,
+  slug: string
+): ContentCriteria | undefined => category.criteria.find((criteria) => criteria.slug === slug)
 
 // Home page exports for easy access
 export const HomePage = getCategoryByName(HOME_PAGE) as CategoryCriteria
 
 // Export commonly used content criteria
-export const HomePageBreakingNews = getContentCriteriaBySlug(HomePage, 'breaking') as ContentCriteria
-export const HomePageEditorsPick = getContentCriteriaBySlug(HomePage, 'editors-pick') as ContentCriteria
+export const HomePageBreakingNews = getContentCriteriaBySlug(
+  HomePage,
+  'breaking'
+) as ContentCriteria
+export const HomePageEditorsPick = getContentCriteriaBySlug(
+  HomePage,
+  'editors-pick'
+) as ContentCriteria
 export const HomePageWithVideos = getContentCriteriaBySlug(HomePage, 'video') as ContentCriteria
 export const HomePageTrending = getContentCriteriaBySlug(HomePage, 'trending') as ContentCriteria
 export const HomePageFeatured = getContentCriteriaBySlug(HomePage, 'featured') as ContentCriteria
 export const HomePageDiaspora = CONTENT_CRITERIA.diaspora
 export const HomePageYouMayHaveMissed = CONTENT_CRITERIA.youMayHaveMissed
 export const HomePageArticles = getContentCriteriaBySlug(HomePage, 'article') as ContentCriteria
-export const HomePageInterviews  = getContentCriteriaBySlug(HomePage, 'interview') as ContentCriteria
+export const HomePageInterviews = getContentCriteriaBySlug(HomePage, 'interview') as ContentCriteria
 
 // Number of days content is considered "fresh"
 export const CONTENT_FRESHNESS_DAYS = 7
 export const DEFAULT_PAGE_NUMBER = 1
 
-
 // Default site configuration order by content type
 export const DEFAULT_SITE_CONFIG_ORDER = {
   contentTypes: [
-    'news',     // News content first
-    'article',  // Articles second
+    'news', // News content first
+    'article', // Articles second
     'lifestyle', // Lifestyle content third
-    'entertainment' // Entertainment content fourth
-  ]
+    'entertainment', // Entertainment content fourth
+  ],
 }
-
 
 export const ViewsThreshold = 500

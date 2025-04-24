@@ -408,7 +408,7 @@ export const AdminSiteConfigComponent = () => {
                   <CardTitle className="flex items-center justify-between">
                     <span>Key Categories</span>
                     <Badge variant="outline" className="ml-2">
-                      {selectedKeyCategories.length}/5
+                      {selectedKeyCategories.length}/4
                     </Badge>
                   </CardTitle>
                   <CardDescription>
