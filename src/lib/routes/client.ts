@@ -17,7 +17,7 @@ export const getPageName = (pathName: string): string => {
 
     // Handle news article pages
     if (pathName.includes('/news/')) {
-        return 'News Article Page';
+        return 'Read News or Article';
     }
 
     // Handle explore page

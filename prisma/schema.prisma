@@ -25,6 +25,8 @@ model User {
   sessions      Session[]
   news          News[]
   comments      Comment[]
+  polls         Poll[]
+  votes         Vote[]
 
   @@index([id])
   @@index([email])
