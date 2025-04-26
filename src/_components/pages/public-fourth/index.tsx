@@ -7,6 +7,7 @@ import { useFetchNews } from '@/network/http-service/news.hooks'
 import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { AdsBox } from '@/_components/public/core/ads-box'
+import { useTrackSection } from '@/hooks/use-track-section'
 
 interface FourthPageContentProps {
   category: number
@@ -14,6 +15,11 @@ interface FourthPageContentProps {
 
 const FeaturedNews = CONTENT_CRITERIA.featured
 const Fashion = CONTENT_CRITERIA.fashion
+const LatestNewsCount = 6
+const LatestUpdatesSectionId = 'Latest Updates'
+const HeroSectionId = 'Hero Section'
+
+const sections = [{ id: HeroSectionId }, { id: LatestUpdatesSectionId }, { id: Fashion.name }]
 
 export const FourthPageContent = ({ category }: FourthPageContentProps) => {
   //featured data
@@ -32,7 +38,7 @@ export const FourthPageContent = ({ category }: FourthPageContentProps) => {
       categoryIds: [category],
     },
     1,
-    6
+    LatestNewsCount
   )
 
   //top picks data
@@ -44,24 +50,32 @@ export const FourthPageContent = ({ category }: FourthPageContentProps) => {
     Fashion.maxThreshold
   )
 
+  const { setRef } = useTrackSection(sections)
+
   return (
     <div className="flex flex-col w-full gap-6">
       {/* Hero section */}
       <div className="w-full">
-        <NewsScreenFullWidthHero newsItems={featuredData?.data} isLoading={featuredDataIsLoading} />
+        <NewsScreenFullWidthHero
+          newsItems={featuredData?.data}
+          isLoading={featuredDataIsLoading}
+          ref={setRef(HeroSectionId)}
+          id={HeroSectionId}
+        />
       </div>
 
       <div className="px-4 sm:px-6 md:px-8 mt-6 sm:mt-8 md:mt-10">
         <NewsCategoryCarousel
-          title={'Latest Updates'}
+          title={LatestUpdatesSectionId}
           items={latestNewsData?.data}
+          ref={setRef(LatestUpdatesSectionId)}
           isLoading={latestNewsIsLoading}
           carouselItem={{ itemType: 'overlay-v2' }}
         />
       </div>
       <AdsBox position="third-page" />
       {/* Masonry grid section */}
-      <div className="mt-8 sm:mt-10 md:mt-12 w-full">
+      <div className="mt-8 sm:mt-10 md:mt-12 w-full" id={Fashion.name} ref={setRef(Fashion.name)}>
         <MasonryNewsGrid data={fashionData?.data} isLoading={fashionIsLoading} />
       </div>
     </div>

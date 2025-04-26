@@ -1,12 +1,18 @@
-"use client"
-import DarkerBasicNewsWithTag from "@/_components/public/core/news-component/darker-basic-news-with-tag"
-import OverlayedNewsImage from "@/_components/public/core/news-component/overlayed-news-image"
-import FullWidthAlternateTitle from "@/_components/public/core/section-title/full-width-alternate-title"
-import { NewsDTO } from "@/app/(server)/modules/news/news.types"
-import { CONTENT_CRITERIA, DEFAULT_PAGE_NUMBER } from "@/app/(server)/modules/site-configurations/site-config.constants"
-import { useFetchNews } from "@/network/http-service/news.hooks"
+'use client'
+import DarkerBasicNewsWithTag from '@/_components/public/core/news-component/darker-basic-news-with-tag'
+import OverlayedNewsImage from '@/_components/public/core/news-component/overlayed-news-image'
+import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
+import { NewsDTO } from '@/app/(server)/modules/news/news.types'
+import {
+  CONTENT_CRITERIA,
+  DEFAULT_PAGE_NUMBER,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
+import { useFetchNews } from '@/network/http-service/news.hooks'
 
-const SportsSection = () => {
+interface SportSectionProps {
+  ref?: (el: HTMLElement | null) => void
+}
+const SportsSection = ({ ref }: SportSectionProps) => {
   const { data: sportsNews, isLoading } = useFetchNews(
     {
       published: true,
@@ -22,19 +28,23 @@ const SportsSection = () => {
       <div className="relative px-8 py-5 flex flex-col gap-8">
         <FullWidthAlternateTitle title="Sports" />
         <div className="min-h-[200px] flex items-center justify-center">
-          {isLoading ? "Loading sports news..." : "No sports news available"}
+          {isLoading ? 'Loading sports news...' : 'No sports news available'}
         </div>
       </div>
     )
   }
 
-  const sportsArticles = sportsNews.data;
-  const featuredSportsArticle = sportsArticles[0];
-  const secondarySportsArticles = sportsArticles.slice(1, 3);
-  const additionalSportsArticles = sportsArticles.slice(3);
+  const sportsArticles = sportsNews.data
+  const featuredSportsArticle = sportsArticles[0]
+  const secondarySportsArticles = sportsArticles.slice(1, 3)
+  const additionalSportsArticles = sportsArticles.slice(3)
 
   return (
-    <div className="relative px-8 py-5 flex flex-col gap-8">
+    <div
+      className="relative px-8 py-5 flex flex-col gap-8"
+      id={CONTENT_CRITERIA.sports.name}
+      ref={ref}
+    >
       <FullWidthAlternateTitle title="Sports" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

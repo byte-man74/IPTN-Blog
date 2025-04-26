@@ -18,9 +18,11 @@ const TrendingContent = CONTENT_CRITERIA.thirdCategoryTrending
 
 interface ArticleHeroProps {
   category: number
+  ref?: (el: HTMLElement | null) => void
+  id?: string
 }
 
-export const ThirdSectionHero = ({ category }: ArticleHeroProps) => {
+export const ThirdSectionHero = ({ category, ref, id }: ArticleHeroProps) => {
   //editors pick
   const { data: politicsData, isLoading: politicsIsLoading } = useFetchNews(
     {
@@ -54,7 +56,7 @@ export const ThirdSectionHero = ({ category }: ArticleHeroProps) => {
   )
 
   return (
-    <div className="w-full flex flex-col lg:flex-row gap-8 justify-between mt-4 px-2 sm:px-4 md:px-6">
+    <div className="w-full flex flex-col lg:flex-row gap-8 justify-between mt-4 px-2 sm:px-4 md:px-6" ref={ref} id={id}>
       {/* main news section div */}
       <div className="flex flex-col md:flex-row gap-4 w-full lg:w-[71%]">
         <div className="w-full md:w-1/2 overflow-hidden">

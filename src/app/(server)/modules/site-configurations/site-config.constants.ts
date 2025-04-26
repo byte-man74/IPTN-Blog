@@ -123,7 +123,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     severity: 'warning',
   },
   // Category-specific content types with variations
-  secondCategoryFeatured: {
+  SecondCategoryPolitics: {
     slug: 'featured',
     name: 'Featured Articles',
     threshold: 2,
@@ -220,7 +220,7 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     criteria: [
       { ...CONTENT_CRITERIA.featured, threshold: 0 },
       CONTENT_CRITERIA.topPicks,
-      CONTENT_CRITERIA.movies ,
+      CONTENT_CRITERIA.movies,
     ],
   },
 ]

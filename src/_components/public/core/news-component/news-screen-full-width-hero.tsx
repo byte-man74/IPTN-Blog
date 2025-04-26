@@ -10,12 +10,15 @@ import { NewsDTO } from "@/app/(server)/modules/news/news.types";
 import { ClientRoutes } from "@/lib/routes/client";
 import { calculateTimeStampFromDate, cleanUpNewsTitle } from "@/app/(server)/modules/news/news.utils";
 import { ViewsThreshold } from "@/app/(server)/modules/site-configurations/site-config.constants";
+import { LatestNewsFullWidthSkeleton } from "@/_components/global/skeletons";
 
 
 
 interface NewsScreenFullWidthHeroProps {
   newsItems?: NewsDTO[];
   isLoading?: boolean;
+  ref?: ((el: HTMLElement | null) => void)
+  id?: string
 }
 
 /**
@@ -24,7 +27,7 @@ interface NewsScreenFullWidthHeroProps {
  * This component displays a full-width hero section with a carousel of news items. Each item includes an image, title, date, and metadata such as read time, category, views, and comments.
  * The carousel is responsive and auto-plays through the items.
  */
-export default function NewsScreenFullWidthHero({ newsItems, isLoading = false }: NewsScreenFullWidthHeroProps) {
+export default function NewsScreenFullWidthHero({ newsItems, isLoading = false, ref, id }: NewsScreenFullWidthHeroProps) {
   const items = newsItems ?? [];
 
   const responsive = {
@@ -49,25 +52,12 @@ export default function NewsScreenFullWidthHero({ newsItems, isLoading = false }
   // Render skeleton loader when loading
   if (isLoading) {
     return (
-      <div className="relative h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[58vh] mx-auto border border-gray-200 overflow-hidden shadow-lg bg-gray-100 animate-pulse">
-        <div className="w-full h-full bg-gray-200"></div>
-        <div className="absolute bottom-0 left-0 w-full right-0 bg-gradient-to-t from-gray-300 via-gray-200 to-transparent p-4 sm:p-6 md:p-8 px-4 sm:px-6 md:px-10 z-10">
-          <div className="w-full md:w-[80%] lg:w-[60%] ml-auto">
-            <div className="h-8 sm:h-10 md:h-12 lg:h-14 bg-gray-300 rounded mb-4"></div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 sm:mt-3 md:mt-5 justify-end">
-            <div className="h-6 w-20 bg-gray-300 rounded-full"></div>
-            <div className="h-6 w-16 bg-gray-300 rounded-full"></div>
-            <div className="h-6 w-12 bg-gray-300 rounded-full"></div>
-            <div className="h-6 w-24 bg-gray-300 rounded-full"></div>
-          </div>
-        </div>
-      </div>
+        <LatestNewsFullWidthSkeleton />
     );
   }
 
   return (
-    <div className="relative h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[58vh] mx-auto border border-gray-200 overflow-hidden shadow-lg">
+    <div className="relative h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[58vh] mx-auto border border-gray-200 overflow-hidden shadow-lg" ref={ref} id={id}>
       {items.length > 0 ? (
         <Carousel
           responsive={responsive}

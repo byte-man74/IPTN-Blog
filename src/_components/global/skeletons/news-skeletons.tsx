@@ -1,7 +1,6 @@
 import React from 'react'
 import { Skeleton } from '../skeleton'
 
-
 /**
  * StandardNewsItemSkeleton
  *
@@ -103,7 +102,6 @@ export const NavigationSkeleton = () => (
   <div className="h-6 w-20 bg-gray-700 animate-pulse rounded"></div>
 )
 
-
 export const NewsItemSkeleton = ({ count = 3 }: { count?: number }) => {
   return (
     <>
@@ -115,18 +113,36 @@ export const NewsItemSkeleton = ({ count = 3 }: { count?: number }) => {
         </div>
       ))}
     </>
-  );
-};
-
+  )
+}
 
 export const ViewNewsMainSkeleton = () => {
-    return(
-        <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-        <Skeleton className="h-5 md:h-6 w-full" />
-        <Skeleton className="h-5 md:h-6 w-full" />
-        <Skeleton className="h-5 md:h-6 w-3/4" />
-        <Skeleton className="h-5 md:h-6 w-full" />
-        <Skeleton className="h-5 md:h-6 w-5/6" />
+  return (
+    <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+      <Skeleton className="h-5 md:h-6 w-full" />
+      <Skeleton className="h-5 md:h-6 w-full" />
+      <Skeleton className="h-5 md:h-6 w-3/4" />
+      <Skeleton className="h-5 md:h-6 w-full" />
+      <Skeleton className="h-5 md:h-6 w-5/6" />
+    </div>
+  )
+}
+
+export const LatestNewsFullWidthSkeleton = () => {
+  return (
+    <div className="relative h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[58vh] mx-auto border border-gray-200 overflow-hidden shadow-lg bg-gray-100 animate-pulse">
+      <div className="w-full h-full bg-gray-200"></div>
+      <div className="absolute bottom-0 left-0 w-full right-0 bg-gradient-to-t from-gray-300 via-gray-200 to-transparent p-4 sm:p-6 md:p-8 px-4 sm:px-6 md:px-10 z-10">
+        <div className="w-full md:w-[80%] lg:w-[60%] ml-auto">
+          <div className="h-8 sm:h-10 md:h-12 lg:h-14 bg-gray-300 rounded mb-4"></div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 sm:mt-3 md:mt-5 justify-end">
+          <div className="h-6 w-20 bg-gray-300 rounded-full"></div>
+          <div className="h-6 w-16 bg-gray-300 rounded-full"></div>
+          <div className="h-6 w-12 bg-gray-300 rounded-full"></div>
+          <div className="h-6 w-24 bg-gray-300 rounded-full"></div>
+        </div>
       </div>
-    )
+    </div>
+  )
 }

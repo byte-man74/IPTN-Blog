@@ -14,6 +14,7 @@ import HomePageFreeContent from '@/_components/pages/public-home/sub-sections/yo
 import { AdsBox } from '@/_components/public/core/ads-box'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { useHomePageNews } from './hooks/use-home-page'
+import { useTrackSection } from '@/hooks/use-track-section'
 
 /**
  * HomePageContent component
@@ -25,10 +26,23 @@ import { useHomePageNews } from './hooks/use-home-page'
  * - Optimized content flow for mobile, tablet, and desktop views
  * - Displays various news carousels and content sections
  */
+const InterviewsId = 'Interviews'
+const HomeHeroId = 'Hero'
+const sections = [
+  { id: HomeHeroId },
+  { id: HomePageFeatured.name },
+  { id: InterviewsId },
+  { id: HomePageWithVideos.name },
+  { id: HomePageDiaspora.name },
+  { id: HomePageYouMayHaveMissed.name },
+]
+
 const HomePageContent = () => {
   // Use the custom hook to fetch all news data
   const { featuredNews, interviews, newsWithVideos, diasporaContent, youMayHaveMissedContent } =
     useHomePageNews()
+
+  const { setRef } = useTrackSection(sections)
 
   // Helper function to render content sections conditionally
   const renderContentSection = <T extends { data?: NewsDTO[] }>(
@@ -51,53 +65,63 @@ const HomePageContent = () => {
       mt-3 xs:mt-4 sm:mt-5 md:mt-6
       mx-auto w-full"
       >
-        <HomeCoreHero />
+        <div id={HomeHeroId} ref={setRef(HomeHeroId)}>
+          <HomeCoreHero />
+        </div>
 
         {renderContentSection(
           featuredNews.data,
           featuredNews.isLoading,
           (items: NewsDTO[]) =>
             items.length > 5 && (
-              <NewsCategoryCarousel
-                title={HomePageFeatured.name}
-                backgroundTitle="Featured"
-                items={items.slice(5)}
-                isLoading={featuredNews.isLoading}
-                carouselItem={{ itemType: 'news-with-description' }}
-              />
+              <div id={HomePageFeatured.name} ref={setRef(HomePageFeatured.name)}>
+                <NewsCategoryCarousel
+                  title={HomePageFeatured.name}
+                  backgroundTitle="Featured"
+                  items={items.slice(5)}
+                  isLoading={featuredNews.isLoading}
+                  carouselItem={{ itemType: 'news-with-description' }}
+                />
+              </div>
             )
         )}
 
         {renderContentSection(interviews.data, interviews.isLoading, (items: NewsDTO[]) => (
-          <NewsCategoryCarousel
-            title="Interviews"
-            backgroundTitle="Honor & Glory"
-            items={items}
-            isLoading={interviews.isLoading}
-            carouselItem={{ itemType: 'interview' }}
-          />
+          <div id={InterviewsId} ref={setRef(InterviewsId)}>
+            <NewsCategoryCarousel
+              title="Interviews"
+              backgroundTitle="Honor & Glory"
+              items={items}
+              isLoading={interviews.isLoading}
+              carouselItem={{ itemType: 'interview' }}
+            />
+          </div>
         ))}
 
         {renderContentSection(newsWithVideos.data, newsWithVideos.isLoading, (items: NewsDTO[]) => (
-          <NewsCategoryCarousel
-            title={HomePageWithVideos.name}
-            backgroundTitle="Must See"
-            items={items}
-            isLoading={newsWithVideos.isLoading}
-            carouselItem={{ itemType: 'news-overlay' }}
-          />
+          <div id={HomePageWithVideos.name} ref={setRef(HomePageWithVideos.name)}>
+            <NewsCategoryCarousel
+              title={HomePageWithVideos.name}
+              backgroundTitle="Must See"
+              items={items}
+              isLoading={newsWithVideos.isLoading}
+              carouselItem={{ itemType: 'news-overlay' }}
+            />
+          </div>
         ))}
 
         {renderContentSection(
           diasporaContent.data,
           diasporaContent.isLoading,
           (items: NewsDTO[]) => (
-            <NewsFullScreenCarousel
-              title={HomePageDiaspora.name}
-              items={items}
-              isLoading={diasporaContent.isLoading}
-              carouselItem={{ itemType: 'news-fullscreen' }}
-            />
+            <div id={HomePageDiaspora.name} ref={setRef(HomePageDiaspora.name)}>
+              <NewsFullScreenCarousel
+                title={HomePageDiaspora.name}
+                items={items}
+                isLoading={diasporaContent.isLoading}
+                carouselItem={{ itemType: 'news-fullscreen' }}
+              />
+            </div>
           )
         )}
 
@@ -105,15 +129,17 @@ const HomePageContent = () => {
           youMayHaveMissedContent.data,
           youMayHaveMissedContent.isLoading,
           (items: NewsDTO[]) => (
-            <HomePageFreeContent
-              title={HomePageYouMayHaveMissed.name}
-              newsItems={items}
-              isLoading={youMayHaveMissedContent.isLoading}
-            />
+            <div id={HomePageYouMayHaveMissed.name} ref={setRef(HomePageYouMayHaveMissed.name)}>
+              <HomePageFreeContent
+                title={HomePageYouMayHaveMissed.name}
+                newsItems={items}
+                isLoading={youMayHaveMissedContent.isLoading}
+              />
+            </div>
           )
         )}
       </div>
-      <AdsBox />
+      <AdsBox position="home-page" />
     </>
   )
 }

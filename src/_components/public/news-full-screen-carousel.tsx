@@ -18,6 +18,7 @@ interface NewsFullScreenCarouselProps {
     items?: NewsDTO[]
     carouselItem: CarouselItemComponentType
     isLoading?: boolean
+    ref?: (el: HTMLElement | null) => void
 }
 
 /**
@@ -29,7 +30,8 @@ interface NewsFullScreenCarouselProps {
  * @param {boolean} props.isLoading - Whether the data is currently loading.
  * @param {Object} props.carouselItem - Configuration for the carousel item type.
  */
-export const NewsFullScreenCarousel = ({ title, items = [], carouselItem, isLoading = false }: NewsFullScreenCarouselProps) => {
+export const NewsFullScreenCarousel = ({ title, ref
+    , items = [], carouselItem, isLoading = false }: NewsFullScreenCarouselProps) => {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -81,7 +83,7 @@ export const NewsFullScreenCarousel = ({ title, items = [], carouselItem, isLoad
   }
 
   return (
-    <div className="mt-6 flex flex-col gap-8 relative">
+    <div className="mt-6 flex flex-col gap-8 relative" ref={ref}>
       <FullWidthAlternateTitle title={title} />
       <Carousel
         responsive={responsive}

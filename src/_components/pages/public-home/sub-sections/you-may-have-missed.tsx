@@ -16,7 +16,7 @@ const HomePageFreeContent: React.FC<{
   title?: string
   newsItems?: NewsDTO[]
   isLoading?: boolean
-}> = ({ title = 'Recommended Content', newsItems = [], isLoading = false }) => {
+}> = ({ title = 'Recommended Content', newsItems = [], isLoading = false}) => {
   // Helper function to render news item or ad space
   const renderNewsItem = (index: number) => {
     return newsItems.length > index ? (

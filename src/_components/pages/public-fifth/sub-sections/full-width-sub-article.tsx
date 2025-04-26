@@ -5,6 +5,8 @@ import { BasicNewsSkeleton } from '@/_components/global/skeletons'
 
 interface EntertainmentFullWidthSubArticleProps {
   category: number
+  ref?: (el: HTMLElement | null) => void
+  id?: string
 }
 
 /**
@@ -14,6 +16,8 @@ interface EntertainmentFullWidthSubArticleProps {
  */
 export const FifthSectionFullWidthSubArticle = ({
   category,
+  ref,
+  id,
 }: EntertainmentFullWidthSubArticleProps) => {
   const { data: latestNews, isLoading } = useFetchNews(
     {
@@ -29,7 +33,7 @@ export const FifthSectionFullWidthSubArticle = ({
   const secondHalf = newsItems.slice(Math.ceil(newsItems.length / 2))
 
   return (
-    <div className="w-full mt-4 pl-8 flex flex-col gap-2 h-auto">
+    <div className="w-full mt-4 pl-8 flex flex-col gap-2 h-auto" id={id} ref={ref}>
       <div className="w-full flex overflow-hidden">
         <div className="flex animate-marquee gap-2">
           {isLoading ? (

@@ -5,16 +5,18 @@ import { NewsCategoryCarousel } from '@/_components/public/news-category-carouse
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import { CONTENT_CRITERIA } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import React from 'react'
+import { NewsItemSkeleton } from '@/_components/global/skeletons'
 
 interface PoliticsProps {
   category: number
+  ref?: (el: HTMLElement | null) => void
 }
 
 /**
  * Shows featured's picks for the selected category.
  * Responsive layout for different screen sizes.
  */
-const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
+const SecondCategoryPolitics = ({ category, ref }: PoliticsProps) => {
   const { data: politicsData, isLoading: politicsDataIsLoading } = useFetchNews(
     {
       published: true,
@@ -28,18 +30,12 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
   // Get the news items from the response
   const newsItems = politicsData?.data || []
 
-  // Skeleton for news items
-  const NewsItemSkeleton = () => (
-    <div className="relative h-[15rem] w-full rounded-sm overflow-hidden animate-pulse bg-gray-200">
-      <div className="absolute bottom-0 left-0 right-0 p-3">
-        <div className="bg-gray-300 h-4 w-16 rounded-sm mb-2"></div>
-        <div className="bg-gray-300 h-5 w-3/4 rounded-sm"></div>
-      </div>
-    </div>
-  )
-
   return (
-    <div className="relative px-4 sm:px-6 lg:px-8 py-5 sm:py-8 flex flex-col gap-6 sm:gap-8">
+    <div
+      className="relative px-4 sm:px-6 lg:px-8 py-5 sm:py-8 flex flex-col gap-6 sm:gap-8"
+      id={CONTENT_CRITERIA.politics.name}
+      ref={ref}
+    >
       <FullWidthAlternateTitle title={CONTENT_CRITERIA.politics.name} />
 
       {politicsDataIsLoading ? (
@@ -63,8 +59,11 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
           </div>
           <div className="w-full lg:w-2/5 flex flex-col sm:flex-row lg:flex-col gap-4 sm:gap-6 lg:gap-8">
             {newsItems.slice(1, 3).map((item, index) => (
-              <div className="w-full sm:w-1/2 lg:w-full transition-transform duration-300 hover:scale-[1.02]" key={item.id || index}>
-                <DarkerBasicNewsWithTag newsItem={item} backgroundColor='#D9D9D9' />
+              <div
+                className="w-full sm:w-1/2 lg:w-full transition-transform duration-300 hover:scale-[1.02]"
+                key={item.id || index}
+              >
+                <DarkerBasicNewsWithTag newsItem={item} backgroundColor="#D9D9D9" />
               </div>
             ))}
           </div>
@@ -93,4 +92,4 @@ const SecondCategoryFeatured = ({ category }: PoliticsProps) => {
   )
 }
 
-export default SecondCategoryFeatured
+export default SecondCategoryPolitics

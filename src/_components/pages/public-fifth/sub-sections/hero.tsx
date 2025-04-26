@@ -14,9 +14,11 @@ const TopPicksContent = CONTENT_CRITERIA.topPicks
 
 interface EntertainmentHeroProps {
   category: number
+  ref?: ((el: HTMLElement | null) => void)
+  id?: string
 }
 
-export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
+export const FifthSectionHero = ({ category, ref, id  }: EntertainmentHeroProps) => {
   // Fetch featured news
   const { data: featuredData, isLoading: featuredIsLoading } = useFetchNews(
     {
@@ -44,7 +46,7 @@ export const FifthSectionHero = ({ category }: EntertainmentHeroProps) => {
   const topPicksItems = topPicksData?.data || []
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 md:px-8 mt-6">
+    <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 md:px-8 mt-6" ref={ref} id={id}>
       <div className="w-full lg:w-1/2 min-h-10 flex flex-col gap-4 md:gap-8 items-stretch mb-8 lg:mb-0 overflow-hidden">
         <FullWidthAlternateTitle title="Featured" />
         {featuredIsLoading ? (

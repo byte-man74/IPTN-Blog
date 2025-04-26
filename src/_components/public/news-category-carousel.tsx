@@ -21,6 +21,7 @@ interface NewsCategoryCarouselProps {
     title?: string
     backgroundTitle?: string
     items?: NewsDTO[]
+    ref?: (el: HTMLElement | null) => void
     isLoading?: boolean
     carouselItem: CarouselItemComponentType
 }
@@ -38,6 +39,7 @@ export const NewsCategoryCarousel = ({
   title,
   items,
   backgroundTitle,
+  ref,
   isLoading = false,
   carouselItem = { itemType: "news-with-description" }
 }: NewsCategoryCarouselProps) => {
@@ -137,7 +139,7 @@ export const NewsCategoryCarousel = ({
   }
 
   return (
-    <div className="mt-6 flex flex-col gap-8 relative">
+    <div className="mt-6 flex flex-col gap-8 relative" id={title} ref={ref}>
       {title && <FullWidthAlternateTitle title={title ?? "NA"}  backgroundTitle={backgroundTitle}/>}
       <Carousel
         responsive={responsive}

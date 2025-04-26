@@ -3,20 +3,24 @@ import NewsWithDescription from '@/_components/public/core/news-component/news-w
 import BasicTitle from '@/_components/public/core/section-title/basic-title'
 import FullWidthAlternateTitle from '@/_components/public/core/section-title/full-width-alternate-title'
 import React from 'react'
-import { CONTENT_CRITERIA, DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
+import {
+  CONTENT_CRITERIA,
+  DEFAULT_PAGE_NUMBER,
+} from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { useFetchNews } from '@/network/http-service/news.hooks'
 import { CarouselSkeleton, NewsWithDescriptionSkeleton } from '@/_components/global/skeletons'
 
 interface SecondPageContentHeroProps {
   category: number
+  ref?: (el: HTMLElement | null) => void
+  id?: string
 }
 
 /**
  * SecondPageContentHero component displays a editors news section and a trending now section side by side.
  * @param {SecondPageContentHeroProps} props - Component props including category
  */
-export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) => {
-
+export const SecondPageContentHero = ({ category, ref, id }: SecondPageContentHeroProps) => {
   //trending
   const { data: secondPageTrending, isLoading: secondPageTrendingDataIsLoading } = useFetchNews(
     {
@@ -28,23 +32,24 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
     CONTENT_CRITERIA.secondCategoryTrending.maxThreshold
   )
 
-
-
-    //featured
-    const { data: secondPageFeatured, isLoading: secondPageFeaturedIsLoading } = useFetchNews(
-        {
-          published: true,
-          categoryIds: [category],
-          categorySlug: CONTENT_CRITERIA.featured.slug,
-        },
-        DEFAULT_PAGE_NUMBER,
-        2 //threshold 
-      )
-
+  //featured
+  const { data: secondPageFeatured, isLoading: secondPageFeaturedIsLoading } = useFetchNews(
+    {
+      published: true,
+      categoryIds: [category],
+      categorySlug: CONTENT_CRITERIA.featured.slug,
+    },
+    DEFAULT_PAGE_NUMBER,
+    2 //threshold
+  )
 
   return (
     // header section
-    <div className="relative flex flex-col lg:flex-row px-4 sm:px-6 lg:px-8 gap-4 h-full items-stretch w-full pb-4 mt-4 sm:mt-2">
+    <div
+      className="relative flex flex-col lg:flex-row px-4 sm:px-6 lg:px-8 gap-4 h-full items-stretch w-full pb-4 mt-4 sm:mt-2"
+      ref={ref}
+      id={id}
+    >
       <div className="w-full lg:w-1/2 h-full relative mb-8 lg:mb-0 overflow-hidden">
         <FullWidthAlternateTitle title={`${CONTENT_CRITERIA.trending.name}`} />
         <div className="mb-4 sm:mb-6 lg:mb-8 w-full" />
@@ -56,7 +61,7 @@ export const SecondPageContentHero = ({ category }: SecondPageContentHeroProps) 
       </div>
 
       <div className="w-full lg:w-1/2 pt-2 sm:pt-4 lg:pt-6 flex flex-col gap-2 min-h-full justify-end-between">
-        <BasicTitle title={"Featured"} />
+        <BasicTitle title={'Featured'} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full h-full items-end">
           {secondPageFeaturedIsLoading ? (
             <>
