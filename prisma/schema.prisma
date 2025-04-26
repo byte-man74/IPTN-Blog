@@ -127,8 +127,6 @@ model Tag {
 }
 
 
-
-
 model SiteConfiguration {
   id                  Int               @id @default(autoincrement())
   navBarKeyCategories Category[]        @relation("NavBarKeyCategories")
@@ -206,4 +204,56 @@ model Advertisement {
     newsId     String?
     news       News? @relation(fields: [newsId], references: [id])
 
+}
+
+
+//polls
+
+
+model Poll {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?   @db.Text
+  status      String    @default("active") // active, closed, draft
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  options     Option[]
+  votes       Vote[]
+
+  @@index([id])
+  @@index([status])
+  @@index([userId])
+}
+
+model Option {
+  id        Int      @id @default(autoincrement())
+  text      String
+  pollId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes     Vote[]
+
+  @@index([id])
+  @@index([pollId])
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  pollId    Int
+  optionId  Int
+  userId    String?
+  createdAt DateTime @default(now())
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option    Option   @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([pollId, userId])
+  @@index([pollId])
+  @@index([optionId])
+  @@index([userId])
 }

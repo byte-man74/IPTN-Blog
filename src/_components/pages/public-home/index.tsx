@@ -15,6 +15,7 @@ import { AdsBox } from '@/_components/public/core/ads-box'
 import { NewsDTO } from '@/app/(server)/modules/news/news.types'
 import { useHomePageNews } from './hooks/use-home-page'
 
+
 /**
  * HomePageContent component
  *
@@ -29,6 +30,8 @@ const HomePageContent = () => {
   // Use the custom hook to fetch all news data
   const { featuredNews, interviews, newsWithVideos, diasporaContent, youMayHaveMissedContent } =
     useHomePageNews()
+
+
 
   // Helper function to render content sections conditionally
   const renderContentSection = <T extends { data?: NewsDTO[] }>(

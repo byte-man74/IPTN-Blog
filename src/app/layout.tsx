@@ -7,6 +7,7 @@ import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
 import { Toaster } from '@/components/ui/toaster'
+import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
 
 /**
  * Font configuration for the application
@@ -140,11 +141,13 @@ export default function RootLayout({
       <body className="antialiased">
         <NextAuthProvider>
           <ReactQueryProvider>
-            <ErrorProvider error={null}>
-              <Toaster />
-              <NextTopLoader showSpinner={false} color="#008751" />
-              <div className="mx-auto max-w-[110rem]">{children}</div>
-            </ErrorProvider>
+            <MixpanelProvider>
+              <ErrorProvider error={null}>
+                <Toaster />
+                <NextTopLoader showSpinner={false} color="#008751" />
+                <div className="mx-auto max-w-[110rem]">{children}</div>
+              </ErrorProvider>
+            </MixpanelProvider>
           </ReactQueryProvider>
         </NextAuthProvider>
       </body>
