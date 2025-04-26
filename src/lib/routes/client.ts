@@ -25,6 +25,20 @@ export const getPageName = (pathName: string): string => {
         return 'Explore Page';
     }
 
+    // Handle dynamic routes with slugs
+    if (pathName.startsWith('/')) {
+        const segments = pathName.split('/').filter(Boolean);
+        if (segments.length > 0) {
+            // Convert slug to title case and append "Page"
+            const slug = segments[segments.length - 1];
+            const formattedSlug = slug
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            return `${formattedSlug} Page`;
+        }
+    }
+
     // Handle other pages
     return "Unidentified Page";
 }

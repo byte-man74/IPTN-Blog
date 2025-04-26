@@ -8,7 +8,7 @@ import { MixpanelContextType, TrackEventProps } from '@/lib/third-party/mixpanel
 import { MixpanelEvents } from './events'
 import { usePathname } from 'next/navigation'
 import { getPageName } from '@/lib/routes/client'
-import { generateEventName } from '@/lib/third-party/mixpanel/utils'
+import { formatEventName } from './utils'
 
 export const MixpanelProvider = ({ children }: { children: ReactNode }) => {
   const mixpanelToken = getMixPanelToken()
@@ -52,10 +52,13 @@ export const MixpanelProvider = ({ children }: { children: ReactNode }) => {
 
       if (!isAdminPage) {
         //only track the admin pages.
-        mixpanel.track(generateEventName(MixpanelEvents.PAGE_VISIT, pageName), {
-          page: pathName,
-          //todo: Add any other page-specific properties here
-        })
+        mixpanel.track(
+          formatEventName({ eventAction: MixpanelEvents.PAGE_VISIT, pageName: pageName }),
+          {
+            page: pathName,
+            //todo: Add any other page-specific properties here
+          }
+        )
       }
     } catch (error) {
       logger.error('Unable to track page visit with Mixpanel', error)
@@ -78,8 +81,30 @@ export const MixpanelProvider = ({ children }: { children: ReactNode }) => {
     [mixpanel]
   )
 
+
+  /**
+   * this would track specific section user is interacting with on a particular page and format it accurately
+   */
+  const trackSectionVisit = async ({
+    sectionName,
+    pageName,
+  }: {
+    sectionName: string
+    pageName: string
+  }) => {
+    const sectionEventName = formatEventName({
+      eventAction: MixpanelEvents.SECTION_VISIT,
+      pageName: pageName,
+      sectionName: sectionName,
+    })
+    trackEvent({
+      eventName: sectionEventName,
+    })
+  }
+
   const value: MixpanelContextType = {
     trackEvent,
+    trackSectionVisit,
     initialized,
   }
 
