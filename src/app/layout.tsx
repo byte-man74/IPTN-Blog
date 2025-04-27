@@ -145,7 +145,7 @@ export default function RootLayout({
               <ErrorProvider error={null}>
                 <Toaster />
                 <NextTopLoader showSpinner={false} color="#008751" />
-                <div className="mx-auto max-w-[110rem]">{children}</div>
+                <div className="mx-auto max-w-[110rem] relative">{children}</div>
               </ErrorProvider>
             </MixpanelProvider>
           </ReactQueryProvider>

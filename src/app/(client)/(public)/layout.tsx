@@ -12,6 +12,7 @@ import HeroNavigation from '@/_components/public/hero-navigation'
 import HeroTags from '@/_components/public/hero-tags'
 import { NewsBanner } from '@/_components/public/news-top-banner'
 import Footer from '@/_components/public/main-public-footer'
+import { GlobalPoll } from '@/_components/public/global-poll'
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient()
@@ -68,6 +69,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <HeroTags />
       <NewsBanner title="Breaking News" />
       <div className="overflow-hidden">{children}</div>
+      <GlobalPoll />
       <Footer />
     </>
   )
