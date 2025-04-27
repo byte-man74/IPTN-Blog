@@ -45,7 +45,14 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
-    // Validate poll data (assuming CreatePollSchema exists)
+    // Convert string dates to Date objects
+    if (body?.startDate) {
+      body.startDate = new Date(body.startDate)
+    }
+
+    if (body?.endDate) {
+      body.endDate = new Date(body.endDate)
+    }
     const validationResult = CreatePollSchema.safeParse(body)
     if (!validationResult.success) {
       return NextResponse.json(

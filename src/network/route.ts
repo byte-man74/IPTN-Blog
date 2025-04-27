@@ -7,7 +7,7 @@ export const routes = {
     delete: (id: string) => `/news/${id}`,
     categories: '/news/categories',
     tags: '/news/tags',
-    popularTags: "news/tags/popular",
+    popularTags: 'news/tags/popular',
     analytics: (id: string) => `/news/internal/${id}/analytics`,
     comments: (slug: string) => `/news/${slug}/create-comment`,
     related: (slug: string) => `/news/${slug}/related`,
@@ -27,7 +27,7 @@ export const routes = {
     initialize: '/site-config/initialize',
     navigation: '/site-config/navigation',
     healthCheck: '/site-config/health-check',
-    simpleHealthCheck: "/site-config/simple-health-check"
+    simpleHealthCheck: '/site-config/simple-health-check',
   },
   ads: {
     list: '/ads',
@@ -35,5 +35,15 @@ export const routes = {
     update: (id: string) => `/ads/${id}`,
     delete: (id: string) => `/ads/${id}`,
     details: (id: string) => `/ads/${id}`,
+  },
+  polls: {
+    list: '/polls',
+    create: '/polls',
+    update: (id: string) => `/polls/${id}`,
+    delete: (id: string) => `/polls/${id}`,
+    vote: (id: string) => `/polls/${id}/vote`,
+    removeVote: (id: string) => `/polls/${id}/vote`,
+    winner: (id: string) => `/polls/${id}/winner`,
+    admin: '/polls/all',
   },
 }

@@ -1,6 +1,7 @@
 export const AdminRoutes = {
     home: "/admin",
     configuration: "/admin/configuration",
+    polls: "/admin/polls",
     createNews: "/admin/news/create",
     updateNews: (slug: string) => `/admin/news/update/${slug}`,
     previewNews: (slug: string) => `/admin/news/preview/${slug}`,
