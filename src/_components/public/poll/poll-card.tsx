@@ -6,6 +6,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { PollDTO } from '@/app/(server)/modules/polls/poll.types'
 import { useSignIn } from '@/providers/signin-provider'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
 
 
 
@@ -33,12 +35,28 @@ export const PollCard: React.FC<PollCardProps> = ({
   isUserLoggedIn
 }) => {
   const { openSignInModal } = useSignIn();
+  const { trackEvent } = useMixpanel();
 
 
   // Check if the user has already voted on this poll
   const hasUserVoted = currentPoll?.options?.some(option =>
     option.votes?.some(vote => vote.userId)
   );
+
+  const handleVoteClick = async () => {
+    if (isUserLoggedIn) {
+      trackEvent({
+        eventName: MixpanelActions.VOTED_ON_A_POLL,
+        properties: {
+          pollTitle: currentPoll?.title,
+          optionText: currentPoll?.options?.find(opt => opt.id === selectedOption)?.text
+        }
+      });
+      await handleVote();
+    } else {
+      openSignInModal();
+    }
+  };
 
   return (
     <Card className="w-full max-w-[30rem] mx-auto border-2 border-muted shadow-md">
@@ -100,7 +118,7 @@ export const PollCard: React.FC<PollCardProps> = ({
       </CardContent>
       <CardFooter className="flex flex-col gap-3 sm:gap-4 pt-2 pb-4 px-3 sm:px-6">
         <Button
-          onClick={isUserLoggedIn ? handleVote : openSignInModal}
+          onClick={handleVoteClick}
           disabled={(selectedOption === null && isUserLoggedIn) || hasUserVoted}
           className="w-full bg-primaryGreen hover:bg-primaryGreen/90 text-sm sm:text-base"
         >

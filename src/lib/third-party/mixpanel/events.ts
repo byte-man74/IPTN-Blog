@@ -19,7 +19,8 @@ export const MixpanelActions = {
     READ_A_POST: "User started reading a post",
     ATTEMPTED_TO_SIGNUP: "User attempted to sign up",
     CLICKED_SOCIAL_LINK: "User clicked social media link",
-    SEARCHED_CONTENT: "User searched for content",
+    SEARCHED_CONTENT: "User is searching for a content",
     SUBSCRIBED_TO_NEWSLETTER: "User subscribed to newsletter",
+    OPENED_POLL: "User opened a poll",
     VOTED_ON_A_POLL: "User voted on a poll"
 }

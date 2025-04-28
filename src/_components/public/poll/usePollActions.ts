@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useToast } from '@/hooks/use-toast'
 import { useVoteOnPoll } from '@/network/http-service/polls.mutation'
@@ -8,8 +8,8 @@ import { useMixpanel } from '@/lib/third-party/mixpanel/context'
 import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
 
 
-export const usePollActions = (pollsData?: PollDTO[]) => {
-  const [selectedPollIndex, setSelectedPollIndex] = useState(0)
+export const usePollActions = (pollsData?: PollDTO[], initialPollIndex?: number) => {
+  const [selectedPollIndex, setSelectedPollIndex] = useState(initialPollIndex || 0)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
@@ -17,10 +17,14 @@ export const usePollActions = (pollsData?: PollDTO[]) => {
   const { trackEvent } = useMixpanel()
   const currentPoll = pollsData?.[selectedPollIndex]
 
+  // Update selectedPollIndex when initialPollIndex changes
+  useEffect(() => {
+    if (initialPollIndex !== undefined && pollsData && initialPollIndex < pollsData.length) {
+      setSelectedPollIndex(initialPollIndex)
+    }
+  }, [initialPollIndex, pollsData])
 
   const { mutateAsync } = useVoteOnPoll(currentPoll?.id as number)
-
-
 
   const handleVote = async () => {
     trackEvent({

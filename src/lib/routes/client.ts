@@ -1,7 +1,8 @@
 export const ClientRoutes = {
     home: "/",
     viewNews: (slug: string) => `news/${slug}`,
-    explore: "/explore"
+    explore: "/explore",
+    contact: "/contact"
 }
 /**
  * Returns a user-friendly page name based on the current path
@@ -23,6 +24,11 @@ export const getPageName = (pathName: string): string => {
     // Handle explore page
     if (pathName === ClientRoutes.explore) {
         return 'Explore Page';
+    }
+
+
+    if (pathName === ClientRoutes.contact) {
+        return 'Contact Page';
     }
 
     // Handle dynamic routes with slugs

@@ -18,6 +18,7 @@ import { debounce } from 'lodash'
 import { ClientRoutes } from '@/lib/routes/client'
 import { useInView } from 'react-intersection-observer'
 import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
 
 type SearchPageClientProps = {
   initialQuery: string
@@ -147,7 +148,7 @@ export default function SearchPageClient({
       // Track search event if there's a search term
       if (searchTerm) {
         trackEvent({
-          eventName: 'User is Searching Content',
+          eventName: MixpanelActions.SEARCHED_CONTENT,
           properties: {
             searchTerm,
             category: selectedCategory || 'none',
