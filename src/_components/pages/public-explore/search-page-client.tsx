@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { debounce } from 'lodash'
 import { ClientRoutes } from '@/lib/routes/client'
 import { useInView } from 'react-intersection-observer'
-
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
 
 type SearchPageClientProps = {
   initialQuery: string
@@ -49,6 +49,7 @@ export default function SearchPageClient({
   const [showFilters, setShowFilters] = useState(false)
   const [allResults, setAllResults] = useState<NewsDTO[]>([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const { trackEvent } = useMixpanel()
 
   // Fetch categories from API
   const { data: categories = [], isLoading: isLoadingCategories } = useFetchCategories()
@@ -135,15 +136,28 @@ export default function SearchPageClient({
     router.push(`${ClientRoutes.explore}?${params.toString()}`, { scroll: false })
   }
 
-  // Debounced search function
+  // Debounced search function with tracking
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
     debounce((searchTerm: string) => {
       setQuery(searchTerm)
       setPage(1)
       updateUrlParams(searchTerm, 1, selectedCategory, selectedTag)
+
+      // Track search event if there's a search term
+      if (searchTerm) {
+        trackEvent({
+          eventName: 'User is Searching Content',
+          properties: {
+            searchTerm,
+            category: selectedCategory || 'none',
+            tag: selectedTag || 'none',
+            page: 1,
+          },
+        })
+      }
     }, 500),
-    [selectedCategory, selectedTag]
+    [selectedCategory, selectedTag, trackEvent]
   )
 
   // Handle input change with debounce

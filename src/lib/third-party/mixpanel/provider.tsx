@@ -46,7 +46,7 @@ export const MixpanelProvider = ({ children }: { children: ReactNode }) => {
         if (!success) {
           // Set user properties using people.set according to Mixpanel docs
           mixpanel.people.set({
-            $distinct_id: sessionData.user.id,
+            $distinct_id: sessionData.user.email,
             $email: sessionData.user.email || 'Not provided',
             $first_name: sessionData.user.firstName || 'Not provided',
             $last_name: sessionData.user.lastName || 'Not provided',

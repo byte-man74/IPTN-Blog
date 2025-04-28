@@ -102,7 +102,7 @@ export const NewsComments = ({ slug, newsId, initialComments}: NewsCommentsProps
                   <User className="h-4 w-4" />
                 </div>
               )}
-              <span className="text-sm font-medium">{sessionData?.user.firstName || "Anonymous"} {sessionData?.user.lastName || "Anonymous"}</span>
+              <span className="text-sm font-medium">{sessionData?.user.firstName || "Anonymous"} {sessionData?.user.lastName || ""}</span>
             </div>
             <textarea
               className="w-full border border-gray-200 p-3 sm:p-4 focus:outline-none focus:ring-2 focus:ring-primaryGreen text-sm sm:text-base bg-gray-50"
@@ -159,7 +159,7 @@ export const NewsComments = ({ slug, newsId, initialComments}: NewsCommentsProps
                 )}
                 <div className="flex-1 min-w-0 bg-gray-50 p-4">
                   <div className="flex flex-wrap justify-between items-center mb-2">
-                    <span className="font-medium text-sm mr-2">{comment.user?.firstName|| "Anonymous"} {comment.user?.lastName|| "Anonymous"}</span>
+                    <span className="font-medium text-sm mr-2">{comment.user?.firstName|| ""} {comment.user?.lastName|| ""}</span>
                     <span className="text-xs text-gray-500">
                       {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Recently'}
                     </span>

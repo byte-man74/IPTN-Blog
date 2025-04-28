@@ -22,6 +22,8 @@ interface AppLinkProps {
   icon?: IconType
   /** Optional size for the icon (defaults to 20) */
   iconSize?: number
+  /** Optional onClick handler for the link */
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
 /**
@@ -32,6 +34,7 @@ interface AppLinkProps {
  * - Supports icons from react-icons
  * - Includes accessibility attributes
  * - Applies consistent transition styling
+ * - Supports custom click handlers
  *
  * @param {AppLinkProps} props - The component props
  * @returns {JSX.Element} Rendered link component
@@ -45,6 +48,7 @@ export const AppLink = ({
   ariaLabel,
   icon: Icon,
   iconSize = 20,
+  onClick,
 }: AppLinkProps) => {
   // Trim href if it's a string
   const trimmedHref = typeof href === 'string' ? href.trim() : href
@@ -61,6 +65,7 @@ export const AppLink = ({
       href={!trimmedHref || trimmedHref === "" ? '#' : trimmedHref}
       className={`transition-colors ${className}`}
       aria-label={ariaLabel}
+      onClick={onClick}
       {...linkProps}
     >
       {Icon && <Icon size={iconSize} className="inline-block mr-2" />}

@@ -16,6 +16,7 @@ export const MixpanelActions = {
     CLICKED_AD: "User clicked advertisement",
     HOVERED_ON_AD: "User hovered on advertisement",
     COMMENTED_ON_POST: "User commented on post",
+    READ_A_POST: "User started reading a post",
     ATTEMPTED_TO_SIGNUP: "User attempted to sign up",
     CLICKED_SOCIAL_LINK: "User clicked social media link",
     SEARCHED_CONTENT: "User searched for content",

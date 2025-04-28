@@ -12,6 +12,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { logger } from '@/lib/utils/logger'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
 
 /**
  * ArticleNav component provides navigation for article pages
@@ -19,27 +21,52 @@ import { logger } from '@/lib/utils/logger'
  */
 const ArticleNav = () => {
   const [open, setOpen] = useState(false)
+  const { trackEvent } = useMixpanel()
 
 
   const shareToTwitter = () => {
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(document.title)}&url=${encodeURIComponent(window.location.href)}`
+    trackEvent({
+        eventName: MixpanelActions.SHARED_CONTENT,
+        properties: {
+            platform: "twitter"
+        }
+    })
     window.open(url, '_blank')
     setOpen(false)
   }
 
   const shareToFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`
+    trackEvent({
+        eventName: MixpanelActions.SHARED_CONTENT,
+        properties: {
+            platform: "facebook"
+        }
+    })
     window.open(url, '_blank')
     setOpen(false)
   }
 
   const shareToLinkedIn = () => {
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`
+    trackEvent({
+        eventName: MixpanelActions.SHARED_CONTENT,
+        properties: {
+            platform: "linkedin"
+        }
+    })
     window.open(url, '_blank')
     setOpen(false)
   }
 
   const copyToClipboard = () => {
+    trackEvent({
+        eventName: MixpanelActions.SHARED_CONTENT,
+        properties: {
+            platform: "copied-link"
+        }
+    })
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {

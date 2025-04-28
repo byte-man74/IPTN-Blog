@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Clock } from 'lucide-react'
 import { useFetchNewsDetail, useFetchRelatedNews, useFetchNews } from '@/network/http-service/news.hooks'
 import { Skeleton } from '@/_components/global/skeleton'
@@ -17,16 +17,32 @@ import { NewsComments } from '@/_components/public/core/news-comment'
 import { NewsCategoryCarousel } from '@/_components/public/news-category-carousel'
 import { DEFAULT_PAGE_NUMBER } from '@/app/(server)/modules/site-configurations/site-config.constants'
 import { ViewNewsMainSkeleton } from '@/_components/global/skeletons'
+import { useTrackSection } from '@/hooks/use-track-section'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
 
 /**
  * ViewNews component displays a news article in a Medium-style layout
  * with a full-width cover image and properly formatted content.
  */
+
+
+const PostReadingCompleted = "Completed Reading post"
+const RecommendedSectionId = "Recommended section"
+const RelatedNewsSkeleton = [1, 2, 3, 4]
+
+const sections = [
+    { id: PostReadingCompleted },
+    { id: RecommendedSectionId }
+]
+
 const ViewNews = ({ slug }: { slug: string }) => {
   const { data, isLoading: isNewsLoading } = useFetchNewsDetail(slug)
   const { data: relatedNewsData, isLoading: isRelatedLoading } = useFetchRelatedNews(slug)
   const hasIncrementedView = useRef(false)
   const incrementMetric = useIncrementNewsMetric(slug, data?.id)
+  const { trackEvent } = useMixpanel()
+  const { setRef } = useTrackSection(sections)
 
   // Fetch news by tags when data is available
   const tagIds = data?.tags?.map(tag => typeof tag === 'object' ? tag.id : null).filter(Boolean) || []
@@ -81,8 +97,18 @@ const ViewNews = ({ slug }: { slug: string }) => {
     }
   }
 
+  useEffect(() => {
+    trackEvent({
+        eventName: MixpanelActions.READ_A_POST,
+        properties: {
+          slug: slug,
+          title: data?.title || 'Unknown',
+        }
+    })
+  }, [trackEvent, slug, data]);
+
   return (
-    <article className="max-w-full w-full flex flex-col items-center ">
+    <article className="max-w-full w-full flex flex-col items-center">
       {/* Header Section */}
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8 flex flex-col items-center">
         {isNewsLoading ? (
@@ -135,6 +161,8 @@ const ViewNews = ({ slug }: { slug: string }) => {
           </div>
         )}
 
+        <div ref={setRef(PostReadingCompleted)} id={PostReadingCompleted} />
+
 
         {/* Comments Section */}
         {!isNewsLoading && data && (
@@ -152,7 +180,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
           <div className="container mx-auto px-2 md:px-4 lg:px-6">
             <Skeleton className="h-10 w-64 mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
+              {RelatedNewsSkeleton.map((i) => (
                 <Skeleton key={i} className="h-64 w-full rounded-md" />
               ))}
             </div>
@@ -180,7 +208,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
           <div className="container mx-auto px-4">
             <Skeleton className="h-10 w-64 mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
+              {RelatedNewsSkeleton.map((i) => (
                 <Skeleton key={i} className="h-64 w-full rounded-md" />
               ))}
             </div>
@@ -188,7 +216,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
         </div>
       ) : (
         relatedNewsData && relatedNewsData.length > 0 && (
-          <div className="w-full mb-16  py-10">
+          <div className="w-full mb-16 py-10" ref={setRef(RecommendedSectionId)} id={RecommendedSectionId}>
             <div className="container mx-auto px-2">
               <NewsCategoryCarousel
                 title="Recommended Reading"
