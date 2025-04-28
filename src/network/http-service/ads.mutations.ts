@@ -1,6 +1,6 @@
 import { useAppMutation } from '@/network/client.constructor'
 import { routes } from '@/network/route'
-
+import { toast } from '@/hooks/use-toast'
 
 /**
  * Hook for creating a new ad
@@ -10,6 +10,12 @@ export function useCreateAd() {
     return useAppMutation({
       apiRoute: routes.ads.create,
       method: 'POST',
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Ad created successfully',
+        })
+      },
     })
   }
 
@@ -22,6 +28,12 @@ export function useCreateAd() {
     return useAppMutation({
       apiRoute: routes.ads.update(id),
       method: 'PATCH',
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Ad updated successfully',
+        })
+      },
     })
   }
 
@@ -34,5 +46,11 @@ export function useCreateAd() {
     return useAppMutation({
       apiRoute: routes.ads.delete(id),
       method: 'DELETE',
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Ad deleted successfully',
+        })
+      },
     })
   }

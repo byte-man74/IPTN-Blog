@@ -11,7 +11,7 @@ import {
   BarChart2,
   Cog,
   AlertTriangle,
-  BarChart,
+  PieChart,
 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
@@ -60,7 +60,7 @@ export const SideNav = () => {
     {
       href: `${AdminRoutes.polls}`,
       label: 'Polls',
-      icon: BarChart,
+      icon: PieChart,
       matchPath: (path: string) => path.startsWith(`${AdminRoutes.polls}`),
     },
     {

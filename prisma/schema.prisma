@@ -230,7 +230,6 @@ model Poll {
   @@index([status])
   @@index([userId])
 }
-
 model Option {
   id        Int      @id @default(autoincrement())
   text      String

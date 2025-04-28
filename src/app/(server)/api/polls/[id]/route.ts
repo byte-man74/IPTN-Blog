@@ -35,7 +35,16 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const body = await request.json()
 
-    // Validate poll data (assuming CreatePollSchema exists)
+    // Convert string dates to Date objects
+    if (body?.startDate) {
+      body.startDate = new Date(body.startDate)
+    }
+
+    if (body?.endDate) {
+      body.endDate = new Date(body.endDate)
+    }
+
+    // Validate poll data
     const validationResult = CreatePollSchema.partial().safeParse(body)
     if (!validationResult.success) {
       return NextResponse.json(

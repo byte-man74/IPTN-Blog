@@ -14,7 +14,7 @@ export interface IPollService {
   ): Promise<PollDTO | null | ApiCustomError>
   removeVote(pollId: number, userId: string): Promise<PollDTO | null | ApiCustomError>
   findPollWinner(pollId: number): Promise<PollWinnerDTO | null | ApiCustomError>
-  fetchActivePollsWithVotes(userId?: string): Promise<PollDTO[] | null | ApiCustomError>
+  fetchActivePollsWithVotes(): Promise<PollDTO[] | null | ApiCustomError>
   fetchAllPolls(): Promise<PollDTO[] | null | ApiCustomError>
 }
 
@@ -110,9 +110,9 @@ export class PollService implements IPollService {
    * @param userId - Optional user ID to check if the user has voted
    * @returns Array of active polls or error
    */
-  async fetchActivePollsWithVotes(userId?: string): Promise<PollDTO[] | null | ApiCustomError> {
+  async fetchActivePollsWithVotes(): Promise<PollDTO[] | null | ApiCustomError> {
     return tryCatchHandler(async () => {
-      return await this.repository.fetchActivePollsWithVotes(userId)
+      return await this.repository.fetchActivePollsWithVotes()
     })
   }
 

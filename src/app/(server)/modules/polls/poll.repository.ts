@@ -3,7 +3,6 @@ import { CreatePollDTO, PollDTO, PollWinnerDTO } from './poll.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 
-
 export class PollRepository {
   private readonly poll = prisma.poll
   private readonly vote = prisma.vote
@@ -264,19 +263,17 @@ export class PollRepository {
   }
 
   //fetch active polls
-  async fetchActivePollsWithVotes(userId?: string): Promise<PollDTO[] | ApiCustomError | null> {
+  async fetchActivePollsWithVotes(): Promise<PollDTO[] | ApiCustomError | null> {
     return tryCatchHandler(async () => {
       const now = new Date()
 
       return await this.poll.findMany({
         where: {
-          endDate: {
-            gte: now,
-          },
-          startDate: {
-            lte: now,
-          },
           status: 'active',
+          OR: [
+            { endDate: { gt: now } }, // Only include polls where expiry date is in the future
+            { endDate: null },
+          ],
         },
         include: {
           options: {
@@ -284,13 +281,7 @@ export class PollRepository {
               votes: true,
             },
           },
-          votes: userId
-            ? {
-                where: {
-                  userId,
-                },
-              }
-            : true,
+          votes: true,
         },
         orderBy: {
           createdAt: 'desc',

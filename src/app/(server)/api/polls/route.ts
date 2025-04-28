@@ -11,11 +11,11 @@ import { logger } from '@/lib/utils/logger'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
-    const userId = session?.user?.id
+
+
 
     const pollService = new PollService()
-    const polls = await pollService.fetchActivePollsWithVotes(userId)
+    const polls = await pollService.fetchActivePollsWithVotes()
 
     if (polls instanceof ApiCustomError) {
       return NextResponse.json({ error: polls.message }, { status: polls.status })

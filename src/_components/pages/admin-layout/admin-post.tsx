@@ -258,7 +258,7 @@ const AdminPostMainComponent = () => {
           <div className="flex space-x-3">
             <button
               onClick={toggleFilters}
-              className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium flex items-center"
+              className="bg-white border border-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-50 transition-colors text-sm font-medium flex items-center"
             >
               <Filter className="h-4 w-4 mr-2" />
               {showFilters ? 'Hide Filters' : 'Show Filters'}

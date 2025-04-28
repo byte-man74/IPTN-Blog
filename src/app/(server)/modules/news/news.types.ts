@@ -42,6 +42,11 @@ export const CommentSchema = z.object({
     userId: z.string().nullable().optional(),
     newsId: z.string(),
     isAnonymous: z.boolean().default(false),
+    user: z.object({
+      firstName: z.string().nullable().optional(),
+      lastName: z.string().nullable().optional(),
+      image: z.string().nullable().optional()
+    }).nullable().optional()
   })
 
 export const FullNewsSchema = z.object({

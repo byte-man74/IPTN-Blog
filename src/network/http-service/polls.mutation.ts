@@ -61,11 +61,14 @@ export function useDeletePoll(id: string) {
  * @param id - The ID of the poll to vote on
  * @returns Mutation object for voting on polls
  */
-export function useVoteOnPoll(id: string) {
+export function useVoteOnPoll(id: number) {
   const queryClient = useQueryClient()
 
+  //convert int id to string
+  const idStr = id ? id.toString() : ''
+
   return useAppMutation<PollDTO, unknown, { optionId: number }>({
-    apiRoute: routes.polls.vote(id),
+    apiRoute: routes.polls.vote(idStr),
     method: 'POST',
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PollQueryKey.POLLS_ALL] })

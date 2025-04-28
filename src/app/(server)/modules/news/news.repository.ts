@@ -122,7 +122,17 @@ export class NewsRepository {
         include: {
           categories: true,
           tags: true,
-          comments: true,
+          comments: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  image: true
+                }
+              }
+            }
+          },
           seo: true,
           analytics: true,
         },

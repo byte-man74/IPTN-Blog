@@ -14,6 +14,7 @@ import { NewsBanner } from '@/_components/public/news-top-banner'
 import Footer from '@/_components/public/main-public-footer'
 import { GlobalPoll } from '@/_components/public/global-poll'
 
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient()
 

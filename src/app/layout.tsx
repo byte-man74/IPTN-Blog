@@ -8,6 +8,7 @@ import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
 import { Toaster } from '@/components/ui/toaster'
 import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
+import { SignInProvider } from '@/providers/signin-provider'
 
 /**
  * Font configuration for the application
@@ -142,11 +143,13 @@ export default function RootLayout({
         <NextAuthProvider>
           <ReactQueryProvider>
             <MixpanelProvider>
-              <ErrorProvider error={null}>
-                <Toaster />
-                <NextTopLoader showSpinner={false} color="#008751" />
-                <div className="mx-auto max-w-[110rem] relative">{children}</div>
-              </ErrorProvider>
+              <SignInProvider>
+                <ErrorProvider error={null}>
+                  <Toaster />
+                  <NextTopLoader showSpinner={false} color="#008751" />
+                  <div className="mx-auto max-w-[110rem] relative">{children}</div>
+                </ErrorProvider>
+              </SignInProvider>
             </MixpanelProvider>
           </ReactQueryProvider>
         </NextAuthProvider>

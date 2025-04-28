@@ -325,7 +325,7 @@ export default function SearchPageClient({
         <Button
           variant="outline"
           size="sm"
-          className="mt-4 flex items-center gap-1.5 font-medium transition-all duration-200 hover:bg-gray-100"
+          className="mt-4 flex items-center gap-1.5 font-medium rounded-none transition-all duration-200 hover:bg-gray-100"
           onClick={toggleFilters}
         >
           <Filter className="h-4 w-4" />
