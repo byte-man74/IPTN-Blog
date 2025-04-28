@@ -18,6 +18,7 @@ interface IAnalyticsService {
   incrementMetric(newsId: string, metricType: MetricField): Promise<ApiCustomError | null>
   getAnalyticsSummary(): Promise<AnalyticsSummaryDTO | ApiCustomError | null>
   getAnalyticsPopularNews(): Promise<AnalyticsPopularNewsDTO[] | ApiCustomError | null>
+  saveUserMixpanelIdentity(userId: string): Promise<ApiCustomError | boolean>
 }
 
 export class AnalyticsService implements IAnalyticsService {
@@ -76,6 +77,22 @@ export class AnalyticsService implements IAnalyticsService {
     return tryCatchHandler(async () => {
       const result = await this.repository.getAnalyticsPopularNews()
       return result
+    })
+  }
+
+  async saveUserMixpanelIdentity(userId: string): Promise<ApiCustomError | boolean> {
+    return tryCatchHandler(async () => {
+      // Check if identity already exists to avoid duplicate entries
+      const identityExists = await this.repository.checkIfMixpanelIdentityHasBeenCreated(userId)
+
+      // If identity already exists, return true without creating a new record
+      if (identityExists === true) {
+        return true
+      }
+
+      // Otherwise, return false to show that this was never created in the first place
+       await this.repository.saveUserMixpanelIdentity(userId)
+      return false
     })
   }
 }

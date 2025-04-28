@@ -9,6 +9,8 @@ import { useSignIn } from '@/providers/signin-provider'
 
 
 
+
+
 interface PollCardProps {
   currentPoll?: PollDTO;
   pollsData: PollDTO[];
@@ -32,6 +34,12 @@ export const PollCard: React.FC<PollCardProps> = ({
 }) => {
   const { openSignInModal } = useSignIn();
 
+
+  // Check if the user has already voted on this poll
+  const hasUserVoted = currentPoll?.options?.some(option =>
+    option.votes?.some(vote => vote.userId)
+  );
+
   return (
     <Card className="w-full max-w-[30rem] mx-auto border-2 border-muted shadow-md">
       <CardHeader className="bg-muted/30 pb-4">
@@ -53,6 +61,7 @@ export const PollCard: React.FC<PollCardProps> = ({
           value={selectedOption?.toString()}
           onValueChange={(value) => setSelectedOption(parseInt(value))}
           className="space-y-3 sm:space-y-4"
+          disabled={hasUserVoted}
         >
           {currentPoll?.options?.map((option) => (
             <div
@@ -63,6 +72,7 @@ export const PollCard: React.FC<PollCardProps> = ({
                 value={option.id?.toString() || ''}
                 id={`option-${option.id}`}
                 className="text-primaryGreen"
+                disabled={hasUserVoted}
               />
               <Label htmlFor={`option-${option.id}`} className="cursor-pointer flex-1 font-medium text-sm sm:text-base">
                 {option.text}
@@ -81,14 +91,20 @@ export const PollCard: React.FC<PollCardProps> = ({
             Please <Button variant="link" className="p-0 h-auto text-amber-700 underline text-xs sm:text-sm" onClick={openSignInModal}>sign in</Button> to vote on this poll
           </div>
         )}
+
+        {isUserLoggedIn && hasUserVoted && (
+          <div className="mt-4 sm:mt-6 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-xs sm:text-sm">
+            You have already voted on this poll. You cannot vote again.
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex flex-col gap-3 sm:gap-4 pt-2 pb-4 px-3 sm:px-6">
         <Button
           onClick={isUserLoggedIn ? handleVote : openSignInModal}
-          disabled={selectedOption === null && isUserLoggedIn}
+          disabled={(selectedOption === null && isUserLoggedIn) || hasUserVoted}
           className="w-full bg-primaryGreen hover:bg-primaryGreen/90 text-sm sm:text-base"
         >
-          {isUserLoggedIn ? 'Submit Vote' : 'Sign in to Vote'}
+          {!isUserLoggedIn ? 'Sign in to Vote' : hasUserVoted ? 'Already Voted' : 'Submit Vote'}
         </Button>
 
         <div className="flex justify-between w-full">

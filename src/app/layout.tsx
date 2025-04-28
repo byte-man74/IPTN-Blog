@@ -142,15 +142,15 @@ export default function RootLayout({
       <body className="antialiased">
         <NextAuthProvider>
           <ReactQueryProvider>
-            <MixpanelProvider>
-              <SignInProvider>
-                <ErrorProvider error={null}>
+            <SignInProvider>
+              <ErrorProvider error={null}>
+                <MixpanelProvider>
                   <Toaster />
                   <NextTopLoader showSpinner={false} color="#008751" />
                   <div className="mx-auto max-w-[110rem] relative">{children}</div>
-                </ErrorProvider>
-              </SignInProvider>
-            </MixpanelProvider>
+                </MixpanelProvider>
+              </ErrorProvider>
+            </SignInProvider>
           </ReactQueryProvider>
         </NextAuthProvider>
       </body>

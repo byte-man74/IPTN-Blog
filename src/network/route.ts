@@ -21,6 +21,7 @@ export const routes = {
   analytics: {
     summary: '/analytics/summary',
     popular: '/analytics/popular',
+    saveMixpanelDetails: '/analytics/save-mixpanel-details',
   },
   siteConfig: {
     get: '/site-config',

@@ -4,6 +4,8 @@ import { useFetchAds } from '@/network/http-service/ads.hooks'
 import React, { useState, useEffect } from 'react'
 import { AppImage } from '@/_components/global/app-image'
 import { AppLink } from '@/_components/global/app-link'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events';
 
 /**
  * AdsBox component displays an advertisement section.
@@ -41,6 +43,7 @@ export const AdsBox = ({
     })
 
     const [currentAdIndex, setCurrentAdIndex] = useState(0)
+    const { trackEvent } = useMixpanel()
 
     // Auto-rotate ads every 5 seconds if there are multiple ads
     useEffect(() => {
@@ -52,6 +55,14 @@ export const AdsBox = ({
 
         return () => clearInterval(interval)
     }, [data])
+
+    const handleAdClick = (adTitle: string, adLink: string) => {
+        trackEvent({eventName: MixpanelActions.CLICKED_AD, properties: {
+            adTitle,
+            adLink,
+            position,
+        }})
+    }
 
     if (isLoading) {
         return (
@@ -120,7 +131,14 @@ export const AdsBox = ({
                     )
 
                     return ad.link ? (
-                        <AppLink key={ad.id} href={ad.link} target="_blank" rel="noopener noreferrer" className="min-w-full flex-shrink-0 h-full">
+                        <AppLink
+                            key={ad.id}
+                            href={ad.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="min-w-full flex-shrink-0 h-full"
+                            onClick={() => handleAdClick(ad.title || 'Untitled Ad', ad.link || '')}
+                        >
                             {AdContent}
                         </AppLink>
                     ) : AdContent

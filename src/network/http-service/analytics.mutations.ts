@@ -1,6 +1,6 @@
 import { logger } from '@/lib/utils/logger'
-import { useAppMutation } from '../client.constructor'
-import { routes } from '../route'
+import { useAppMutation } from '@/network/client.constructor'
+import { routes } from '@/network/route'
 
 /**
  * Hook for incrementing a news article metric (views, likes, shares)
@@ -25,6 +25,25 @@ export function useIncrementNewsMetric(slug?: string, id?: string) {
     },
     onError: (error) => {
       logger.error('Failed to increment metric:', error)
+    },
+  })
+}
+
+
+/**
+ * Hook for saving user's Mixpanel identity
+ * @param userId The ID of the user to save
+ * @returns Mutation object for saving Mixpanel identity
+ */
+export function useSaveMixpanelIdentity() {
+  return useAppMutation<{ success: boolean }, unknown, { userId: string }>({
+    apiRoute: routes.analytics.saveMixpanelDetails,
+    method: 'PATCH',
+    onSuccess: () => {
+      logger.info('Successfully saved Mixpanel identity')
+    },
+    onError: (error) => {
+      logger.error('Failed to save Mixpanel identity:', error)
     },
   })
 }

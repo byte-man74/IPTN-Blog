@@ -4,6 +4,9 @@ import { useToast } from '@/hooks/use-toast'
 import { useVoteOnPoll } from '@/network/http-service/polls.mutation'
 import { logger } from '@/lib/utils/logger'
 import { PollDTO } from '@/app/(server)/modules/polls/poll.types'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
+
 
 export const usePollActions = (pollsData?: PollDTO[]) => {
   const [selectedPollIndex, setSelectedPollIndex] = useState(0)
@@ -11,6 +14,7 @@ export const usePollActions = (pollsData?: PollDTO[]) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const { data: session } = useSession()
+  const { trackEvent } = useMixpanel()
   const currentPoll = pollsData?.[selectedPollIndex]
 
 
@@ -19,6 +23,13 @@ export const usePollActions = (pollsData?: PollDTO[]) => {
 
 
   const handleVote = async () => {
+    trackEvent({
+        eventName: MixpanelActions.VOTED_ON_A_POLL,
+        properties: {
+            pollTitle: currentPoll?.title,
+            optionText: currentPoll?.options?.find(opt => opt.id === selectedOption)?.text
+        }
+    })
     if (!selectedOption || !session?.user?.id || !currentPoll) {
       toast({
         title: "Error",
@@ -34,7 +45,7 @@ export const usePollActions = (pollsData?: PollDTO[]) => {
         data: {
           optionId: selectedOption
         },
-        // id: currentPoll.id
+
       })
 
       toast({

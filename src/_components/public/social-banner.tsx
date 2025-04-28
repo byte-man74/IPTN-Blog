@@ -2,6 +2,7 @@ import React from 'react'
 import { SocialMediaLinks } from '@/lib/constants/public'
 import { AppLink } from '@/_components/global/app-link';
 
+
 /**
  * GlobalSocialBanner Component
  *

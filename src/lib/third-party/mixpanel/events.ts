@@ -13,11 +13,12 @@ export const MixpanelEvents = {
 
 export const MixpanelActions = {
     SHARED_CONTENT: "User shared content",
-    CLICKED_AD: "",
-    HOVERED_ON_AD: "",
-    COMMENTED_ON_POST: "",
-    ATTEMPTED_TO_SIGNUP: "",
-    CLICKED_SOCIAL_LINK: "",
-    SEARCHED_CONTENT: "",
-    SUBSCRIBED_TO_NEWSLETTER: ""
+    CLICKED_AD: "User clicked advertisement",
+    HOVERED_ON_AD: "User hovered on advertisement",
+    COMMENTED_ON_POST: "User commented on post",
+    ATTEMPTED_TO_SIGNUP: "User attempted to sign up",
+    CLICKED_SOCIAL_LINK: "User clicked social media link",
+    SEARCHED_CONTENT: "User searched for content",
+    SUBSCRIBED_TO_NEWSLETTER: "User subscribed to newsletter",
+    VOTED_ON_A_POLL: "User voted on a poll"
 }

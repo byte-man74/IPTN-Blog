@@ -11,26 +11,38 @@ datasource db {
 // Models --
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  firstName     String
-  lastName      String
-  image         String?
-  emailVerified DateTime?
-  isAdmin       Boolean   @default(false)
-  isActive      Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  news          News[]
-  comments      Comment[]
-  polls         Poll[]
-  votes         Vote[]
+  id                    String                   @id @default(cuid())
+  email                 String                   @unique
+  firstName             String
+  lastName              String
+  image                 String?
+  emailVerified         DateTime?
+  isAdmin               Boolean                  @default(false)
+  isActive              Boolean                  @default(false)
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  accounts              Account[]
+  sessions              Session[]
+  news                  News[]
+  comments              Comment[]
+  polls                 Poll[]
+  votes                 Vote[]
+  mixpanelIdentification MixpanelIdentification[]
 
   @@index([id])
   @@index([email])
   @@index([lastName, firstName])
+}
+
+
+model MixpanelIdentification {
+  id                  String            @id @default(cuid())
+  userId              String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Account {

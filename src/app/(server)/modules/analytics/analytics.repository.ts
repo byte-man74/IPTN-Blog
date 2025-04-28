@@ -15,6 +15,7 @@ export class AnalyticsRepository {
   private readonly analytics = prisma.analytics
   private readonly news = prisma.news
   private readonly comment = prisma.comment
+  private readonly mixpanelIdentification = prisma.mixpanelIdentification
 
   constructor() {
     this.cache = new AnalyticsCache()
@@ -208,6 +209,35 @@ export class AnalyticsRepository {
       await analyticsCache.setPopularNews(popularNews)
 
       return popularNews
+    })
+  }
+
+
+/**
+ * responsible for handling db savings user identification.
+ * @param userId
+ * @returns
+ */
+  async saveUserMixpanelIdentity(userId: string): Promise<boolean | ApiCustomError> {
+    return tryCatchHandler(async() => {
+        await this.mixpanelIdentification.create({
+            data: {
+                userId,
+            }
+        })
+        return true
+    })
+  }
+
+
+  async checkIfMixpanelIdentityHasBeenCreated(userId: string): Promise<boolean | ApiCustomError> {
+    return tryCatchHandler(async() => {
+        const identity = await this.mixpanelIdentification.findFirst({
+            where: {
+                userId: userId
+            }
+        })
+        return !!identity
     })
   }
 }
