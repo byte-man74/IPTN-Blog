@@ -7,6 +7,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import { useFetchSiteConfig } from '@/network/http-service/site-config.hooks';
 import { AppLink } from '@/_components/global/app-link';
 import { usePathname } from 'next/navigation';
+import { ClientRoutes } from '@/lib/routes/client';
 
 /**
  * Primary navigation component for the hero section
@@ -19,6 +20,7 @@ const HeroNavigation = () => {
 
   const navigationItems = siteConfig?.navBarKeyCategories || [];
   const isHomePage = pathname === '/' || pathname === '';
+
 
   // Render loading placeholders
   const renderSkeletons = (count = 5) => {
@@ -59,6 +61,16 @@ const HeroNavigation = () => {
             <HeroNavItem item={item} key={item.id.toString()}/>
           ))
         )}
+
+        {/* Contact Us link */}
+        <div className={`h-full flex items-center px-8`}>
+          <AppLink
+            href="/contact"
+            className="text-white hover:text-gray-300 transition-colors relative flex items-center"
+          >
+            Contact Us
+          </AppLink>
+        </div>
       </div>
 
       {/* Mobile navigation dropdown */}
@@ -87,6 +99,16 @@ const HeroNavigation = () => {
                 </div>
               ))
             )}
+
+            {/* Contact Us link in mobile menu */}
+            <div className="px-4 py-2">
+              <AppLink
+                href={ClientRoutes.contact}
+                className={`text-white hover:text-gray-300 transition-colors`}
+              >
+                Contact Us
+              </AppLink>
+            </div>
           </div>
         </div>
       )}
