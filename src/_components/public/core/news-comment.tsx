@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button'
 import { useSignIn } from '@/providers/signin-provider'
 import { useSession } from 'next-auth/react'
 import { AppImage } from '@/_components/global/app-image'
+import { useMixpanel } from '@/lib/third-party/mixpanel/context'
+import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
+import { useTrackSection } from '@/hooks/use-track-section'
 
 
 interface NewsCommentsProps {
@@ -16,15 +19,30 @@ interface NewsCommentsProps {
   initialComments: CommentDTO[]
 }
 
+
+const CommentSectionId = "Comment Section"
+
+const sections = [
+    {id: CommentSectionId}
+]
+
 export const NewsComments = ({ slug, newsId, initialComments}: NewsCommentsProps) => {
   const [comments, setComments] = useState<CommentDTO[]>(initialComments || [])
   const [newComment, setNewComment] = useState('')
   const createComment = useCreateComment(slug)
   const { openSignInModal } = useSignIn()
-const { data: sessionData } = useSession();
+  const { data: sessionData } = useSession();
+  const { trackEvent } = useMixpanel()
+  const { setRef } = useTrackSection(sections)
 
 
-console.log("comment data", comments)
+
+  const recordMixpanelCommentTracking = () => {
+    trackEvent({eventName: MixpanelActions.COMMENTED_ON_POST, properties: {
+        slug: slug
+    }})
+  }
+
 
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,7 +80,7 @@ console.log("comment data", comments)
   }
 
   return (
-    <div className="mt-8 md:mt-12 mb-8 md:mb-12 border-t pt-6 md:pt-8 bg-white p-6 shadow-sm">
+    <div className="mt-8 md:mt-12 mb-8 md:mb-12 border-t pt-6 md:pt-8 bg-white p-6 shadow-sm" ref={setRef(CommentSectionId)} id={CommentSectionId}>
       <div className="flex items-center mb-4 md:mb-6">
         <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-primaryGreen" />
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Comments ({comments.length})</h2>
@@ -97,6 +115,7 @@ console.log("comment data", comments)
             <div className="flex justify-end">
               <button
                 type="submit"
+                onClick={recordMixpanelCommentTracking}
                 disabled={createComment.isPending || !newComment.trim()}
                 className="flex items-center bg-primaryGreen text-white px-4 py-2 sm:px-5 sm:py-2.5 hover:bg-primaryGreen/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
               >

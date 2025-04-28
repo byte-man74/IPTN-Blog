@@ -8,3 +8,16 @@ export const MixpanelEvents = {
     SEARCH: "User performed search",
     SHARE: "User shared content",
 }
+
+
+
+export const MixpanelActions = {
+    SHARED_CONTENT: "User shared content",
+    CLICKED_AD: "",
+    HOVERED_ON_AD: "",
+    COMMENTED_ON_POST: "",
+    ATTEMPTED_TO_SIGNUP: "",
+    CLICKED_SOCIAL_LINK: "",
+    SEARCHED_CONTENT: "",
+    SUBSCRIBED_TO_NEWSLETTER: ""
+}
