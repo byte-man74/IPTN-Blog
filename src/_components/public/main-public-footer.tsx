@@ -1,12 +1,11 @@
 "use client"
 
 import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from "lucide-react"
-import Link from "next/link"
 import { AppLogo } from "@/_components/global/app-logo"
 import { useFetchPopularTags } from "@/network/http-service/news.hooks"
 import { DEFAULT_SITE_CONFIG_ORDER } from "@/app/(server)/modules/site-configurations/site-config.constants"
 import { ClientRoutes } from "@/lib/routes/client"
-import { AppLink } from "../global/app-link"
+import { AppLink } from "@/_components/global/app-link"
 import { CompanyData } from "@/lib/constants/company-data"
 import { useSignIn } from "@/providers/signin-provider"
 import { signOut, useSession } from "next-auth/react"
@@ -82,7 +81,7 @@ export default function Footer() {
                     onClick={handleUnsubscribe}
                     className="border border-gray-500 hover:border-gray-400 text-gray-300 hover:text-white px-6 py-3 rounded-md transition-colors duration-300 w-full sm:w-auto"
                   >
-                    Un Subscribe from newsletter
+                    Unsubscribe from newsletter
                   </button>
                 </div>
               </>
@@ -102,38 +101,38 @@ export default function Footer() {
             )}
 
             <div className="flex space-x-6 pt-2 sm:pt-4 justify-center sm:justify-start">
-              <Link
+              <AppLink
                 href={CompanyData.YoutubeLink}
                 aria-label="YouTube"
                 className="transition-transform hover:scale-110 duration-300"
                 onClick={() => handleSocialClick("YouTube")}
               >
                 <Youtube className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
-              </Link>
-              <Link
+              </AppLink>
+              <AppLink
                 href={CompanyData.TwitterLink}
                 aria-label="Twitter"
                 className="transition-transform hover:scale-110 duration-300"
                 onClick={() => handleSocialClick("Twitter")}
               >
                 <Twitter className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
-              </Link>
-              <Link
+              </AppLink>
+              <AppLink
                 href={CompanyData.InstagramLink}
                 aria-label="Instagram"
                 className="transition-transform hover:scale-110 duration-300"
                 onClick={() => handleSocialClick("Instagram")}
               >
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
-              </Link>
-              <Link
+              </AppLink>
+              <AppLink
                 href={CompanyData.FacebookLink}
                 aria-label="Facebook"
                 className="transition-transform hover:scale-110 duration-300"
                 onClick={() => handleSocialClick("Facebook")}
               >
                 <Facebook className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
-              </Link>
+              </AppLink>
             </div>
           </div>
 
@@ -203,13 +202,13 @@ export default function Footer() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <Link
+                    <AppLink
                       href={`${ClientRoutes.explore}?tag=${tag.name}`}
                       className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300"
                       onClick={() => handleTagClick(tag.name)}
                     >
                       {tag.name}
-                    </Link>
+                    </AppLink>
                   </li>
                 ))}
                 {(!popularTags || popularTags.length === 0) && (
