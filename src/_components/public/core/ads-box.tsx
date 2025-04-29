@@ -16,6 +16,7 @@ import { MixpanelActions } from '@/lib/third-party/mixpanel/events';
 
 interface AdsBoxProps {
     position?: "home-page" | "second-page" | "third-page" | "fourth-page"
+    className?: string
 }
 
 const getPageTypeFromPosition = (position: string): string => {
@@ -34,7 +35,8 @@ const getPageTypeFromPosition = (position: string): string => {
 }
 
 export const AdsBox = ({
-    position = "home-page"
+    position = "home-page",
+    className = ""
 }: AdsBoxProps = {}) => {
     const pageType = getPageTypeFromPosition(position);
     const { data, isLoading } = useFetchAds({
@@ -66,7 +68,7 @@ export const AdsBox = ({
 
     if (isLoading) {
         return (
-            <div className='w-full flex h-[20rem] justify-center items-center bg-[#D2D2D2] animate-pulse overflow-hidden'>
+            <div className={`w-full mx-auto flex h-[20rem] justify-center items-center bg-[#D2D2D2] animate-pulse overflow-hidden ${className}`}>
                 <span className="opacity-30 text-black text-[102px] font-bold sm:text-[80px] xs:text-[60px]">
                     <h2
                         className="font-black tracking-widest text-transparent whitespace-nowrap"
@@ -84,7 +86,7 @@ export const AdsBox = ({
 
     if (!data || data.length === 0) {
         return (
-            <div className='w-full flex h-[20rem] justify-center items-center bg-[#D2D2D2] overflow-hidden'>
+            <div className={`w-full mx-auto flex h-[20rem] justify-center items-center bg-[#D2D2D2] overflow-hidden ${className}`}>
                 <span className="inset-0 opacity-30 text-black text-[102px] font-bold sm:text-[80px] xs:text-[60px] overflow-hidden">
                     <h2
                         className="font-black tracking-widest text-transparent whitespace-nowrap overflow-hidden"
@@ -101,15 +103,15 @@ export const AdsBox = ({
     }
 
     return (
-        <div className="relative w-full h-[20rem] overflow-hidden">
+        <div className={`relative w-full mx-auto h-[20rem] overflow-hidden ${className}`}>
             {/* Carousel container */}
             <div
-                className="flex h-full transition-transform duration-500 ease-in-out"
+                className="flex h-full w-full transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentAdIndex * 100}%)` }}
             >
                 {data.map((ad) => {
                     const AdContent = (
-                        <div key={ad.id} className="min-w-full flex-shrink-0 h-full">
+                        <div key={ad.id} className="w-full flex-shrink-0 h-full">
                             <div className="relative w-full h-full overflow-hidden flex flex-col items-center">
                                 <AppImage
                                     alt={ad.title}

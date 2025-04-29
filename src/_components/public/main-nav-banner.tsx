@@ -27,7 +27,7 @@ const MainNavBanner = () => {
             <div className="transform-gpu transition-transform duration-300 hover:scale-105 w-full sm:w-auto flex justify-center sm:justify-start">
                 <AppLogo />
             </div>
-            <div className="transform-gpu transition-all duration-300 w-full sm:w-auto flex justify-center sm:justify-end">
+            <div className="transform-gpu transition-all duration-300 w-full sm:w-[80%] md:w-[45rem] lg:w-[40rem] flex justify-center sm:justify-end">
                 {AdvertismentBox ? <AdvertismentBox /> : <div className="h-16 sm:h-20 md:h-24 bg-opacity-20 rounded animate-pulse"></div>}
             </div>
         </div>

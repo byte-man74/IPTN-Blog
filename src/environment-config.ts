@@ -5,7 +5,7 @@ const dev = {
 }
 
 const prod = {
-  API_URL: process.env.NEXT_PUBLIC_API_URL_PROD,
+  API_URL: process.env.SERVER_API_BASE_URL,
 }
 
 const getEnv = () => {
@@ -14,23 +14,19 @@ const getEnv = () => {
       return dev
     case 'production':
       return prod
+    case 'test':
+      return dev
     default:
+      logger.warn(`Unknown environment: ${process.env.NODE_ENV}, using development config`)
       return dev
   }
 }
 
 export const env = getEnv()
 
-logger.info('env API_URL', String(env.API_URL ?? '').replace(/[a-zA-Z]/g, '-'))
+console.log('env API_URL', String(env.API_URL ?? '').replace(/[a-zA-Z]/g, '-'))
 
 export const API_URL = env.API_URL
-
-
-
-
-
-
-
 
 // third party impl...
 
@@ -44,7 +40,6 @@ export const getMixPanelToken = (): string => {
       return ''
   }
 }
-
 
 /**
  * would just place this here to check if my environment is in prod or dev state. incase i need any set up on the client side for some config. already used this in the mixpanel init

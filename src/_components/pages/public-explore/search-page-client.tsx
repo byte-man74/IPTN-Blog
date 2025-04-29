@@ -66,6 +66,12 @@ export default function SearchPageClient({
     tagIds: selectedTagId ? [selectedTagId] : undefined,
   }
 
+  // Fetch trending/popular content when no search is active
+  const {
+    data: trendingNewsData,
+    isLoading: isLoadingTrending,
+  } = useFetchNews({ published: true,}, 1, 6)
+
   // Fetch search results
   const {
     data: newsData,
@@ -538,25 +544,59 @@ export default function SearchPageClient({
             </>
           )
         ) : (
-          <div className="p-10 text-center bg-white rounded-lg shadow-md border border-gray-200 w-full">
-            <h3 className="text-xl font-medium text-gray-800 mb-3">
-              Enter a search term or select a category
-            </h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Search our articles, news and information by typing in the search box above or
-              selecting a category or tag.
-            </p>
-            <div className="mt-6 flex justify-center gap-4">
-              <Button
-                variant="outline"
-                onClick={toggleFilters}
-                className="flex items-center gap-1.5"
-              >
-                <Filter className="h-4 w-4" />
-                Browse Categories
-              </Button>
+          <>
+            {/* Show trending/popular content when no search is active */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                <span className="w-2 h-6 bg-primaryGreen rounded-sm mr-3"></span>
+                Trending Now
+              </h2>
+
+              {isLoadingTrending ? (
+                <div className="animate-pulse">
+                  <div className="h-64 bg-gray-200 rounded-lg mb-8"></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {Array(6).fill(0).map((_, i) => (
+                      <div key={i} className="rounded-lg overflow-hidden shadow-md">
+                        <div className="h-48 bg-gray-200"></div>
+                        <div className="p-4 space-y-3">
+                          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                          <div className="h-4 bg-gray-200 rounded w-full"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : trendingNewsData?.data && trendingNewsData.data.length > 0 ? (
+                <>
+                  {/* Featured trending article */}
+                  <div className="mb-10 rounded-lg overflow-hidden shadow-lg">
+                    <NewsScreenFullWidthHero
+                      newsItems={[trendingNewsData.data[0]]}
+                      isLoading={false}
+                    />
+                  </div>
+
+                  {/* Grid of trending articles */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {trendingNewsData.data.slice(1).map((post, index) => (
+                      <div
+                        key={`trending-${post.id}-${index}`}
+                        className="transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg rounded-lg overflow-hidden"
+                      >
+                        {renderNewsItem(post, index)}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="p-8 text-center bg-white rounded-lg shadow-md border border-gray-200">
+                  <p className="text-gray-600">No trending content available at the moment.</p>
+                </div>
+              )}
             </div>
-          </div>
+          </>
         )}
       </div>
 
