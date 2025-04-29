@@ -6,9 +6,58 @@ import { AppLogo } from "@/_components/global/app-logo"
 import { useFetchPopularTags } from "@/network/http-service/news.hooks"
 import { DEFAULT_SITE_CONFIG_ORDER } from "@/app/(server)/modules/site-configurations/site-config.constants"
 import { ClientRoutes } from "@/lib/routes/client"
+import { AppLink } from "../global/app-link"
+import { CompanyData } from "@/lib/constants/company-data"
+import { useSignIn } from "@/providers/signin-provider"
+import { signOut, useSession } from "next-auth/react"
+import { useMixpanel } from "@/lib/third-party/mixpanel/context"
+import { MixpanelActions } from "@/lib/third-party/mixpanel/events"
+
 
 export default function Footer() {
   const { data: popularTags } = useFetchPopularTags()
+  const { openSignInModal } = useSignIn()
+  const { data: sessionData } = useSession()
+  const { trackEvent } = useMixpanel()
+
+  const handleSubscribe = () => {
+    // Open sign-in modal with newsletter context
+    trackEvent({
+      eventName: MixpanelActions.ATTEMPTED_TO_CONTACT,
+      properties: { action: "newsletter_subscribe" }
+    })
+    openSignInModal()
+  }
+
+  const handleUnsubscribe = () => {
+    trackEvent({
+      eventName: MixpanelActions.UNSUBSCRIBED,
+      properties: { email: sessionData?.user?.email }
+    })
+    signOut({ callbackUrl: '/' });
+  }
+
+  const handleSocialClick = (platform: string) => {
+    trackEvent({
+      eventName: MixpanelActions.CLICKED_SOCIAL_LINK,
+      properties: { platform }
+    })
+  }
+
+  const handleContactClick = (method: string, value: string) => {
+    trackEvent({
+      eventName: MixpanelActions.ATTEMPTED_TO_CONTACT,
+      properties: { method, value }
+    })
+  }
+
+  const handleTagClick = (tagName: string) => {
+    trackEvent({
+      eventName: MixpanelActions.SEARCHED_CONTENT,
+      properties: { tag: tagName }
+    })
+  }
+
 
   return (
     <footer className="bg-[#171717] text-white py-4 sm:py-6 px-4 sm:px-6 md:px-12 mt-10">
@@ -21,30 +70,68 @@ export default function Footer() {
               <h2 className="text-3xl sm:text-4xl font-bold">Connect.</h2>
             </div>
 
-            <p className="text-gray-400 text-sm sm:text-base">
-              Subscribe to our exclusive newsletter to receive exclusive news. Sign up by entering your mail below
-            </p>
+            {sessionData?.user ? (
+              <>
+                <p className="text-gray-400 text-sm sm:text-base">
+                  You&apos;re subscribed with <span className="text-primaryGreen font-medium">{sessionData.user.email}</span>.
+                  You&apos;ll receive our exclusive news and updates.
+                </p>
 
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="bg-white border border-gray-700 rounded-md sm:rounded-l-md sm:rounded-r-none px-4 py-3 w-full text-gray-800 focus:outline-none focus:border-primaryGreen"
-              />
-              <button className="bg-primaryGreen hover:bg-primaryGreen/80 text-white px-6 py-3 rounded-md sm:rounded-l-none sm:rounded-r-md transition-colors duration-300">Subscribe</button>
-            </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={handleUnsubscribe}
+                    className="border border-gray-500 hover:border-gray-400 text-gray-300 hover:text-white px-6 py-3 rounded-md transition-colors duration-300 w-full sm:w-auto"
+                  >
+                    Un Subscribe from newsletter
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-400 text-sm sm:text-base">
+                  Subscribe to our exclusive newsletter to receive exclusive news. Sign in with Google and check the newsletter option to subscribe.
+                </p>
+
+                <button
+                  onClick={handleSubscribe}
+                  className="bg-primaryGreen hover:bg-primaryGreen/80 text-white px-6 py-3 rounded-md transition-colors duration-300 w-full sm:w-auto"
+                >
+                  Sign in to Subscribe to newsletter
+                </button>
+              </>
+            )}
 
             <div className="flex space-x-6 pt-2 sm:pt-4 justify-center sm:justify-start">
-              <Link href="#" aria-label="YouTube" className="transition-transform hover:scale-110 duration-300">
+              <Link
+                href={CompanyData.YoutubeLink}
+                aria-label="YouTube"
+                className="transition-transform hover:scale-110 duration-300"
+                onClick={() => handleSocialClick("YouTube")}
+              >
                 <Youtube className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
               </Link>
-              <Link href="#" aria-label="Twitter" className="transition-transform hover:scale-110 duration-300">
+              <Link
+                href={CompanyData.TwitterLink}
+                aria-label="Twitter"
+                className="transition-transform hover:scale-110 duration-300"
+                onClick={() => handleSocialClick("Twitter")}
+              >
                 <Twitter className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
               </Link>
-              <Link href="#" aria-label="Instagram" className="transition-transform hover:scale-110 duration-300">
+              <Link
+                href={CompanyData.InstagramLink}
+                aria-label="Instagram"
+                className="transition-transform hover:scale-110 duration-300"
+                onClick={() => handleSocialClick("Instagram")}
+              >
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
               </Link>
-              <Link href="#" aria-label="Facebook" className="transition-transform hover:scale-110 duration-300">
+              <Link
+                href={CompanyData.FacebookLink}
+                aria-label="Facebook"
+                className="transition-transform hover:scale-110 duration-300"
+                onClick={() => handleSocialClick("Facebook")}
+              >
                 <Facebook className="w-5 h-5 sm:w-6 sm:h-6 text-white hover:text-primaryGreen transition-colors duration-300" />
               </Link>
             </div>
@@ -69,9 +156,12 @@ export default function Footer() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <Link href={`/${contentType}`} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300 capitalize">
+                    <AppLink
+                      href={`/${contentType}`}
+                      className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300 capitalize"
+                    >
                       {contentType}
-                    </Link>
+                    </AppLink>
                   </li>
                 ))}
                 <li className="flex items-center group">
@@ -86,9 +176,12 @@ export default function Footer() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <Link href={ClientRoutes.explore} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
+                  <AppLink
+                    href={ClientRoutes.explore}
+                    className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300"
+                  >
                     Explore
-                  </Link>
+                  </AppLink>
                 </li>
               </ul>
             </div>
@@ -110,7 +203,11 @@ export default function Footer() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <Link href={`${ClientRoutes.explore}?tag=${tag.name}`} className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300">
+                    <Link
+                      href={`${ClientRoutes.explore}?tag=${tag.name}`}
+                      className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300"
+                      onClick={() => handleTagClick(tag.name)}
+                    >
                       {tag.name}
                     </Link>
                   </li>
@@ -128,22 +225,42 @@ export default function Footer() {
         {/* Contact Information */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center">
           <div className="flex items-center space-x-4 justify-start">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300">
+            <AppLink
+              href={`tel:${CompanyData.PhoneNumber}`}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300"
+              onClick={() => handleContactClick("phone", CompanyData.PhoneNumber)}
+            >
               <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-primaryGreen" />
-            </div>
+            </AppLink>
             <div>
               <h4 className="font-bold text-primaryGreen text-sm sm:text-base">Phone</h4>
-              <p className="text-gray-400 text-xs sm:text-sm">(+234) 811-8394-9489</p>
+              <AppLink
+                href={`tel:${CompanyData.PhoneNumber}`}
+                className="text-gray-400 text-xs sm:text-sm hover:text-primaryGreen transition-colors"
+                onClick={() => handleContactClick("phone", CompanyData.PhoneNumber)}
+              >
+                {CompanyData.PhoneNumber}
+              </AppLink>
             </div>
           </div>
 
           <div className="flex items-center space-x-4 justify-start">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300">
+            <AppLink
+              href={`mailto:${CompanyData.Email}`}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300"
+              onClick={() => handleContactClick("email", CompanyData.Email)}
+            >
               <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primaryGreen" />
-            </div>
+            </AppLink>
             <div>
               <h4 className="font-bold text-primaryGreen text-sm sm:text-base">Email</h4>
-              <p className="text-gray-400 text-xs sm:text-sm">Webteam@ipledge2nigeria.net</p>
+              <AppLink
+                href={`mailto:${CompanyData.Email}`}
+                className="text-gray-400 text-xs sm:text-sm hover:text-primaryGreen transition-colors"
+                onClick={() => handleContactClick("email", CompanyData.Email)}
+              >
+                {CompanyData.Email}
+              </AppLink>
             </div>
           </div>
 
@@ -154,7 +271,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="text-center mt-8 sm:mt-10 text-gray-500 text-xs sm:text-sm">© Copyright {new Date().getFullYear()}. All rights reserved.</div>
+        <div className="text-center mt-8 sm:mt-10 text-gray-500 text-xs sm:text-sm">© Copyright {new Date().getFullYear()}. All rights reserved by {CompanyData.CompanyName}.</div>
       </div>
     </footer>
   )

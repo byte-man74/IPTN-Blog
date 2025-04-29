@@ -13,6 +13,8 @@ export const AdminAnalyticsComponent = () => {
   const { data: analyticsSummary, isLoading } = useFetchAnalyticsSummary()
   const { data: popularNews, isLoading: isLoadingPopularNews } = useFetchPopularNews()
 
+  const MixpanelLink = 'https://mixpanel.com/project/3678820/view/4177368/app/events'
+
   // Format the analytics data for display
   const analyticsData = {
     summary: [
@@ -61,20 +63,20 @@ export const AdminAnalyticsComponent = () => {
 
     return popularNews.map((post) => {
       // Get the publish date or creation date
-      const publishDate = new Date(post.news.pubDate || post.news.createdAt);
-      const currentDate = new Date();
+      const publishDate = new Date(post.news.pubDate || post.news.createdAt)
+      const currentDate = new Date()
 
       // Calculate days since publication
       const daysSincePublished = Math.max(
         1,
         Math.floor((currentDate.getTime() - publishDate.getTime()) / (1000 * 60 * 60 * 24))
-      );
+      )
 
       // Calculate engagement rate as views per day since publication
       const calculatedEngagementRate =
         post.views > 0
           ? Math.round((post.views / daysSincePublished) * 100) / 100 // Views per day with 2 decimal precision
-          : 0;
+          : 0
 
       return {
         ...post,
@@ -109,7 +111,7 @@ export const AdminAnalyticsComponent = () => {
                 </div>
               </div>
               <AppLink
-                href="https://mixpanel.com"
+                href={MixpanelLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -268,8 +270,9 @@ export const AdminAnalyticsComponent = () => {
                   </p>
                   <div className="mt-4">
                     <AppLink
-                      href="https://mixpanel.com"
-                      target="_blank"
+                      href={MixpanelLink}
+                      target="_blank
+                      "
                       rel="noopener noreferrer"
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm text-white bg-black hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
