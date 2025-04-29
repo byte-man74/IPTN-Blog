@@ -32,7 +32,7 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
 
   const imageUrl = coverImage || "/placeholder.svg";
   const date = pubDate ? new Date(pubDate).toLocaleDateString() : "Date not available";
-  const readTime = analytics?.readDuration || "3 mins read";
+  const readTime = analytics?.readDuration || "";
   const views = analytics?.views || 0;
 
 

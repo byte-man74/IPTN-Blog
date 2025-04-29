@@ -5,6 +5,7 @@ import { AppLink } from '@/_components/global/app-link';
 import { NewsDTO } from '@/app/(server)/modules/news/news.types';
 import { ClientRoutes } from '@/lib/routes/client';
 import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants';
+import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils';
 
 interface OverlayedNewsImageProps {
     newsItem?: NewsDTO;
@@ -110,7 +111,7 @@ const OverlayedNewsImage = ({
             {/* Headline */}
             <div className="block">
               <h3 className="text-white text-[18px] font-semibold leading-tight transition-all duration-300 group-hover:text-primaryGreen group-hover:translate-x-1 drop-shadow-lg">
-                {title ?? "News title"}
+                {cleanUpNewsTitle(title ?? "News title")}
               </h3>
             </div>
           </div>

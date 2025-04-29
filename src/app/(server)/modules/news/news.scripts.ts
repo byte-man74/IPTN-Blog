@@ -1,30 +1,54 @@
 import { logger } from '@/lib/utils/logger'
 import { NewsRepository } from './news.repository'
-import { CreateNewsDTO, NewsCategoryDTO, NewsDTO, TagDTO } from './news.types'
+import { CreateNewsDTO, FullNewsDTO, NewsCategoryDTO, NewsDTO, TagDTO } from './news.types'
 import { slugifyContent } from './news.utils'
+import { AnalyticsService } from '../analytics/analytics.service'
 
-// // eslint-disable-next-line @typescript-eslint/no-require-imports
-// const data: OldData[] = await require('./../../../../../script/blog_posts.json');
-// Define the data structure for the old blog posts
 interface OldDataItem {
-  title: string
-  date: string
-  status: string
-  slug?: string
-  content: string
-  cover_image: string
-  categories: string[]
-  tags: string[]
-}
+    title: string
+    date: string
+    status: string
+    slug?: string
+    content: string
+    cover_image: string
+    categories: string[]
+    tags: string[]
+  }
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json');
+// Define the data structure for the old blog posts
+
+//create articles
+//create featured
+//create a movies
+//if the category is fashion-top change it to fashion
+//if its featured-article just it to articles and featured
+//assign latest-blogs to blogs
+//assign politicss to politics
+//assign video-interview to video and interview category
+//assign trending to breaking category
+//assign lifestyle-top to just lifestyle
+//assign sports-news to just sports
+//assign video-big to videos
+//assign i-diaspora to diaspora
+//assign fashion-top to fashion
+//assign latest-news to news
+//assign politics-news to politics and news
+//assign entertainment-movie to movies and entertainment
 
 export class NewsScripts {
   private readonly repository: NewsRepository
+  private readonly analyticsService: AnalyticsService
 
   constructor() {
     this.repository = new NewsRepository()
+    this.analyticsService = new AnalyticsService()
   }
 
-  async updateOldData(data: OldDataItem[]): Promise<string> {
+  async updateOldData(): Promise<string> {
     logger.info('Starting to update old data...')
     logger.info(`Loaded ${data.length} items from blog_posts.json`)
 
@@ -33,9 +57,64 @@ export class NewsScripts {
 
     for (const dataItem of data) {
       logger.info(`Processing item: ${dataItem.title}`)
-      // Process each item from blog_post.json
-      // Save categories
+
+      // Process categories with mapping rules
+      const processedCategories: string[] = []
+
       for (const category of dataItem.categories) {
+        const categoriesToAdd: string[] = []
+
+        // Apply category mapping rules
+        if (category === 'fashion-top') {
+          categoriesToAdd.push('fashion')
+        } else if (category === 'featured-article') {
+          categoriesToAdd.push('articles', 'featured')
+        } else if (category === 'latest-blogs') {
+          categoriesToAdd.push('blogs')
+        } else if (category === 'politicss') {
+          categoriesToAdd.push('politics')
+        } else if (category === 'video-interview') {
+          categoriesToAdd.push('video', 'interview')
+        } else if (category === 'trending') {
+          categoriesToAdd.push('breaking')
+        } else if (category === 'lifestyle-top') {
+          categoriesToAdd.push('lifestyle')
+        } else if (category === 'sports-news') {
+          categoriesToAdd.push('sports', 'news')
+        } else if (category === 'video-big') {
+          categoriesToAdd.push('videos')
+        } else if (category === 'i-diaspora') {
+          categoriesToAdd.push('diaspora')
+        } else if (category === 'latest-news') {
+          categoriesToAdd.push('news')
+        } else if (category === 'politics-news') {
+          categoriesToAdd.push('politics', 'news')
+        } else if (category === 'entertainment-movie') {
+          categoriesToAdd.push('movies', 'entertainment')
+        } else {
+          // If no mapping rule, keep the original category
+          categoriesToAdd.push(category)
+        }
+
+        // Add all processed categories
+        processedCategories.push(...categoriesToAdd)
+      }
+
+      // Add default categories if needed
+      if (!processedCategories.includes('articles')) {
+        processedCategories.push('articles')
+      }
+
+      // Create movies category if needed
+      if (dataItem.categories.some((cat) => cat.includes('movie'))) {
+        processedCategories.push('movies')
+      }
+
+      // Remove duplicates
+      const uniqueCategories = [...new Set(processedCategories)]
+
+      // Save categories
+      for (const category of uniqueCategories) {
         if (!savedCategories[category]) {
           logger.info(`Creating new category: ${category}`)
           const newlyCreatedCategory = await this.repository.createNewsCategory({
@@ -87,7 +166,7 @@ export class NewsScripts {
         logger.info(`News created with slug: ${(createdNews as NewsDTO).slug}`)
 
         // Assign categories to news
-        const categoryIds = dataItem.categories
+        const categoryIds = uniqueCategories
           .map((category: string) => savedCategories[category])
           .filter((id: number | undefined) => id !== undefined)
 
@@ -104,6 +183,31 @@ export class NewsScripts {
         if (tagIds.length > 0) {
           logger.info(`Assigning ${tagIds.length} tags to news`)
           await this.repository.assignTagsToNews((createdNews as NewsDTO).slug, tagIds)
+        }
+
+        // Set up analytics for the news item
+        logger.info(`Setting up analytics for news: ${(createdNews as NewsDTO).slug}`)
+        // Check if createdNews is valid and not an ApiCustomError
+        if (createdNews && !('error' in createdNews) && 'slug' in createdNews) {
+          const fullNews = await this.repository.getNewsBySlug(createdNews.slug)
+
+          // Only proceed with analytics if fullNews is valid and not null or ApiCustomError
+          if (fullNews && !('error' in fullNews)) {
+            const analyticsResult = await this.analyticsService.setUpNewsAnalytics(
+              fullNews as FullNewsDTO,
+              true
+            )
+
+            if (analyticsResult && 'error' in analyticsResult) {
+              logger.info('Failed to set up analytics:', analyticsResult)
+            } else {
+              logger.info('Analytics set up successfully')
+            }
+          } else {
+            logger.info('Failed to fetch full news details for analytics setup')
+          }
+        } else {
+          logger.info('Cannot set up analytics: Invalid news data')
         }
       } else {
         logger.info('Failed to create news item:', createdNews)

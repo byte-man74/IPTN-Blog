@@ -82,7 +82,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     severity: 'warning',
   },
   sports: {
-    slug: 'sports-news',
+    slug: 'sports',
     name: 'Sports',
     threshold: 6,
     severity: 'warning',
@@ -102,7 +102,7 @@ export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
     severity: 'warning',
   },
   articles: {
-    slug: 'article',
+    slug: 'articles',
     name: 'Articles',
     threshold: 3,
     requiresFresh: false,
@@ -251,7 +251,7 @@ export const HomePageTrending = getContentCriteriaBySlug(HomePage, 'trending') a
 export const HomePageFeatured = getContentCriteriaBySlug(HomePage, 'featured') as ContentCriteria
 export const HomePageDiaspora = CONTENT_CRITERIA.diaspora
 export const HomePageYouMayHaveMissed = CONTENT_CRITERIA.youMayHaveMissed
-export const HomePageArticles = getContentCriteriaBySlug(HomePage, 'article') as ContentCriteria
+export const HomePageArticles = getContentCriteriaBySlug(HomePage, 'articles') as ContentCriteria
 export const HomePageInterviews = getContentCriteriaBySlug(HomePage, 'interview') as ContentCriteria
 
 // Number of days content is considered "fresh"
@@ -262,7 +262,7 @@ export const DEFAULT_PAGE_NUMBER = 1
 export const DEFAULT_SITE_CONFIG_ORDER = {
   contentTypes: [
     'news', // News content first
-    'article', // Articles second
+    'articles', // Articles second
     'lifestyle', // Lifestyle content third
     'entertainment', // Entertainment content fourth
   ],

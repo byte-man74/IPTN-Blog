@@ -28,9 +28,9 @@ export interface INewsService {
   ): Promise<
     { data: NewsDTO[]; meta: PageNumberPagination & PageNumberCounters } | null | ApiCustomError
   >
-  createNewsCategory(category: CreateNewsCategoryDTO): Promise<unknown | null | ApiCustomError>
+  createNewsCategory(category: CreateNewsCategoryDTO): Promise<NewsCategoryDTO | null | ApiCustomError>
   getNewsBySlug(slug: string): Promise<FullNewsDTO | null | ApiCustomError>
-  createTag(tag: CreateTagDTO): Promise<unknown | null | ApiCustomError>
+  createTag(tag: CreateTagDTO): Promise<TagDTO | null | ApiCustomError>
   assignTagsToNews(
     newsId: string,
     tagIds: number[],
@@ -147,7 +147,7 @@ export class NewsService implements INewsService {
    */
   async createNewsCategory(
     category: CreateNewsCategoryDTO
-  ): Promise<unknown | null | ApiCustomError> {
+  ): Promise<NewsCategoryDTO | null | ApiCustomError> {
     return await this.repository.createNewsCategory(category)
   }
 
@@ -156,7 +156,7 @@ export class NewsService implements INewsService {
    * @param tag - The tag data to create
    * @returns The created tag or error
    */
-  async createTag(tag: CreateTagDTO): Promise<unknown | null | ApiCustomError> {
+  async createTag(tag: CreateTagDTO): Promise<TagDTO | null | ApiCustomError> {
     return await this.repository.createTag(tag)
   }
 

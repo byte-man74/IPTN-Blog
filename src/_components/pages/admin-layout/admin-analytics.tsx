@@ -8,6 +8,7 @@ import {
 } from '@/network/http-service/analytics.hooks'
 import { Skeleton } from '@/_components/global/skeleton'
 import { AppLink } from '@/_components/global/app-link'
+import { cleanUpNewsTitle } from '@/app/(server)/modules/news/news.utils'
 
 export const AdminAnalyticsComponent = () => {
   const { data: analyticsSummary, isLoading } = useFetchAnalyticsSummary()
@@ -198,7 +199,7 @@ export const AdminAnalyticsComponent = () => {
                         <div className="px-4 py-4 sm:px-6">
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-primaryGreen truncate">
-                              {post.news.title}
+                              {cleanUpNewsTitle(post.news.title)}
                             </p>
                             <div className="ml-2 flex-shrink-0 flex">
                               <p className="px-2 inline-flex text-xs leading-5 font-semibold bg-green-100 text-green-800 rounded-full">

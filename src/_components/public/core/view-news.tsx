@@ -102,7 +102,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
         eventName: MixpanelActions.READ_A_POST,
         properties: {
           slug: slug,
-          title: data?.title || 'Unknown',
+          title: cleanUpNewsTitle(data?.title ?? "") || 'Unknown',
         }
     })
   }, [trackEvent, slug, data]);
