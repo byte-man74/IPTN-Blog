@@ -82,7 +82,7 @@ export default function ImagePreviewNews({
               </span>
             )}
             {readTime && (
-              <span className="bg-white/20 px-2 py-1 rounded-full">{readTime} min read</span>
+              <span className="bg-white/20 px-2 py-1 rounded-full">{readTime} read</span>
             )}
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function ImagePreviewNews({
                 </span>
               )}
               {readTime && (
-                <span className="bg-gray-100 px-2 py-1 rounded-full">{readTime} min read</span>
+                <span className="bg-gray-100 px-2 py-1 rounded-full">{readTime} read</span>
               )}
             </div>
 

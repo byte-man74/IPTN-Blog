@@ -57,7 +57,7 @@ export const MainSectionBody = (
         if (isLoading || !hasNextPage) return;
 
         const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
-        const scrollThreshold = document.documentElement.offsetHeight - 500;
+        const scrollThreshold = document.documentElement.offsetHeight - 900;
 
         if (scrollPosition >= scrollThreshold) {
           handleLoadMore();
@@ -104,5 +104,3 @@ export const MainSectionBody = (
     )
   }
 )
-
-

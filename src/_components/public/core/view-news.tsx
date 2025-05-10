@@ -115,7 +115,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
           <Skeleton className="h-12 md:h-16 w-full md:w-3/4 mb-3 md:mb-4" />
         ) : (
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight text-center">
-            {cleanUpNewsTitle(data?.title ?? "") || 'Article Title'}
+            {cleanUpNewsTitle(data?.title ?? "", 100000) || 'Article Title'}
           </h1>
         )}
 

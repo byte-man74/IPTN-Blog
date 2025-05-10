@@ -6,7 +6,7 @@ import { CategoryCriteria, ContentCriteria } from './site-config.types'
 export const CONTENT_CRITERIA: Record<string, ContentCriteria> = {
   // Home page primary content types
   editorsPick: {
-    slug: 'editors-pick',
+    slug: 'editors-picks',
     name: "Editor's Picks",
     threshold: 2,
     severity: 'warning',
@@ -244,7 +244,7 @@ export const HomePageBreakingNews = getContentCriteriaBySlug(
 ) as ContentCriteria
 export const HomePageEditorsPick = getContentCriteriaBySlug(
   HomePage,
-  'editors-pick'
+  'editors-picks'
 ) as ContentCriteria
 export const HomePageWithVideos = getContentCriteriaBySlug(HomePage, 'video') as ContentCriteria
 export const HomePageTrending = getContentCriteriaBySlug(HomePage, 'trending') as ContentCriteria

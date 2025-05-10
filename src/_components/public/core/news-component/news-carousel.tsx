@@ -7,7 +7,7 @@ import { AppLink } from "@/_components/global/app-link";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { NewsDTO } from "@/app/(server)/modules/news/news.types";
-import { calculateTimeStampFromDate } from "@/app/(server)/modules/news/news.utils";
+import { calculateTimeStampFromDate, cleanUpNewsTitle } from "@/app/(server)/modules/news/news.utils";
 import { ClientRoutes } from "@/lib/routes/client";
 import { ViewsThreshold } from "@/app/(server)/modules/site-configurations/site-config.constants";
 
@@ -70,7 +70,7 @@ const NewsCarouselItem: React.FC<NewsCarouselItemProps> = ({ item }) => {
         <AppLink href={ClientRoutes.viewNews(item.slug)}>
           <AppImage
             src={item?.coverImage ?? "/placeholder.jpg"}
-            alt={item?.title ?? "News image"}
+            alt={cleanUpNewsTitle(cleanUpNewsTitle(item?.title)) ?? "News image"}
             className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
             priority
           />
@@ -89,7 +89,7 @@ const NewsCarouselItem: React.FC<NewsCarouselItemProps> = ({ item }) => {
           {/* Headline */}
           <AppLink href={ClientRoutes.viewNews(item.slug)}>
             <h2 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight line-clamp-3 sm:line-clamp-none group-hover:text-primaryGreen/90 transition-colors duration-300">
-              {item?.title ?? "News title"}
+              {cleanUpNewsTitle(item?.title ?? "News title")}
             </h2>
           </AppLink>
         </div>

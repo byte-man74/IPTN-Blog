@@ -11,7 +11,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-    //   message: result
+      message: result
     })
   } catch (error) {
     logger.error('Migration error:', error)

@@ -5,20 +5,18 @@ import { slugifyContent } from './news.utils'
 import { AnalyticsService } from '../analytics/analytics.service'
 
 interface OldDataItem {
-    title: string
-    date: string
-    status: string
-    slug?: string
-    content: string
-    cover_image: string
-    categories: string[]
-    tags: string[]
-  }
+  title: string
+  date: string
+  status: string
+  slug?: string
+  content: string
+  cover_image: string
+  categories: string[]
+  tags: string[]
+}
 
 
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json');
+// const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json')
 // Define the data structure for the old blog posts
 
 //create articles
@@ -43,6 +41,7 @@ export class NewsScripts {
   private readonly repository: NewsRepository
   private readonly analyticsService: AnalyticsService
 
+  private data: OldDataItem[] = []
   constructor() {
     this.repository = new NewsRepository()
     this.analyticsService = new AnalyticsService()
@@ -50,12 +49,12 @@ export class NewsScripts {
 
   async updateOldData(): Promise<string> {
     logger.info('Starting to update old data...')
-    logger.info(`Loaded ${data.length} items from blog_posts.json`)
+    logger.info(`Loaded ${this.data.length} items from blog_posts.json`)
 
     const savedCategories: { [key: string]: number } = {}
     const savedTags: { [key: string]: number } = {}
 
-    for (const dataItem of data) {
+    for (const dataItem of this.data) {
       logger.info(`Processing item: ${dataItem.title}`)
 
       // Process categories with mapping rules
@@ -91,7 +90,16 @@ export class NewsScripts {
           categoriesToAdd.push('politics', 'news')
         } else if (category === 'entertainment-movie') {
           categoriesToAdd.push('movies', 'entertainment')
-        } else {
+        } else if (category === 'right-now') {
+          categoriesToAdd.push('trending')
+        } else if (category === 'latest') {
+          categoriesToAdd.push('top-picks')
+        }else if (category === 'news-homepage') {
+            categoriesToAdd.push('news')
+          }else if (category === 'recommended-content') {
+            categoriesToAdd.push('editors-pick')
+          }
+          else {
           // If no mapping rule, keep the original category
           categoriesToAdd.push(category)
         }
@@ -99,6 +107,26 @@ export class NewsScripts {
         // Add all processed categories
         processedCategories.push(...categoriesToAdd)
       }
+
+
+      if (!processedCategories.includes('editors-pick')) {
+        processedCategories.push('editors-picks')
+      }
+
+
+      if (!processedCategories.includes('trending')) {
+        processedCategories.push('trending')
+      }
+
+      if (!processedCategories.includes('trending')) {
+        processedCategories.push('trending')
+      }
+
+
+      if (!processedCategories.includes('top-picks')) {
+        processedCategories.push('top-picks')
+      }
+
 
       // Add default categories if needed
       if (!processedCategories.includes('articles')) {

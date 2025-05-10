@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import {
-    CommentDTO,
-    CreateCommentSchemaDTO,
+  CommentDTO,
+  CreateCommentSchemaDTO,
   CreateNewsCategoryDTO,
   CreateNewsDTO,
   CreateTagDTO,
@@ -9,14 +9,15 @@ import {
   NewsCategoryDTO,
   NewsDTO,
   NewsFilterDTO,
-  TagDTO,
   UpdateNewsDTO,
+  TagDTO
 } from '@/app/(server)/modules/news/news.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
 import { paginate } from 'prisma-extension-pagination'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
+
 
 
 const prisma = new PrismaClient().$extends({
@@ -459,7 +460,7 @@ export class NewsRepository {
                   published: true,
                   analytics: {
                     views: {
-                      gt: 50
+                      gt: 10
                     }
                   }
                 }
@@ -473,7 +474,7 @@ export class NewsRepository {
               published: true,
               analytics: {
                 views: {
-                  gt: 100
+                  gt: 10
                 }
               }
             }
