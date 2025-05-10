@@ -15,8 +15,6 @@ interface OldDataItem {
   tags: string[]
 }
 
-
-// const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json')
 // Define the data structure for the old blog posts
 
 //create articles
