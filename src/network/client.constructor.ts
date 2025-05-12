@@ -1,6 +1,6 @@
 import { useQuery, useMutation, UseQueryResult, UseMutationResult } from '@tanstack/react-query'
 import axios, { AxiosRequestConfig, AxiosError } from 'axios'
-import { API_URL } from '@/environment-config'
+// import { API_URL } from '@/environment-config'
 
 import { useErrorHandling } from '@/hooks/use-error'
 
