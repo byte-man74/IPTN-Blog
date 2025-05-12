@@ -2,7 +2,6 @@ import { useQuery, useMutation, UseQueryResult, UseMutationResult } from '@tanst
 import axios, { AxiosRequestConfig, AxiosError } from 'axios'
 import { API_URL } from '@/environment-config'
 
-
 import { useErrorHandling } from '@/hooks/use-error'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -25,10 +24,8 @@ type QueryConfigWithParams<TQueryKey, TData> = QueryConfig<TQueryKey, TData> & {
   params?: Record<string, string | number | boolean | null | undefined>
 }
 
-
-
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: 'https://iptn-blog.vercel.app/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -68,9 +65,7 @@ export function useAppQueryWithPaginationAndParams<
   TData = unknown,
   TError = AxiosError,
   TQueryKey extends Array<unknown> = unknown[],
->(
-  config: QueryConfigWithParams<TQueryKey, TData>
-): UseQueryResult<TData, TError> {
+>(config: QueryConfigWithParams<TQueryKey, TData>): UseQueryResult<TData, TError> {
   const { apiRoute, queryKey, options, params } = config
 
   const query = useQuery<TData, TError>({
@@ -113,24 +108,23 @@ export function useAppQueryWithPaginationAndParams<
   return useErrorHandling(() => query)()
 }
 
-export function useAppMutation<
-  TData = unknown,
-  TError = AxiosError,
-  TVariables = unknown,
->(
-  config: {
-    apiRoute: string;
-    method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-    options?: Omit<AxiosRequestConfig, 'url' | 'method'> & {
-      enabled?: boolean;
-    };
-    onSuccess?: (data: NonNullable<TData>, variables: { data: TVariables }, context: unknown) => void;
-    onError?: (error: TError, variables: { data: TVariables }, context: unknown) => void;
-    onMutate?: (variables: { data: TVariables }) => Promise<unknown> | unknown;
-    onSettled?: (data: NonNullable<TData> | undefined, error: TError | null, variables: { data: TVariables }, context: unknown) => void;
+export function useAppMutation<TData = unknown, TError = AxiosError, TVariables = unknown>(config: {
+  apiRoute: string
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  options?: Omit<AxiosRequestConfig, 'url' | 'method'> & {
+    enabled?: boolean
   }
-): UseMutationResult<NonNullable<TData>, TError, { data: TVariables }, unknown> {
-  const { apiRoute, method, options, onSuccess, onError, onMutate, onSettled } = config;
+  onSuccess?: (data: NonNullable<TData>, variables: { data: TVariables }, context: unknown) => void
+  onError?: (error: TError, variables: { data: TVariables }, context: unknown) => void
+  onMutate?: (variables: { data: TVariables }) => Promise<unknown> | unknown
+  onSettled?: (
+    data: NonNullable<TData> | undefined,
+    error: TError | null,
+    variables: { data: TVariables },
+    context: unknown
+  ) => void
+}): UseMutationResult<NonNullable<TData>, TError, { data: TVariables }, unknown> {
+  const { apiRoute, method, options, onSuccess, onError, onMutate, onSettled } = config
 
   const mutation = useMutation<NonNullable<TData>, TError, { data: TVariables }, unknown>({
     mutationFn: async ({ data }: { data: TVariables }) => {
@@ -139,40 +133,37 @@ export function useAppMutation<
         method,
         data,
         ...options,
-      });
+      })
 
       if (!response?.data) {
-        throw new Error(
-          'No data received from server. It may be network issue'
-        );
+        throw new Error('No data received from server. It may be network issue')
       }
 
-      return response.data as NonNullable<TData>;
+      return response.data as NonNullable<TData>
     },
     onSuccess: (data, variables, context) => {
       if (onSuccess) {
-        onSuccess(data, variables, context);
+        onSuccess(data, variables, context)
       }
     },
     onError: (error, variables, context) => {
       if (onError) {
-        onError(error, variables, context);
+        onError(error, variables, context)
       }
     },
     onMutate: async (variables) => {
       if (onMutate) {
-        return await onMutate(variables);
+        return await onMutate(variables)
       }
-      return undefined;
+      return undefined
     },
     onSettled: (data, error, variables, context) => {
       if (onSettled) {
-        onSettled(data, error, variables, context);
+        onSettled(data, error, variables, context)
       }
     },
     retry: 0,
-  });
+  })
 
-
-  return useErrorHandling(() => mutation)();
+  return useErrorHandling(() => mutation)()
 }
