@@ -35,7 +35,6 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
   const readTime = analytics?.readDuration || "";
   const views = analytics?.views || 0;
 
-
   return (
     <AppLink
       href={`/${ClientRoutes.viewNews(slug ?? "#")}`}
@@ -58,7 +57,7 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
 
         <div className="relative h-full flex flex-col justify-end p-4 sm:p-6">
           {/* Metadata indicators */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white mb-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white mb-3 pointer-events-none">
             <div className="flex items-center gap-2">
               <div className="bg-primaryGreen rounded-full p-1.5 flex items-center justify-center">
                 <Camera size={16} className="text-white" />
@@ -91,7 +90,7 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
           </div>
 
           {/* Title */}
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-primaryGreen transition-colors">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-primaryGreen transition-colors pointer-events-none">
             {cleanUpNewsTitle(title)}
           </h2>
         </div>

@@ -5,7 +5,7 @@ const dev = {
 }
 
 const prod = {
-  API_URL: process.env.SERVER_API_BASE_URL,
+  API_URL: process.env.NEXT_PUBLIC_SERVER_API_BASE_URL,
 }
 
 const getEnv = () => {
@@ -24,7 +24,7 @@ const getEnv = () => {
 
 export const env = getEnv()
 
-console.log('env API_URL', String(env.API_URL ?? ''))
+
 
 export const API_URL = env.API_URL
 

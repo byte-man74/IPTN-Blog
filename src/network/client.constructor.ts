@@ -24,7 +24,6 @@ type QueryConfigWithParams<TQueryKey, TData> = QueryConfig<TQueryKey, TData> & {
   params?: Record<string, string | number | boolean | null | undefined>
 }
 
-console.log("tee-hee", API_URL)
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {

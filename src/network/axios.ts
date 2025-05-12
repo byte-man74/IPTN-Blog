@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { API_URL } from '../environment-config'
 import { logger } from '@/lib/utils/logger'
 
-console.log('oomo', API_URL)
+
 // Create axios instance with base configuration
 const axiosInstance = axios.create({
   baseURL: API_URL,
