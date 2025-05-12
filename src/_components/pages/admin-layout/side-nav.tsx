@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { usePathname } from 'next/navigation'
-import { AppLogo } from '@/_components/global/app-logo'
 import { useSession, signOut } from 'next-auth/react'
 import { AppImage } from '@/_components/global/app-image'
 import { AdminRoutes } from '@/lib/routes/admin'
