@@ -1,6 +1,6 @@
 import { useQuery, useMutation, UseQueryResult, UseMutationResult } from '@tanstack/react-query'
 import axios, { AxiosRequestConfig, AxiosError } from 'axios'
-// import { API_URL } from '@/environment-config'
+import { API_URL } from '@/environment-config'
 
 import { useErrorHandling } from '@/hooks/use-error'
 
@@ -24,8 +24,9 @@ type QueryConfigWithParams<TQueryKey, TData> = QueryConfig<TQueryKey, TData> & {
   params?: Record<string, string | number | boolean | null | undefined>
 }
 
+console.log("tee-hee", API_URL)
 const axiosInstance = axios.create({
-  baseURL: 'https://iptn-blog.vercel.app/api',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
