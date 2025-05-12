@@ -3,15 +3,8 @@ import { FileText, MessageSquare, Users, Edit, ArrowRight, BarChart2 } from 'luc
 import { AppLink } from '@/_components/global/app-link'
 import { AdminRoutes } from '@/lib/routes/admin'
 
-const blogStats = {
-  totalPosts: 42,
-  publishedPosts: 38,
-  draftPosts: 4,
-  totalViews: 12580,
-  totalComments: 256,
-}
 
-const stats = blogStats ?? {
+const stats =  {
   totalPosts: 0,
   publishedPosts: 0,
   draftPosts: 0,

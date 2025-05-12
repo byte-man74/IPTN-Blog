@@ -41,7 +41,7 @@ export const AppLogoBlack = ({
   target,
 }: AppLogoProps) => {
   // Determine which logo variant to use
-  const logoSrc = '/assets/iptn-black.png'
+  const logoSrc = '/assets/Iptn-blk.png'
 
   const logoImage = (
     <AppImage
