@@ -151,9 +151,9 @@ export default function RootLayout({
                     height={4}
                     shadow="0 0 10px #008751,0 0 5px #008751"
                     zIndex={9999}
-                    speed={500}
+                    speed={900}
                     easing="ease"
-                    initialPosition={0.3}
+                    initialPosition={0.55}
                   />
                   <div className="mx-auto max-w-[110rem] relative">{children}</div>
                 </MixpanelProvider>
