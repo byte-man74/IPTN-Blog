@@ -34,14 +34,14 @@ interface AppLogoProps {
  */
 export const AppLogoBlack = ({
   alt = 'Company Logo',
-  width = 150,
+  width = 100,
   height = 50,
   className = 'z-10',
   href,
   target,
 }: AppLogoProps) => {
   // Determine which logo variant to use
-  const logoSrc = `/assets/iptn-black.png?${new Date().getTime()}`
+  const logoSrc = '/assets/iptn-black.png'
 
   const logoImage = (
     <AppImage
