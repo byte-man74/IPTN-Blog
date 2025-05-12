@@ -148,13 +148,12 @@ export default function RootLayout({
                   <Toaster />
                   <NextTopLoader
                     color="#008751"
-                    showSpinner={true}
                     height={4}
                     shadow="0 0 10px #008751,0 0 5px #008751"
                     zIndex={9999}
-                    speed={200}
+                    speed={500}
                     easing="ease"
-                    initialPosition={0.08}
+                    initialPosition={0.3}
                   />
                   <div className="mx-auto max-w-[110rem] relative">{children}</div>
                 </MixpanelProvider>
