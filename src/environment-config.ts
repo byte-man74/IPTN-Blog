@@ -24,7 +24,7 @@ const getEnv = () => {
 
 export const env = getEnv()
 
-console.log('env API_URL', String(env.API_URL ?? '').replace(/[a-zA-Z]/g, '-'))
+console.log('env API_URL', String(env.API_URL ?? ''))
 
 export const API_URL = env.API_URL
 
