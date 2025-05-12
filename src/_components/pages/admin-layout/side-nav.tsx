@@ -20,6 +20,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { AppImage } from '@/_components/global/app-image'
 import { AdminRoutes } from '@/lib/routes/admin'
 import { useSimpleSiteHealthCheck } from '@/network/http-service/site-config.hooks'
+import { AppLogoBlack } from '@/_components/global/app-logo-black'
 
 /**
  * SideNav Component
@@ -132,8 +133,7 @@ export const SideNav = () => {
 
         <div className="h-0 flex-1 flex flex-col pt-4 pb-6 overflow-y-auto">
           <div className={`flex justify-center mb-6 ${isCollapsed ? 'px-1' : 'px-4'}`}>
-            <AppLogo
-              variant="white"
+            <AppLogoBlack
               width={isCollapsed ? 240 : 120}
               height={40}
               className={`transition-all duration-300 ${isCollapsed ? 'scale-90' : ''}`}
@@ -206,7 +206,9 @@ export const SideNav = () => {
                         <div className="font-bold text-white">
                           {session.user.firstName} {session.user.lastName}
                         </div>
-                        <div className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</div>
+                        <div className="text-xs text-gray-400 truncate mt-0.5">
+                          {session.user.email}
+                        </div>
                         {session.user.isAdmin && (
                           <div className="mt-1">
                             <span className="bg-primaryGreen/20 text-primaryGreen text-xs px-2 py-0.5 rounded-full font-medium">

@@ -3,13 +3,12 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Tiro_Devanagari_Hindi } from 'next/font/google'
 import { NextAuthProvider } from '@/providers/session-provider'
 import ReactQueryProvider from '@/providers/query-client-provider'
+import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
 import { Toaster } from '@/components/ui/toaster'
 import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
 import { SignInProvider } from '@/providers/signin-provider'
-import { AppLogo } from '@/_components/global/app-logo'
-import { Suspense } from 'react'
 
 /**
  * Font configuration for the application
@@ -147,20 +146,17 @@ export default function RootLayout({
               <ErrorProvider error={null}>
                 <MixpanelProvider>
                   <Toaster />
-                  <Suspense
-                    fallback={
-                      <div className="fixed inset-0 bg-white dark:bg-black z-50 flex items-center justify-center">
-                        <AppLogo variant="white" width={300} height={100} />
-                        <div className="absolute bottom-10 w-full flex justify-center">
-                          <div className="h-1 w-24 bg-gray-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-primaryGreen w-1/2 animate-pulse"></div>
-                          </div>
-                        </div>
-                      </div>
-                    }
-                  >
-                    <div className="mx-auto max-w-[110rem] relative">{children}</div>
-                  </Suspense>
+                  <NextTopLoader
+                    color="#008751"
+                    showSpinner={true}
+                    height={4}
+                    shadow="0 0 10px #008751,0 0 5px #008751"
+                    zIndex={9999}
+                    speed={200}
+                    easing="ease"
+                    initialPosition={0.08}
+                  />
+                  <div className="mx-auto max-w-[110rem] relative">{children}</div>
                 </MixpanelProvider>
               </ErrorProvider>
             </SignInProvider>

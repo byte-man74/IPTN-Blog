@@ -1,4 +1,4 @@
-import { AppLogo } from '@/_components/global/app-logo'
+import { AppLogoBlack } from '@/_components/global/app-logo-black'
 import React, { Suspense } from 'react'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -6,7 +6,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <Suspense
       fallback={
         <div className="w-full h-[100dvh] flex items-center justify-center">
-          <AppLogo variant="white" width={500} />
+          <AppLogoBlack width={500} />
         </div>
       }
     >
