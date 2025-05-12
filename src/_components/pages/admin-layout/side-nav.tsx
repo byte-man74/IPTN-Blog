@@ -133,7 +133,6 @@ export const SideNav = () => {
         <div className="h-0 flex-1 flex flex-col pt-4 pb-6 overflow-y-auto">
           <div className={`flex justify-center mb-6 ${isCollapsed ? 'px-1' : 'px-4'}`}>
             <AppLogoBlack
-              width={isCollapsed ? 240 : 120}
               height={40}
               className={`transition-all duration-300 ${isCollapsed ? 'scale-90' : ''}`}
             />
