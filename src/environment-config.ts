@@ -25,8 +25,9 @@ const getEnv = () => {
 export const env = getEnv()
 
 
-
+console.log(env.API_URL)
 export const API_URL = env.API_URL
+
 
 // third party impl...
 

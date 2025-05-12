@@ -45,7 +45,7 @@ export const AppLogo = ({
 }: AppLogoProps) => {
   // Determine which logo variant to use
   const logoSrc = variant === 'white'
-    ? "/assets/iptn-black.webp"
+    ? "/assets/iptn-black.png"
     : "/assets/iptn-logo.svg"
 
   const logoImage = (
