@@ -15,6 +15,10 @@ interface OldDataItem {
   tags: string[]
 }
 
+
+
+const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json')
+
 // Define the data structure for the old blog posts
 
 //create articles
@@ -39,7 +43,7 @@ export class NewsScripts {
   private readonly repository: NewsRepository
   private readonly analyticsService: AnalyticsService
 
-  private data: OldDataItem[] = []
+  private data: OldDataItem[] = data
   constructor() {
     this.repository = new NewsRepository()
     this.analyticsService = new AnalyticsService()
