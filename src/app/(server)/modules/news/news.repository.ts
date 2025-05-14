@@ -430,6 +430,7 @@ export class NewsRepository {
           slug: true,
           description: true,
         },
+        take: 1000,
       })
     })
   }
@@ -442,6 +443,7 @@ export class NewsRepository {
           id: true,
           name: true,
         },
+        take: 1000, 
       })
     })
   }
