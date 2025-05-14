@@ -48,11 +48,17 @@ const HomePageContent = () => {
   const renderContentSection = <T extends { data?: NewsDTO[] }>(
     data: T | undefined,
     isLoading: boolean,
-    renderComponent: (items: NewsDTO[]) => React.ReactNode
+    renderComponent: (items: NewsDTO[]) => React.ReactNode,
+    loadingComponent?: React.ReactNode
   ): React.ReactNode => {
-    if (!isLoading && data?.data && data.data.length > 0) {
+    if (isLoading) {
+      return loadingComponent || renderComponent([])
+    }
+
+    if (data?.data && data.data.length > 0) {
       return renderComponent(data.data)
     }
+
     return null
   }
 
@@ -83,32 +89,67 @@ const HomePageContent = () => {
                   carouselItem={{ itemType: 'news-with-description' }}
                 />
               </div>
-            )
+            ),
+          <div id={HomePageFeatured.name} ref={setRef(HomePageFeatured.name)}>
+            <NewsCategoryCarousel
+              title={HomePageFeatured.name}
+              backgroundTitle="Featured"
+              items={[]}
+              isLoading={true}
+              carouselItem={{ itemType: 'news-with-description' }}
+            />
+          </div>
         )}
 
-        {renderContentSection(interviews.data, interviews.isLoading, (items: NewsDTO[]) => (
+        {renderContentSection(
+          interviews.data,
+          interviews.isLoading,
+          (items: NewsDTO[]) => (
+            <div id={InterviewsId} ref={setRef(InterviewsId)}>
+              <NewsCategoryCarousel
+                title="Interviews"
+                backgroundTitle="Honor & Glory"
+                items={items}
+                isLoading={interviews.isLoading}
+                carouselItem={{ itemType: 'interview' }}
+              />
+            </div>
+          ),
           <div id={InterviewsId} ref={setRef(InterviewsId)}>
             <NewsCategoryCarousel
               title="Interviews"
               backgroundTitle="Honor & Glory"
-              items={items}
-              isLoading={interviews.isLoading}
+              items={[]}
+              isLoading={true}
               carouselItem={{ itemType: 'interview' }}
             />
           </div>
-        ))}
+        )}
 
-        {renderContentSection(newsWithVideos.data, newsWithVideos.isLoading, (items: NewsDTO[]) => (
+        {renderContentSection(
+          newsWithVideos.data,
+          newsWithVideos.isLoading,
+          (items: NewsDTO[]) => (
+            <div id={HomePageWithVideos.name} ref={setRef(HomePageWithVideos.name)}>
+              <NewsCategoryCarousel
+                title={HomePageWithVideos.name}
+                backgroundTitle="Must See"
+                items={items}
+                isLoading={newsWithVideos.isLoading}
+                carouselItem={{ itemType: 'news-overlay' }}
+              />
+            </div>
+          ),
           <div id={HomePageWithVideos.name} ref={setRef(HomePageWithVideos.name)}>
             <NewsCategoryCarousel
               title={HomePageWithVideos.name}
               backgroundTitle="Must See"
-              items={items}
-              isLoading={newsWithVideos.isLoading}
+              items={[]}
+              isLoading={true}
               carouselItem={{ itemType: 'news-overlay' }}
             />
           </div>
-        ))}
+        )}
 
         {renderContentSection(
           diasporaContent.data,
@@ -122,7 +163,15 @@ const HomePageContent = () => {
                 carouselItem={{ itemType: 'news-fullscreen' }}
               />
             </div>
-          )
+          ),
+          <div id={HomePageDiaspora.name} ref={setRef(HomePageDiaspora.name)}>
+            <NewsFullScreenCarousel
+              title={HomePageDiaspora.name}
+              items={[]}
+              isLoading={true}
+              carouselItem={{ itemType: 'news-fullscreen' }}
+            />
+          </div>
         )}
 
         {renderContentSection(
@@ -136,7 +185,14 @@ const HomePageContent = () => {
                 isLoading={youMayHaveMissedContent.isLoading}
               />
             </div>
-          )
+          ),
+          <div id={HomePageYouMayHaveMissed.name} ref={setRef(HomePageYouMayHaveMissed.name)}>
+            <HomePageFreeContent
+              title={HomePageYouMayHaveMissed.name}
+              newsItems={[]}
+              isLoading={true}
+            />
+          </div>
         )}
       </div>
       <AdsBox position="home-page" />

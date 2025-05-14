@@ -85,21 +85,7 @@ export const AdsBox = ({
     }
 
     if (!data || data.length === 0) {
-        return (
-            <div className={`w-full mx-auto flex h-[20rem] justify-center items-center bg-[#D2D2D2] overflow-hidden ${className}`}>
-                <span className="inset-0 opacity-30 text-black text-[102px] font-bold sm:text-[80px] xs:text-[60px] overflow-hidden">
-                    <h2
-                        className="font-black tracking-widest text-transparent whitespace-nowrap overflow-hidden"
-                        style={{
-                            WebkitTextStroke: "2px black",
-                            fontFamily: "Arial Black, sans-serif",
-                        }}
-                    >
-                        ADVERTISEMENT
-                    </h2>
-                </span>
-            </div>
-        )
+        return null
     }
 
     return (
