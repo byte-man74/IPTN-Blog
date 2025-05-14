@@ -6,10 +6,7 @@ import { NewsQueryKey } from '@/network/query-keys/news'
 import { logger } from '@/lib/utils/logger'
 import {
   CONTENT_CRITERIA,
-  HomePageDiaspora,
   HomePageFeatured,
-  HomePageWithVideos,
-  HomePageYouMayHaveMissed
 } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
 export default async function Home() {
@@ -160,93 +157,6 @@ export default async function Home() {
           return response.data
         } catch (error) {
           logger.error('Error fetching interviews:', error)
-          throw error
-        }
-      },
-    })
-
-    // Prefetch news with videos
-    await queryClient.prefetchQuery({
-      queryKey: [
-        NewsQueryKey.NEWS,
-        { published: true, categorySlug: HomePageWithVideos.slug },
-        1,
-        8,
-      ],
-      queryFn: async () => {
-        try {
-          const response = await createServerAxiosInstance(routes.news.list, {
-            params: {
-              published: true,
-              categorySlug: HomePageWithVideos.slug,
-              page: 1,
-              limit: 8,
-            },
-          })
-          if (!response) {
-            throw new Error('Failed to fetch news with videos')
-          }
-          return response.data
-        } catch (error) {
-          logger.error('Error fetching news with videos:', error)
-          throw error
-        }
-      },
-    })
-
-    // Prefetch diaspora content
-    await queryClient.prefetchQuery({
-      queryKey: [
-        NewsQueryKey.NEWS,
-        { published: true, categorySlug: HomePageDiaspora.slug },
-        1,
-        8,
-      ],
-      queryFn: async () => {
-        try {
-          const response = await createServerAxiosInstance(routes.news.list, {
-            params: {
-              published: true,
-              categorySlug: HomePageDiaspora.slug,
-              page: 1,
-              limit: 8,
-            },
-          })
-          if (!response) {
-            throw new Error('Failed to fetch diaspora content')
-          }
-          return response.data
-        } catch (error) {
-          logger.error('Error fetching diaspora content:', error)
-          throw error
-        }
-      },
-    })
-
-    // Prefetch "You May Have Missed" content
-    await queryClient.prefetchQuery({
-      queryKey: [
-        NewsQueryKey.NEWS,
-        { published: true, categorySlug: HomePageYouMayHaveMissed.slug },
-        1,
-        10,
-      ],
-      queryFn: async () => {
-        try {
-          const response = await createServerAxiosInstance(routes.news.list, {
-            params: {
-              published: true,
-              categorySlug: HomePageYouMayHaveMissed.slug,
-              page: 1,
-              limit: 10,
-            },
-          })
-          if (!response) {
-            throw new Error('Failed to fetch "You May Have Missed" content')
-          }
-          return response.data
-        } catch (error) {
-          logger.error('Error fetching "You May Have Missed" content:', error)
           throw error
         }
       },
