@@ -11,7 +11,6 @@ import { ViewsThreshold } from "@/app/(server)/modules/site-configurations/site-
 
 /**
  * MasonryNewsElement component displays a news item in a masonry layout.
- * @param {NewsDTO} newsItem - The news item data for the component.
  */
 const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
   const { coverImage, title, pubDate, analytics, slug, comments, categories } = newsItem ?? {}
