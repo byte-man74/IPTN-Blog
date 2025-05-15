@@ -211,7 +211,10 @@ export const CATEGORY_CRITERIA: CategoryCriteria[] = [
     // Fourth category (index 3)
     index: 3,
     name: FOURTH_CATEGORY,
-    criteria: [{ ...CONTENT_CRITERIA.featured, threshold: 1 }, CONTENT_CRITERIA.fashion],
+    criteria: [
+      { ...CONTENT_CRITERIA.featured, threshold: 1 },
+      { ...CONTENT_CRITERIA.fashion, requiresFresh: false },
+    ],
   },
   {
     // Fifth category (index 4)
