@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import HeroSearch from '@/_components/public/core/hero-search';
 import HeroNavItem from '@/_components/public/core/hero-nav-item';
 import { FiMenu, FiX } from 'react-icons/fi';
@@ -21,12 +21,21 @@ const HeroNavigation = () => {
   const navigationItems = siteConfig?.navBarKeyCategories || [];
   const isHomePage = pathname === '/' || pathname === '';
 
+  // Close mobile menu on page navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   // Render loading placeholders
   const renderSkeletons = (count = 5) => {
     return Array(count).fill(0).map((_, index) => (
       <div key={`skeleton-${index}`} className="h-6 w-20 bg-gray-700 animate-pulse rounded"></div>
     ));
+  };
+
+  // Handle mobile menu item click
+  const handleMobileItemClick = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -81,6 +90,7 @@ const HeroNavigation = () => {
               <AppLink
                 href="/"
                 className={`text-white hover:text-gray-300 transition-colors ${isHomePage ? 'font-bold' : ''}`}
+                onClick={handleMobileItemClick}
               >
                 Home
               </AppLink>
@@ -94,7 +104,7 @@ const HeroNavigation = () => {
               </div>
             ) : (
               navigationItems.map((item) => (
-                <div className="px-4 py-2" key={item.id.toString()}>
+                <div className="px-4 py-2" key={item.id.toString()} onClick={handleMobileItemClick}>
                   <HeroNavItem item={item} />
                 </div>
               ))
@@ -105,6 +115,7 @@ const HeroNavigation = () => {
               <AppLink
                 href={ClientRoutes.contact}
                 className={`text-white hover:text-gray-300 transition-colors`}
+                onClick={handleMobileItemClick}
               >
                 Contact Us
               </AppLink>
