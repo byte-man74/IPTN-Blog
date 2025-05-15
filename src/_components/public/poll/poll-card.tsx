@@ -121,6 +121,7 @@ export const PollCard: React.FC<PollCardProps> = ({
           onClick={handleVoteClick}
           disabled={(selectedOption === null && isUserLoggedIn) || hasUserVoted}
           className="w-full bg-primaryGreen hover:bg-primaryGreen/90 text-sm sm:text-base"
+          aria-label="handle vote"
         >
           {!isUserLoggedIn ? 'Sign in to Vote' : hasUserVoted ? 'Already Voted' : 'Submit Vote'}
         </Button>

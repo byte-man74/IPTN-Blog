@@ -18,6 +18,16 @@ interface AppLinkProps {
   rel?: string
   /** Optional aria-label for accessibility */
   ariaLabel?: string
+  /** Optional aria-label for accessibility (alternative to ariaLabel) */
+  'aria-label'?: string
+  /** Optional aria-current attribute for indicating current page */
+  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'
+  /** Optional aria-describedby attribute to reference description element */
+  'aria-describedby'?: string
+  /** Optional aria-haspopup attribute for indicating popup content */
+  'aria-haspopup'?: boolean | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'
+  /** Optional aria-expanded attribute for expandable elements */
+  'aria-expanded'?: boolean
   /** Optional icon to display before the link text */
   icon?: IconType
   /** Optional size for the icon (defaults to 20) */
@@ -32,7 +42,7 @@ interface AppLinkProps {
  * A reusable link component that wraps Next.js Link with additional features:
  * - Automatically handles external links (adds target="_blank" and rel="noopener noreferrer")
  * - Supports icons from react-icons
- * - Includes accessibility attributes
+ * - Includes comprehensive accessibility attributes
  * - Applies consistent transition styling
  * - Supports custom click handlers
  *
@@ -46,9 +56,15 @@ export const AppLink = ({
   target,
   rel,
   ariaLabel,
+  'aria-label': ariaLabelProp,
+  'aria-current': ariaCurrent,
+  'aria-describedby': ariaDescribedby,
+  'aria-haspopup': ariaHaspopup,
+  'aria-expanded': ariaExpanded,
   icon: Icon,
   iconSize = 20,
   onClick,
+  ...rest
 }: AppLinkProps) => {
   // Trim href if it's a string
   const trimmedHref = typeof href === 'string' ? href.trim() : href
@@ -60,15 +76,23 @@ export const AppLink = ({
       }
     : {}
 
+  // Use either ariaLabel or aria-label prop
+  const finalAriaLabel = ariaLabel || ariaLabelProp
+
   return (
     <Link
       href={!trimmedHref || trimmedHref === "" ? '#' : trimmedHref}
       className={`transition-colors ${className}`}
-      aria-label={ariaLabel}
+      aria-label={finalAriaLabel}
+      aria-current={ariaCurrent}
+      aria-describedby={ariaDescribedby}
+      aria-haspopup={ariaHaspopup}
+      aria-expanded={ariaExpanded}
       onClick={onClick}
       {...linkProps}
+      {...rest}
     >
-      {Icon && <Icon size={iconSize} className="inline-block mr-2" />}
+      {Icon && <Icon size={iconSize} className="inline-block mr-2" aria-hidden="true" />}
       {children}
     </Link>
   )

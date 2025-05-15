@@ -17,6 +17,10 @@ interface OldDataItem {
 
 
 
+// const data: OldDataItem[] = await require('./../../../../../script/blog_posts.json')
+
+
+
 
 
 // Define the data structure for the old blog posts
@@ -43,21 +47,38 @@ export class NewsScripts {
   private readonly repository: NewsRepository
   private readonly analyticsService: AnalyticsService
 
-  private data: OldDataItem[] = []
+  private data: OldDataItem[] = data
   constructor() {
     this.repository = new NewsRepository()
     this.analyticsService = new AnalyticsService()
   }
-
   async updateOldData(): Promise<string> {
     logger.info('Starting to update old data...')
     logger.info(`Loaded ${this.data.length} items from blog_posts.json`)
 
     const savedCategories: { [key: string]: number } = {}
     const savedTags: { [key: string]: number } = {}
+    const processedSlugs: Set<string> = new Set()
 
     for (const dataItem of this.data) {
       logger.info(`Processing item: ${dataItem.title}`)
+
+      // Skip if the slug already exists in the database
+      const slug = dataItem.slug ?? slugifyContent(dataItem.title)
+      const existingNews = await this.repository.getNewsBySlug(slug)
+
+      if (existingNews && !('error' in existingNews)) {
+        logger.info(`Skipping existing news with slug: ${slug}`)
+        continue
+      }
+
+      // Skip if we've already processed this slug in the current run
+      if (processedSlugs.has(slug)) {
+        logger.info(`Skipping duplicate slug in current batch: ${slug}`)
+        continue
+      }
+
+      processedSlugs.add(slug)
 
       // Process categories with mapping rules
       const processedCategories: string[] = []
@@ -185,7 +206,7 @@ export class NewsScripts {
         pubDate: new Date(dataItem.date),
         published: dataItem.status === 'publish',
         summary: dataItem.title,
-        slug: dataItem.slug ?? slugifyContent(dataItem.title),
+        slug: slug,
         contentEncoded: dataItem.content,
         coverImage: dataItem.cover_image,
       }

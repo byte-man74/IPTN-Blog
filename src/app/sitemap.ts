@@ -73,25 +73,47 @@ async function generateTopicPages(): Promise<MetadataRoute.Sitemap> {
 async function generateNewsPages(): Promise<MetadataRoute.Sitemap> {
   try {
     const newsService = new NewsService()
-    // Fetch all published news articles by setting a very large limit
-    const result = await newsService.getNewsWithFilters({ published: true }, 1, 10000)
+    const pageSize = 100 // Reasonable page size
+    let currentPage = 1
+    let hasMorePages = true
+    let allNewsPages: MetadataRoute.Sitemap = []
 
-    if (result instanceof ApiCustomError) {
-      logger.error('Error fetching news for sitemap:', result.message)
-      return []
+    // Fetch news in batches
+    while (hasMorePages) {
+      const result = await newsService.getNewsWithFilters(
+        { published: true },
+        currentPage,
+        pageSize
+      )
+
+      if (result instanceof ApiCustomError) {
+        logger.error(`Error fetching news for sitemap (page ${currentPage}):`, result.message)
+        break
+      }
+
+      if (!result || !result.data || result.data.length === 0) {
+        hasMorePages = false
+        break
+      }
+
+      const newsPages = result.data.map((article: NewsDTO) => ({
+        url: `${domain}/news/${article.slug}`,
+        lastModified: new Date(article.lastUpdated || article.pubDate),
+        changeFrequency: 'daily' as const,
+        priority: 0.7,
+      }))
+
+      allNewsPages = [...allNewsPages, ...newsPages]
+
+      // Check if we've reached the last page
+      if (result.data.length < pageSize) {
+        hasMorePages = false
+      } else {
+        currentPage++
+      }
     }
 
-    if (!result) {
-      logger.error('No news data returned for sitemap')
-      return []
-    }
-
-    return result.data.map((article: NewsDTO) => ({
-      url: `${domain}/news/${article.slug}`,
-      lastModified: new Date(article.lastUpdated || article.pubDate),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    }))
+    return allNewsPages
   } catch (error) {
     logger.error('Error fetching news for sitemap:', error)
     return []

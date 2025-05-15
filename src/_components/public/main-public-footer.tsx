@@ -80,6 +80,7 @@ export default function Footer() {
                   <button
                     onClick={handleUnsubscribe}
                     className="border border-gray-500 hover:border-gray-400 text-gray-300 hover:text-white px-6 py-3 rounded-md transition-colors duration-300 w-full sm:w-auto"
+                    aria-label="Unsubscribe from newsletter"
                   >
                     Unsubscribe from newsletter
                   </button>
