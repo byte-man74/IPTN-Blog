@@ -129,7 +129,7 @@ const NewsMetadata: React.FC<{ item: NewsDTO }> = ({ item }) => (
 
     <MetadataItem
       icon={<Camera className="w-3 h-3 sm:w-4 sm:h-4" />}
-      text={`${item?.analytics?.readDuration} read`}
+      text={`${item?.analytics?.readDuration ?? ''}`}
     />
 
     {item?.analytics?.views !== undefined && item.analytics.views >= ViewsThreshold && (

@@ -53,7 +53,7 @@ const BasicNews: React.FC<BasicNewsComponentProps> = ({ newsContent }) => {
         {/* Title */}
         <AppLink href={ClientRoutes.viewNews(slug)}>
           <h3 className="text-md font-bold leading-tight text-gray-900 mb-2 line-clamp-2 group-hover:text-primaryGreen transition-colors duration-300">
-            {cleanUpNewsTitle(title) ?? ""}
+            {cleanUpNewsTitle(title, true) ?? ""}
           </h3>
         </AppLink>
 

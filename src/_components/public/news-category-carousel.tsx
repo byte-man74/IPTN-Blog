@@ -46,7 +46,6 @@ export const NewsCategoryCarousel = ({
   /**
    * Get the number of items to display based on the item type.
    * @param {string} itemType - The type of the carousel item.
-   * @returns {number} The number of items to display.
    */
   const getNumberOfItems = (itemType: string) => {
     switch (itemType) {

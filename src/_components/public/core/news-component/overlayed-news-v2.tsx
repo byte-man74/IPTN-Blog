@@ -91,7 +91,7 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
 
           {/* Title */}
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-primaryGreen transition-colors pointer-events-none">
-            {cleanUpNewsTitle(title)}
+            {cleanUpNewsTitle(title, true)}
           </h2>
         </div>
       </div>

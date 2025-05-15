@@ -70,11 +70,11 @@ export const calculateTimeStampFromDate = (date: string | Date) => {
     })
   }
 }
-export const cleanUpNewsTitle = (title: string, maxLength: number = 70): string => {
+
+export const cleanUpNewsTitle = (title: string, full: boolean = true): string => {
   if (!title) return ''
 
   const cleanTitle = decode(title)
 
-  
-  return cleanTitle.substring(0, maxLength).trim() + '...'
+  return full ? cleanTitle : cleanTitle.substring(0, 79).trim() + '...'
 }

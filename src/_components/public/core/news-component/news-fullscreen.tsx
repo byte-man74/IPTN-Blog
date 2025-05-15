@@ -49,14 +49,14 @@ export default function NewsFullScreen({
     <AppLink href={ClientRoutes.viewNews(slug)} className="block hover:shadow-lg transition-shadow duration-300 w-full">
       <div className="w-full overflow-hidden border border-gray-200 shadow-sm">
         <div className="relative h-[30rem] w-full overflow-hidden">
-          <AppImage src={coverImage as string} alt={title ?? "News image"} className="object-cover w-full h-full object-center" priority />
+          <AppImage src={coverImage as string} alt={title ?? ""} className="object-cover w-full h-full object-center" priority />
           {/* Black overlay on top of the image */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
             {readTime && (
               <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
                 <Clock size={16} />
-                <span>{readTime} read</span>
+                <span>{readTime}</span>
               </div>
             )}
             {category && <div className="rounded bg-primaryGreen px-3 py-1 text-sm text-white">{category}</div>}
@@ -83,7 +83,7 @@ export default function NewsFullScreen({
             </div>
           </div>
 
-          <h2 className="mb-2 text-xl font-bold uppercase tracking-tight text-gray-900">{cleanUpNewsTitle(title)}</h2>
+          <h2 className="mb-2 text-xl font-bold uppercase tracking-tight text-gray-900">{cleanUpNewsTitle(title, true )}</h2>
         </div>
       </div>
     </AppLink>

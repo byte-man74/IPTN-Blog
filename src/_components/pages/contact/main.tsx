@@ -6,8 +6,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Mail, MessageSquare} from 'lucide-react'
-import { AppLogo } from '@/_components/global/app-logo'
 import { CompanyData } from '@/lib/constants/company-data'
+import { AppLogoBlack } from '@/_components/global/app-logo-black'
 
 export const ContactMainComponent = () => {
   const [contactReason, setContactReason] = useState<string>('')
@@ -62,7 +62,7 @@ export const ContactMainComponent = () => {
       <div className="bg-white shadow-sm py-4">
         <div className="container mx-auto px-4 flex items-center">
           <div className="mx-auto">
-              <AppLogo variant='white' />
+              <AppLogoBlack className='w-[14rem]' />
           </div>
           <div className="w-24"></div> {/* Spacer for centering */}
         </div>
