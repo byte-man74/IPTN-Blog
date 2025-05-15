@@ -89,7 +89,7 @@ const NewsCarouselItem: React.FC<NewsCarouselItemProps> = ({ item }) => {
           {/* Headline */}
           <AppLink href={ClientRoutes.viewNews(item.slug)}>
             <h2 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight line-clamp-3 sm:line-clamp-none group-hover:text-primaryGreen/90 transition-colors duration-300">
-              {cleanUpNewsTitle(item?.title ?? "News title")}
+              {cleanUpNewsTitle(item?.title ?? "Fetching News")}
             </h2>
           </AppLink>
         </div>

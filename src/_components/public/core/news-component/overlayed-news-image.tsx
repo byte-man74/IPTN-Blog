@@ -111,7 +111,7 @@ const OverlayedNewsImage = ({
             {/* Headline */}
             <div className="block">
               <h3 className="text-white text-[18px] font-semibold leading-tight transition-all duration-300 group-hover:text-primaryGreen group-hover:translate-x-1 drop-shadow-lg">
-                {cleanUpNewsTitle(title ?? "News title")}
+                {cleanUpNewsTitle(title ?? "Fetching News")}
               </h3>
             </div>
           </div>
