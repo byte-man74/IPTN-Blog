@@ -158,6 +158,7 @@ export default function Footer() {
                     </span>
                     <AppLink
                       href={`/${contentType}`}
+                             aria-label="popular-content"
                       className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300 capitalize"
                     >
                       {contentType}
@@ -178,6 +179,7 @@ export default function Footer() {
                   </span>
                   <AppLink
                     href={ClientRoutes.explore}
+                           aria-label="Explore"
                     className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300"
                   >
                     Explore
@@ -205,6 +207,7 @@ export default function Footer() {
                     </span>
                     <AppLink
                       href={`${ClientRoutes.explore}?tag=${tag.name}`}
+                             aria-label="tag"
                       className="text-sm sm:text-base hover:text-primaryGreen transition-colors duration-300"
                       onClick={() => handleTagClick(tag.name)}
                     >
@@ -227,6 +230,7 @@ export default function Footer() {
           <div className="flex items-center space-x-4 justify-start">
             <AppLink
               href={`tel:${CompanyData.PhoneNumber}`}
+              aria-label="Phone"
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300"
               onClick={() => handleContactClick("phone", CompanyData.PhoneNumber)}
             >
@@ -236,6 +240,7 @@ export default function Footer() {
               <h4 className="font-bold text-primaryGreen text-sm sm:text-base">Phone</h4>
               <AppLink
                 href={`tel:${CompanyData.PhoneNumber}`}
+                aria-label="Phone"
                 className="text-gray-400 text-xs sm:text-sm hover:text-primaryGreen transition-colors"
                 onClick={() => handleContactClick("phone", CompanyData.PhoneNumber)}
               >
@@ -247,6 +252,7 @@ export default function Footer() {
           <div className="flex items-center space-x-4 justify-start">
             <AppLink
               href={`mailto:${CompanyData.Email}`}
+              aria-label="email"
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262626] border border-primaryGreen flex items-center justify-center hover:border-primaryGreen/80 transition-colors duration-300"
               onClick={() => handleContactClick("email", CompanyData.Email)}
             >
@@ -256,6 +262,7 @@ export default function Footer() {
               <h4 className="font-bold text-primaryGreen text-sm sm:text-base">Email</h4>
               <AppLink
                 href={`mailto:${CompanyData.Email}`}
+                       aria-label="Email"
                 className="text-gray-400 text-xs sm:text-sm hover:text-primaryGreen transition-colors"
                 onClick={() => handleContactClick("email", CompanyData.Email)}
               >
