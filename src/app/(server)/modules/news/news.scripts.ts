@@ -47,7 +47,7 @@ export class NewsScripts {
   private readonly repository: NewsRepository
   private readonly analyticsService: AnalyticsService
 
-  private data: OldDataItem[] = data
+  private data: OldDataItem[] = []
   constructor() {
     this.repository = new NewsRepository()
     this.analyticsService = new AnalyticsService()
