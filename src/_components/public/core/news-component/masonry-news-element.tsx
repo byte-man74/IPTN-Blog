@@ -43,7 +43,7 @@ const MasonryNewsElement: React.FC<{ newsItem: NewsDTO }> = ({ newsItem }) => {
             <div className="rounded-full p-2 bg-primaryGreen">
                 <Calendar className="text-white w-4 h-4" />
             </div>
-            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{pubDate ? calculateTimeStampFromDate(pubDate) : "Date not available"}</span>
+            <span className="text-white text-sm p-1 bg-[#1B1B1B]">{pubDate ? calculateTimeStampFromDate(pubDate) : ""}</span>
           </div>
           {analytics?.readDuration && (
             <div className="flex items-center py-1 gap-2">

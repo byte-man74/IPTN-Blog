@@ -109,7 +109,7 @@ const DateIndicator: React.FC<{ pubDate?: Date }> = ({ pubDate }) => (
       <Calendar className="w-3 h-3 sm:w-5 sm:h-5" />
     </div>
     <span className="text-white text-xs sm:text-sm font-medium bg-black/40 px-2 sm:px-3 py-1 rounded-sm backdrop-blur-sm group-hover:bg-primaryGreen/80 transition-all duration-300">
-      {pubDate ? calculateTimeStampFromDate(pubDate) : "Date not available"}
+      {pubDate ? calculateTimeStampFromDate(pubDate) : ""}
     </span>
   </div>
 );

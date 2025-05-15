@@ -134,7 +134,7 @@ export default function NewsScreenFullWidthHero({ newsItems, isLoading = false, 
                           <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                         <span className="text-white text-xs sm:text-sm font-medium">
-                          {item?.pubDate ? calculateTimeStampFromDate(item.pubDate) : "Date not available"}
+                          {item?.pubDate ? calculateTimeStampFromDate(item.pubDate) : ""}
                         </span>
                       </div>
                     </div>

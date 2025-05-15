@@ -17,7 +17,7 @@ const DarkerBasicNewsWithTag: React.FC<DarkerBasicNewsWithTagProps> = ({ newsIte
 
   const { title, analytics, tags, pubDate, slug } = newsItem
   const readTime = analytics?.readDuration || ""
-  const date = pubDate ? new Date(pubDate).toLocaleDateString() : "Date not available"
+  const date = pubDate ? new Date(pubDate).toLocaleDateString() : ""
   const mainTag = tags ? tags[0] : undefined
 
   return (

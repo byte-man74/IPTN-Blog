@@ -31,7 +31,7 @@ const OverlayedNewsImageV2 = ({ newsItem, fullHeight }: OverlayedNewsImageProps)
   } = newsItem;
 
   const imageUrl = coverImage || "/placeholder.svg";
-  const date = pubDate ? new Date(pubDate).toLocaleDateString() : "Date not available";
+  const date = pubDate ? new Date(pubDate).toLocaleDateString() : "";
   const readTime = analytics?.readDuration || "";
   const views = analytics?.views || 0;
 

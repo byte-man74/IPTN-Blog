@@ -68,7 +68,7 @@ const OverlayedNewsImage = ({
             <div className="bg-primaryGreen rounded-full p-2 text-white flex items-center justify-center shadow-md group-hover:bg-white group-hover:text-primaryGreen transition-all duration-300">
               <CalendarDays className="w-4 h-4" />
             </div>
-            <span className="text-white text-sm font-medium drop-shadow-md group-hover:text-primaryGreen transition-colors duration-300">{date ?? "Date not available"}</span>
+            <span className="text-white text-sm font-medium drop-shadow-md group-hover:text-primaryGreen transition-colors duration-300">{date ?? ""}</span>
           </div>
 
           {/* Bottom content */}
