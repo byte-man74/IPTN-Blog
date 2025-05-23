@@ -10,15 +10,13 @@ import {
   NewsDTO,
   NewsFilterDTO,
   UpdateNewsDTO,
-  TagDTO
+  TagDTO,
 } from '@/app/(server)/modules/news/news.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
 import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
 import { paginate } from 'prisma-extension-pagination'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
-
-
 
 const prisma = new PrismaClient().$extends({
   model: {
@@ -129,10 +127,10 @@ export class NewsRepository {
                 select: {
                   firstName: true,
                   lastName: true,
-                  image: true
-                }
-              }
-            }
+                  image: true,
+                },
+              },
+            },
           },
           seo: true,
           analytics: true,
@@ -186,12 +184,12 @@ export class NewsRepository {
 
       // Filter by categories if provided - using AND logic to require all categories
       if (filters.categoryIds && filters.categoryIds.length > 0) {
-        where.AND = filters.categoryIds.map(categoryId => ({
+        where.AND = filters.categoryIds.map((categoryId) => ({
           categories: {
             some: {
-              id: categoryId
-            }
-          }
+              id: categoryId,
+            },
+          },
         }))
       }
 
@@ -201,13 +199,13 @@ export class NewsRepository {
           where.AND = []
         }
 
-        filters.categorySlugs.forEach(slug => {
+        filters.categorySlugs.forEach((slug) => {
           where.AND.push({
             categories: {
               some: {
                 slug: slug,
               },
-            }
+            },
           })
         })
       }
@@ -222,7 +220,7 @@ export class NewsRepository {
             some: {
               slug: filters.categorySlug,
             },
-          }
+          },
         })
       }
 
@@ -270,9 +268,7 @@ export class NewsRepository {
             },
           },
         },
-        orderBy: filters.byPopularity
-          ? { analytics: { views: 'desc' } }
-          : { pubDate: 'desc' },
+        orderBy: filters.byPopularity ? { analytics: { views: 'desc' } } : { pubDate: 'desc' },
       })
 
       const paginatedResults = await news.withPages({
@@ -300,8 +296,13 @@ export class NewsRepository {
     category: CreateNewsCategoryDTO
   ): Promise<NewsCategoryDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
-      return await this.category.create({
-        data: {
+      return await this.category.upsert({
+        where: { slug: category.slug ?? slugifyContent(category.name) },
+        update: {
+          name: category.name,
+          description: category.description,
+        },
+        create: {
           name: category.name,
           slug: category.slug ?? slugifyContent(category.name),
           description: category.description,
@@ -313,8 +314,10 @@ export class NewsRepository {
   //this should be really quick
   async createTag(tag: CreateTagDTO): Promise<TagDTO | null | ApiCustomError> {
     return tryCatchHandler(async () => {
-      return await this.tag.create({
-        data: {
+      return await this.tag.upsert({
+        where: { name: slugifyContent(tag.name) },
+        update: {},
+        create: {
           name: slugifyContent(tag.name),
         },
       })
@@ -430,7 +433,6 @@ export class NewsRepository {
           slug: true,
           description: true,
         },
-        take: 1000,
       })
     })
   }
@@ -443,7 +445,6 @@ export class NewsRepository {
           id: true,
           name: true,
         },
-        take: 1000, 
       })
     })
   }
@@ -462,13 +463,13 @@ export class NewsRepository {
                   published: true,
                   analytics: {
                     views: {
-                      gt: 10
-                    }
-                  }
-                }
-              }
-            }
-          }
+                      gt: 10,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         where: {
           news: {
@@ -476,25 +477,25 @@ export class NewsRepository {
               published: true,
               analytics: {
                 views: {
-                  gt: 10
-                }
-              }
-            }
-          }
+                  gt: 10,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           news: {
-            _count: 'desc'
-          }
+            _count: 'desc',
+          },
         },
-        take: 10 // Limit to top 10 most popular tags
-      });
+        take: 10, // Limit to top 10 most popular tags
+      })
 
       // Transform the result to match TagDTO structure
-      return tagsWithCount.map(tag => ({
+      return tagsWithCount.map((tag) => ({
         id: tag.id,
         name: tag.name,
-      }));
+      }))
     })
   }
 
@@ -545,23 +546,22 @@ export class NewsRepository {
     return false
   }
 
-
   async fetchRelatedNews(slug: string): Promise<NewsDTO[] | null | ApiCustomError> {
-    return tryCatchHandler(async() => {
+    return tryCatchHandler(async () => {
       // First get the current news to find its categories
       const currentNews = await this.news.findUnique({
         where: { slug },
         include: {
           categories: true,
         },
-      });
+      })
 
       if (!currentNews) {
-        return [];
+        return []
       }
 
       // Extract category IDs from the current news
-      const categoryIds = currentNews.categories.map(category => category.id);
+      const categoryIds = currentNews.categories.map((category) => category.id)
 
       // Find related news that share categories with the current news
       // but exclude the current news itself
@@ -571,9 +571,9 @@ export class NewsRepository {
           published: true,
           categories: {
             some: {
-              id: { in: categoryIds }
-            }
-          }
+              id: { in: categoryIds },
+            },
+          },
         },
         include: {
           categories: true,
@@ -581,13 +581,13 @@ export class NewsRepository {
           analytics: true,
         },
         orderBy: {
-          pubDate: 'desc'
+          pubDate: 'desc',
         },
         take: 5, // Limit to 5 related articles
-      });
+      })
 
       return relatedNews
-    });
+    })
   }
 
   async createNewsComment(
@@ -601,7 +601,7 @@ export class NewsRepository {
           userId: data.userId || null,
           isAnonymous: data.isAnonymous || false,
         },
-      });
-    });
+      })
+    })
   }
 }
