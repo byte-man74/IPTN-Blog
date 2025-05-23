@@ -24,11 +24,11 @@ const MasonryNewsGrid = ({
   }
 
   return (
-    <div className="mt-4 sm:mt-6 md:mt-8 flex flex-col gap-4 sm:gap-6 md:gap-8 pb-4 sm:pb-6 md:pb-8">
-      <div className="px-4 sm:px-6 md:px-8">
+    <div className="mt-4 sm:mt-6 md:mt-8 flex flex-col gap-4 sm:gap-6 md:gap-8 pb-4 sm:pb-6 md:pb-8 px-4 sm:px-6 md:px-8">
+      <div>
         <FullWidthAlternateTitle title={title} />
       </div>
-      <div className="w-full px-0 sm:px-6 md:px-10">
+      <div className="w-full">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array(4)
@@ -40,14 +40,14 @@ const MasonryNewsGrid = ({
         ) : (
           <Masonry
             breakpointCols={breakpointColumns}
-            className="flex w-full gap-x-0 sm:gap-x-2"
+            className="flex w-full gap-x-2"
             style={{
               rowGap: '20px',
             }}
             columnClassName="masonry-grid_column"
           >
             {data.map((newsItem, index) => (
-              <div className="mb-2 sm:mb-4 w-full px-0 sm:px-2" key={newsItem.id || index}>
+              <div className="mb-4 w-full" key={newsItem.id || index}>
                 <MasonryNewsElement newsItem={newsItem} />
               </div>
             ))}

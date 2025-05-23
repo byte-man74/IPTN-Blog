@@ -6,7 +6,6 @@ import ReactQueryProvider from '@/providers/query-client-provider'
 import NextTopLoader from 'nextjs-toploader'
 import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
-import { Toaster } from '@/components/ui/toaster'
 import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
 import { SignInProvider } from '@/providers/signin-provider'
 
@@ -145,7 +144,6 @@ export default function RootLayout({
             <SignInProvider>
               <ErrorProvider error={null}>
                 <MixpanelProvider>
-                  <Toaster />
                   <NextTopLoader
                     color="#008751"
                     height={4}
@@ -154,6 +152,7 @@ export default function RootLayout({
                     speed={900}
                     easing="ease"
                     initialPosition={0.55}
+                    showSpinner={false}
                   />
                   <div className="mx-auto max-w-[110rem] relative">{children}</div>
                 </MixpanelProvider>

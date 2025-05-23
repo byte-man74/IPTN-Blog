@@ -1,3 +1,4 @@
+
 'use client'
 
 import React, { useState } from 'react'
@@ -31,6 +32,8 @@ interface AppImageProps {
   fallbackSrc?: string
   /** Optional flag to use Cloudinary image component */
   optimizeImage?: boolean
+  /** Optional onClick handler */
+  onClick?: () => void
 }
 
 /**
@@ -59,6 +62,7 @@ export const AppImage = ({
   opacity = 1,
   fallbackSrc = '',
   optimizeImage = false,
+  onClick,
 }: AppImageProps) => {
   // Ensure src is not an empty string, use fallbackSrc or a default placeholder
   const initialSrc = src && src.trim() !== '' ? src : (fallbackSrc || '/assets/placeholder.png')
@@ -83,6 +87,7 @@ export const AppImage = ({
           backgroundColor: '#f0f0f0',
           placeItems: 'center'
         }}
+        onClick={onClick}
       >
         <div className="flex flex-col items-center gap-2">
           <ImageOff size={32} />
@@ -107,6 +112,7 @@ export const AppImage = ({
         }}
         className={className || ''}
         onError={handleError}
+        onClick={onClick}
       />
     )
   }
@@ -125,6 +131,7 @@ export const AppImage = ({
       }}
       className={className || ''}
       onError={handleError}
+      onClick={onClick}
     />
   )
 }

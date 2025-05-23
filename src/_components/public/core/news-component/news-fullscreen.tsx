@@ -8,8 +8,6 @@ import { ClientRoutes } from '@/lib/routes/client'
 import { cleanUpNewsTitle, calculateTimeStampFromDate } from '@/app/(server)/modules/news/news.utils'
 import { ViewsThreshold } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
-
-
 interface NewsFullScreenProps {
   newsItem?: NewsDTO
 }
@@ -48,42 +46,42 @@ export default function NewsFullScreen({
   return (
     <AppLink href={ClientRoutes.viewNews(slug)} className="block hover:shadow-lg transition-shadow duration-300 w-full">
       <div className="w-full overflow-hidden border border-gray-200 shadow-sm">
-        <div className="relative h-[30rem] w-full overflow-hidden">
+        <div className="relative h-[20rem] sm:h-[30rem] w-full overflow-hidden">
           <AppImage src={coverImage as string} alt={title ?? ""} className="object-cover w-full h-full object-center" priority />
           {/* Black overlay on top of the image */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="absolute bottom-4 left-4 flex items-center gap-2">
+          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 flex flex-wrap items-center gap-1 sm:gap-2">
             {readTime && (
-              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
-                <Clock size={16} />
+              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-1 sm:px-2 py-0.5 sm:py-1 text-xs sm:text-sm text-white">
+                <Clock size={14} />
                 <span>{readTime}</span>
               </div>
             )}
-            {category && <div className="rounded bg-primaryGreen px-3 py-1 text-sm text-white">{category}</div>}
+            {category && <div className="rounded bg-primaryGreen px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-white">{category}</div>}
             {showViews && (
-              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
-                <Eye size={16} />
+              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-1 sm:px-2 py-0.5 sm:py-1 text-xs sm:text-sm text-white">
+                <Eye size={14} />
                 <span>{views}</span>
               </div>
             )}
             {showComments && (
-              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-2 py-1 text-sm text-white">
-                <MessageSquare size={16} />
+              <div className="flex items-center gap-1 rounded bg-gray-800/70 px-1 sm:px-2 py-0.5 sm:py-1 text-xs sm:text-sm text-white">
+                <MessageSquare size={14} />
                 <span>{commentCount}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="py-4">
-          <div className="mb-3 flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Calendar size={16} />
+        <div className="py-2 sm:py-4">
+          <div className="mb-2 sm:mb-3 flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-500">
+              <Calendar size={14} />
               <span>{date}</span>
             </div>
           </div>
 
-          <h2 className="mb-2 text-xl font-bold uppercase tracking-tight text-gray-900">{cleanUpNewsTitle(title, true )}</h2>
+          <h2 className="mb-1 sm:mb-2 text-lg sm:text-xl font-bold uppercase tracking-tight text-gray-900">{cleanUpNewsTitle(title, true)}</h2>
         </div>
       </div>
     </AppLink>

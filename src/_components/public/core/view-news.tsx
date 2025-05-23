@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Clock } from 'lucide-react'
 import { useFetchNewsDetail, useFetchRelatedNews, useFetchNews } from '@/network/http-service/news.hooks'
 import { Skeleton } from '@/_components/global/skeleton'
@@ -20,12 +20,12 @@ import { ViewNewsMainSkeleton } from '@/_components/global/skeletons'
 import { useTrackSection } from '@/hooks/use-track-section'
 import { useMixpanel } from '@/lib/third-party/mixpanel/context'
 import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 /**
  * ViewNews component displays a news article in a Medium-style layout
  * with a full-width cover image and properly formatted content.
  */
-
 
 const PostReadingCompleted = "Completed Reading post"
 const RecommendedSectionId = "Recommended section"
@@ -43,6 +43,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
   const incrementMetric = useIncrementNewsMetric(slug, data?.id)
   const { trackEvent } = useMixpanel()
   const { setRef } = useTrackSection(sections)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   // Fetch news by tags when data is available
   const tagIds = data?.tags?.map(tag => typeof tag === 'object' ? tag.id : null).filter(Boolean) || []
@@ -142,12 +143,23 @@ const ViewNews = ({ slug }: { slug: string }) => {
         {isNewsLoading ? (
           <Skeleton className="w-full h-full" />
         ) : (
-          <AppImage
-            src={data?.coverImage || '/placeholder-image.jpg'}
-            alt={data?.title || 'Article Title'}
-            className="object-cover w-full h-full"
-            priority
-          />
+          <>
+            <AppImage
+              src={data?.coverImage || '/placeholder-image.jpg'}
+              alt={data?.title || 'Article Title'}
+              className="object-cover w-full h-full cursor-pointer"
+              priority
+              onClick={() => setIsDialogOpen(true)}
+            />
+            {isDialogOpen && (
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent>
+                  <DialogTitle className="sr-only">Article Cover Image</DialogTitle>
+                  <AppImage src={data?.coverImage || '/placeholder-image.jpg'} alt={data?.title || 'Article Title'} className="w-full h-auto" />
+                </DialogContent>
+              </Dialog>
+            )}
+          </>
         )}
       </div>
 
@@ -162,7 +174,6 @@ const ViewNews = ({ slug }: { slug: string }) => {
         )}
 
         <div ref={setRef(PostReadingCompleted)} id={PostReadingCompleted} />
-
 
         {/* Comments Section */}
         {!isNewsLoading && data && (
