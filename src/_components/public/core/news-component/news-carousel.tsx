@@ -123,7 +123,7 @@ const NewsMetadata: React.FC<{ item: NewsDTO }> = ({ item }) => (
   <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2 sm:mb-5">
     {item?.categories && item.categories.length > 0 && (
       <div className="bg-primaryGreen px-2 sm:px-4 py-0.5 sm:py-1.5 rounded-sm shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105 hover:bg-white group-hover:ring-2 group-hover:ring-white/30">
-        <span className="text-white text-xs sm:text-sm font-medium group-hover:text-primaryGreen transition-colors duration-300">{item.categories[0].name}</span>
+        <span className="text-white text-xs sm:text-sm font-medium transition-colors duration-300">{item.categories[0].name}</span>
       </div>
     )}
 
