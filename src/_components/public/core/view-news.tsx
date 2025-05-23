@@ -139,7 +139,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
       </div>
 
       {/* Cover Image */}
-      <div className="w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[450px] relative mb-6 md:mb-8">
+      <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] relative mb-6 md:mb-8">
         {isNewsLoading ? (
           <Skeleton className="w-full h-full" />
         ) : (
