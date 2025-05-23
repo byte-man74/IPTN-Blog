@@ -187,7 +187,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
               summary: data.summary,
               contentEncoded: data.content,
               published: data.isPublished,
-              pubDate: data.isPublished ? new Date() : null,
+              pubDate: data.isPublished ? (newsItem.pubDate || new Date()) : null,
               coverImage: data.featuredImageUrl,
               categoryIds: categories,
               tagIds: tags,
