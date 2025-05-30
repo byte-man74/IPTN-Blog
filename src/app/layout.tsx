@@ -56,6 +56,15 @@ export const metadata: Metadata = {
     'Breaking news Nigeria',
     'Nigerian journalism',
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+    },
+  },
   authors: [{ name: 'IPledge to Nigeria Team' }],
   creator: 'IPledge to Nigeria',
   publisher: 'IPledge to Nigeria',
