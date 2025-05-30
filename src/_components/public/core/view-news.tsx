@@ -88,16 +88,17 @@ const ViewNews = ({ slug }: { slug: string }) => {
     editable: false,
   }, [data?.contentEncoded])
 
-  // Handle view increment
-  if (data?.id && !hasIncrementedView.current) {
-    const viewedNews = JSON.parse(sessionStorage?.getItem('viewedNews') || '{}')
-    if (!viewedNews[slug]) {
-      incrementMetric.mutate({
-        data: { metricType: 'views' }
-      })
-      hasIncrementedView.current = true
+  useEffect(() => {
+    if (typeof window !== 'undefined' && data?.id && !hasIncrementedView.current) {
+      const viewedNews = JSON.parse(sessionStorage?.getItem('viewedNews') ?? '{}')
+      if (!viewedNews[slug]) {
+        incrementMetric.mutate({
+          data: { metricType: 'views' }
+        })
+        hasIncrementedView.current = true
+      }
     }
-  }
+  }, [data?.id, slug, incrementMetric,])
 
   useEffect(() => {
     trackEvent({

@@ -39,8 +39,11 @@ export const PollCard: React.FC<PollCardProps> = ({
 
 
   // Check if the user has already voted on this poll
-  const hasUserVoted = currentPoll?.options?.some(option =>
-    option.votes?.some(vote => vote.userId)
+  const hasUserVoted = React.useMemo(() =>
+    currentPoll?.options?.some(option =>
+      option.votes?.some(vote => vote.userId)
+    ),
+    [currentPoll?.options]
   );
 
   const handleVoteClick = async () => {

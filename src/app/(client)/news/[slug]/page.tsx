@@ -59,12 +59,6 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
       alternates: {
         canonical: `${domain}/${ClientRoutes.viewNews(slug)}`,
       },
-      other: {
-        'article:published_time': newsData.pubDate?.toISOString() as string,
-        'article:modified_time': newsData.lastUpdated?.toISOString() as string,
-        'article:author': 'Editorial Team',
-        'article:section': 'News',
-      },
     }
   } catch (error) {
     logger.error('Error fetching news data for SEO:', error)
@@ -102,7 +96,7 @@ function generateStructuredData(newsData: FullNewsDTO) {
       '@id': `${domain}/news/${newsData.slug}`,
     },
     url: `${domain}/news/${newsData.slug}`,
-    articleType: 'News Article',
+    articleType: 'News Article'
   }
 }
 

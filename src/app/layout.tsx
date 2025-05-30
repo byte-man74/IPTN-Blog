@@ -69,6 +69,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: 'google-site-verification',
+    yandex: 'yandex-verification',
+  },
   openGraph: {
     title: 'IPledge to Nigeria | Promoting Patriotism in Nigeria 🇳🇬',
     description:
