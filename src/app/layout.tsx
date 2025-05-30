@@ -8,6 +8,7 @@ import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
 import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
 import { SignInProvider } from '@/providers/signin-provider'
+import { CompanyData } from '@/lib/constants/company-data'
 
 /**
  * Font configuration for the application
@@ -81,7 +82,7 @@ export const metadata: Metadata = {
     description:
       'Your go-to media hub for breaking news, untold Nigerian stories, and insightful interviews.',
     images: [`${domain}/assets/twitter.png`], // Replace with actual image path
-    creator: '@ipledgenigeria', // Replace with actual Twitter handle
+    creator: CompanyData.TwitterLink
   },
   alternates: {
     canonical: domain,

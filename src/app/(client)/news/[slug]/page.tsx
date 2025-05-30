@@ -13,6 +13,7 @@ import GlobalSocialBanner from '@/_components/public/social-banner'
 import ArticleNav from '@/_components/public/core/news-component/article-nav'
 import { auth } from '@/auth'
 import { ClientRoutes } from '@/lib/routes/client'
+import { CompanyData } from '@/lib/constants/company-data'
 
 type Params = Promise<{ slug: string }>
 
@@ -47,6 +48,7 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
         images: newsData.seo?.openGraphImage ? [{ url: newsData.seo?.openGraphImage }] : [],
       },
       twitter: {
+        site: CompanyData.TwitterLink,
         card: 'summary_large_image',
         title: newsData.title,
         description: newsData.summary ?? '',
