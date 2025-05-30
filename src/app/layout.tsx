@@ -58,6 +58,17 @@ export const metadata: Metadata = {
   authors: [{ name: 'IPledge to Nigeria Team' }],
   creator: 'IPledge to Nigeria',
   publisher: 'IPledge to Nigeria',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: 'IPledge to Nigeria | Promoting Patriotism in Nigeria 🇳🇬',
     description:
@@ -68,7 +79,7 @@ export const metadata: Metadata = {
     url: domain,
     images: [
       {
-        url: `${domain}/assets/og-imag.png`, // Replace with actual image path
+        url: `${domain}/assets/og-imag.png`,
         width: 1200,
         height: 630,
         alt: 'IPledge to Nigeria - Promoting Patriotism',
@@ -80,8 +91,8 @@ export const metadata: Metadata = {
     title: 'IPledge to Nigeria | Promoting Patriotism 🇳🇬',
     description:
       'Your go-to media hub for breaking news, untold Nigerian stories, and insightful interviews.',
-    images: [`${domain}/assets/twitter.png`], // Replace with actual image path
-    creator: '@ipledgenigeria', // Replace with actual Twitter handle
+    images: [`${domain}/assets/twitter.png`],
+    creator: '@ipledgenigeria',
   },
   alternates: {
     canonical: domain,
