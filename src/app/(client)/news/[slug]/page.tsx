@@ -34,28 +34,65 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
       return {
         title: 'News Article Not Found',
         description: 'The requested news article could not be found',
+        robots: {
+          index: false,
+          follow: false,
+        },
       }
     }
 
     return {
       title: newsData.title || 'News Article',
       description: newsData.summary || 'Read our latest news article',
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+        },
+      },
       openGraph: {
         title: newsData.title,
         description: newsData.summary ?? '',
         url: `${domain}/${ClientRoutes.viewNews(slug)}`,
         type: 'article',
-        images: newsData.seo?.openGraphImage ? [{ url: newsData.seo?.openGraphImage }] : [],
+        authors: ['Editorial Team'],
+        section: 'News',
+        images: newsData.seo?.openGraphImage
+          ? [
+              {
+                url: newsData.seo.openGraphImage,
+                width: 1200,
+                height: 630,
+                alt: newsData.title || 'News Article Image',
+              },
+            ]
+          : [],
       },
       twitter: {
         site: CompanyData.TwitterLink,
         card: 'summary_large_image',
         title: newsData.title,
         description: newsData.summary ?? '',
-        images: newsData.seo?.twitterImage ? [newsData.seo.twitterImage] : [],
+        images: newsData.seo?.twitterImage
+          ? [
+              {
+                url: newsData.seo.twitterImage,
+                alt: newsData.title || 'News Article Image',
+              },
+            ]
+          : [],
       },
       alternates: {
         canonical: `${domain}/${ClientRoutes.viewNews(slug)}`,
+      },
+      other: {
+        'article:published_time': newsData.pubDate?.toISOString() as string,
+        'article:modified_time': newsData.lastUpdated?.toISOString() as string,
+        'article:author': 'Editorial Team',
+        'article:section': 'News',
       },
     }
   } catch (error) {
@@ -63,6 +100,10 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
     return {
       title: 'News Article',
       description: 'Read our latest news article',
+      robots: {
+        index: true,
+        follow: true,
+      },
     }
   }
 }
@@ -94,7 +135,7 @@ function generateStructuredData(newsData: FullNewsDTO) {
       '@id': `${domain}/news/${newsData.slug}`,
     },
     url: `${domain}/news/${newsData.slug}`,
-    articleType: 'News Article'
+    articleType: 'News Article',
   }
 }
 
