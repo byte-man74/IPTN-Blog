@@ -491,7 +491,7 @@ export class NewsRepository {
             _count: 'desc',
           },
         },
-        take: 10, // Limit to top 10 most popular tags
+        take: 8, // Limit to top 10 most popular tags
       })
 
       // Transform the result to match TagDTO structure
