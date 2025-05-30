@@ -34,41 +34,19 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
       return {
         title: 'News Article Not Found',
         description: 'The requested news article could not be found',
-        robots: {
-          index: false,
-          follow: false,
-        },
       }
     }
 
     return {
       title: newsData.title || 'News Article',
       description: newsData.summary || 'Read our latest news article',
-      robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-          index: true,
-          follow: true,
-          'max-image-preview': 'large',
-        },
-      },
       openGraph: {
         title: newsData.title,
         description: newsData.summary ?? '',
         url: `${domain}/${ClientRoutes.viewNews(slug)}`,
         type: 'article',
-        authors: ['Editorial Team'],
-        section: 'News',
         images: newsData.seo?.openGraphImage
-          ? [
-              {
-                url: newsData.seo.openGraphImage,
-                width: 1200,
-                height: 630,
-                alt: newsData.title || 'News Article Image',
-              },
-            ]
+          ? [{ url: newsData.seo?.openGraphImage, width: 1200, height: 630 }]
           : [],
       },
       twitter: {
@@ -76,14 +54,7 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
         card: 'summary_large_image',
         title: newsData.title,
         description: newsData.summary ?? '',
-        images: newsData.seo?.twitterImage
-          ? [
-              {
-                url: newsData.seo.twitterImage,
-                alt: newsData.title || 'News Article Image',
-              },
-            ]
-          : [],
+        images: newsData.seo?.twitterImage ? [newsData.seo.twitterImage] : [],
       },
       alternates: {
         canonical: `${domain}/${ClientRoutes.viewNews(slug)}`,
@@ -100,10 +71,6 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
     return {
       title: 'News Article',
       description: 'Read our latest news article',
-      robots: {
-        index: true,
-        follow: true,
-      },
     }
   }
 }
