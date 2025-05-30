@@ -42,6 +42,8 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
       openGraph: {
         title: newsData.title,
         description: newsData.summary ?? '',
+        url: `${domain}/${ClientRoutes.viewNews(slug)}`,
+        type: 'article',
         images: newsData.seo?.openGraphImage ? [{ url: newsData.seo?.openGraphImage }] : [],
       },
       twitter: {
@@ -89,6 +91,8 @@ function generateStructuredData(newsData: FullNewsDTO) {
       '@type': 'WebPage',
       '@id': `${domain}/news/${newsData.slug}`,
     },
+    url: `${domain}/news/${newsData.slug}`,
+    articleType: 'News Article'
   }
 }
 
