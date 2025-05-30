@@ -62,6 +62,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
   const filteredTagNews = tagRelatedNews?.data?.filter(item => item.id !== data?.id).slice(0, 4) || []
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Link.configure({
@@ -89,7 +90,7 @@ const ViewNews = ({ slug }: { slug: string }) => {
 
   // Handle view increment
   if (data?.id && !hasIncrementedView.current) {
-    const viewedNews = JSON.parse(sessionStorage.getItem('viewedNews') || '{}')
+    const viewedNews = JSON.parse(sessionStorage?.getItem('viewedNews') || '{}')
     if (!viewedNews[slug]) {
       incrementMetric.mutate({
         data: { metricType: 'views' }
