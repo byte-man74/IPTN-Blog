@@ -8,7 +8,6 @@ import './globals.css'
 import { ErrorProvider } from '@/providers/error-provider'
 import { MixpanelProvider } from '@/lib/third-party/mixpanel/provider'
 import { SignInProvider } from '@/providers/signin-provider'
-import { CompanyData } from '@/lib/constants/company-data'
 
 /**
  * Font configuration for the application
@@ -56,15 +55,6 @@ export const metadata: Metadata = {
     'Breaking news Nigeria',
     'Nigerian journalism',
   ],
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-    },
-  },
   authors: [{ name: 'IPledge to Nigeria Team' }],
   creator: 'IPledge to Nigeria',
   publisher: 'IPledge to Nigeria',
@@ -91,7 +81,7 @@ export const metadata: Metadata = {
     description:
       'Your go-to media hub for breaking news, untold Nigerian stories, and insightful interviews.',
     images: [`${domain}/assets/twitter.png`], // Replace with actual image path
-    creator: CompanyData.TwitterLink
+    creator: '@ipledgenigeria', // Replace with actual Twitter handle
   },
   alternates: {
     canonical: domain,
