@@ -14,7 +14,7 @@ import {
 } from '@/app/(server)/modules/news/news.types'
 import ApiCustomError from '@/types/api-custom-error'
 import { tryCatchHandler } from '@/lib/utils/try-catch-handler'
-import { getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
+import { encodeNewsTitleContent, getNewsSummary, slugifyContent } from '@/app/(server)/modules/news/news.utils'
 import { paginate } from 'prisma-extension-pagination'
 import { PageNumberCounters, PageNumberPagination } from 'prisma-extension-pagination/dist/types'
 
@@ -176,8 +176,11 @@ export class NewsRepository {
 
       if (filters.searchTerm) {
         where.OR = [
+          { title: { contains: encodeNewsTitleContent(filters.searchTerm), mode: 'insensitive' } },
           { title: { contains: filters.searchTerm, mode: 'insensitive' } },
+          { summary: { contains: encodeNewsTitleContent(filters.searchTerm), mode: 'insensitive' } },
           { summary: { contains: filters.searchTerm, mode: 'insensitive' } },
+          { contentEncoded: { contains: encodeNewsTitleContent(filters.searchTerm), mode: 'insensitive' } },
           { contentEncoded: { contains: filters.searchTerm, mode: 'insensitive' } },
         ]
       }

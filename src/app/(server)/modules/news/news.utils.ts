@@ -1,5 +1,5 @@
 import slugify from 'slugify'
-import { decode } from 'entities'
+import { decode, encodeHTML } from 'entities'
 /**
  * Converts a string to a URL-friendly slug
  * @param content The string to convert to a slug
@@ -77,4 +77,8 @@ export const cleanUpNewsTitle = (title: string, full: boolean = true): string =>
   const cleanTitle = decode(title)
 
   return full ? cleanTitle : cleanTitle.substring(0, 79).trim() + '...'
+}
+
+export const encodeNewsTitleContent = (title: string) => {
+    return encodeHTML(title)
 }

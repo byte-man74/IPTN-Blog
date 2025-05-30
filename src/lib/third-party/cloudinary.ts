@@ -5,7 +5,7 @@ cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true 
+  secure: true
 })
 
 export async function deleteFileFromCloudinary(publicId: string) {
@@ -34,7 +34,7 @@ export async function uploadFileToCloudinary(file: string, folder?: string) {
 
     return {
       url: result.secure_url,
-      thumbnailUrl: result.url,
+      thumbnailUrl: result.secure_url,
       publicId: result.public_id,
     }
   } catch (error) {
