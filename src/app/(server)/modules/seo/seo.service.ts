@@ -60,8 +60,10 @@ export class SeoService implements ISeoService {
 
       if (!response) return null
 
+      // Create a new Response object from the buffer
+      const responseObj = new Response(response)
       // Upload the generated image to Cloudinary
-      const uploadResult = await this.uploadImageToCloudinary(response)
+      const uploadResult = await this.uploadImageToCloudinary(responseObj)
       return uploadResult
     })
   }
@@ -85,7 +87,8 @@ export class SeoService implements ISeoService {
       if (!response) return null
 
       // Upload the generated image to Cloudinary
-      const uploadResult = await this.uploadImageToCloudinary(response)
+      const responseObj = new Response(response)
+      const uploadResult = await this.uploadImageToCloudinary(responseObj)
 
       return uploadResult
     })

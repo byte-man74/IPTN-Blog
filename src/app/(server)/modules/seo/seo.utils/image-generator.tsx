@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from 'next/og'
 import React from 'react'
+import sharp from 'sharp'
 import ApiCustomError from '@/types/api-custom-error'
 import { logger } from '@/lib/utils/logger'
 
@@ -31,6 +32,17 @@ async function loadGoogleFont(font: string, text: string) {
   return fetch(font_url).then((response) => response.arrayBuffer())
 }
 
+// Helper function to convert ImageResponse to WebP
+async function convertToWebP(imageResponse: ImageResponse, quality: number = 80): Promise<Buffer> {
+  const arrayBuffer = await imageResponse.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
+
+  // Convert PNG to WebP using Sharp
+  return await sharp(buffer)
+    .webp({ quality })
+    .toBuffer()
+}
+
 export async function generateOgImage({
   title,
   image,
@@ -41,7 +53,7 @@ export async function generateOgImage({
   try {
     // If an image is provided, just resize it to the recommended OG size
     if (image) {
-      return new ImageResponse(
+      const imageResponse = new ImageResponse(
         (
           <div
             style={{
@@ -67,12 +79,15 @@ export async function generateOgImage({
           height: 630,
         }
       )
+
+      // Convert to WebP
+      return await convertToWebP(imageResponse, 80)
     }
 
     const interFont = await loadGoogleFont('Inter', title + siteName)
     const playfairFont = await loadGoogleFont('Playfair Display', title)
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -187,6 +202,9 @@ export async function generateOgImage({
         ],
       }
     )
+
+    // Convert to WebP
+    return await convertToWebP(imageResponse, 80)
   } catch (error) {
     logger.error('OG Image generation error:', error)
     throw new ApiCustomError('Failed to generate blog image', 500)
@@ -203,7 +221,7 @@ export async function generateTwitterImage({
   try {
     // If an image is provided, just resize it to the recommended Twitter size
     if (image) {
-      return new ImageResponse(
+      const imageResponse = new ImageResponse(
         (
           <div
             style={{
@@ -229,12 +247,15 @@ export async function generateTwitterImage({
           height: 600,
         }
       )
+
+      // Convert to WebP
+      return await convertToWebP(imageResponse, 80)
     }
 
     const interFont = await loadGoogleFont('Inter', title + siteName)
     const playfairFont = await loadGoogleFont('Playfair Display', title)
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -349,6 +370,9 @@ export async function generateTwitterImage({
         ],
       }
     )
+
+    // Convert to WebP
+    return await convertToWebP(imageResponse, 80)
   } catch (error) {
     logger.error('Twitter Image generation error:', error)
     throw new ApiCustomError('Failed to generate Twitter image', 500)
