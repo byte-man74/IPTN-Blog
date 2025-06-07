@@ -6,7 +6,7 @@ import { NewsService } from './(server)/modules/news/news.service'
 import { SiteConfigService } from './(server)/modules/site-configurations/site-config.service'
 import ApiCustomError from '@/types/api-custom-error'
 
-const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
+const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ipledgenigeria.com'
 
 /**
  * Generates the static pages for the sitemap

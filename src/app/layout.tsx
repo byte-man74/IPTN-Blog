@@ -36,7 +36,7 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
 })
 
 // Get the domain from environment variables
-const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
+const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ipledgenigeria.com'
 
 /**
  * Metadata configuration for SEO

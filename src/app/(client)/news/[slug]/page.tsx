@@ -24,7 +24,7 @@ type NewsArticleProps = {
 export async function generateMetadata({ params }: NewsArticleProps): Promise<Metadata> {
   const params_resolved = await params
   const slug = params_resolved.slug
-  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
+  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ipledgenigeria.com'
 
   try {
     const response = await createServerAxiosInstance(routes.news.detail(slug))
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: NewsArticleProps): Promise<Me
 }
 
 function generateStructuredData(newsData: FullNewsDTO) {
-  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipledgenigeria.com'
+  const domain = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ipledgenigeria.com'
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
