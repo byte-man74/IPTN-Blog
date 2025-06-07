@@ -7,7 +7,7 @@ Disallow: /auth/
 Disallow: /private/
 
 # Sitemap
-Sitemap: https://www.iptn-blog.vercel.app/sitemap.xml
+Sitemap: https://www.ipledge2nigeria.com/sitemap.xml
 
 # Crawl delay to prevent server overload
 Crawl-delay: 10
