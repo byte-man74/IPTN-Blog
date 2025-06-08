@@ -8,6 +8,7 @@ import { PollDTO } from '@/app/(server)/modules/polls/poll.types'
 import { useSignIn } from '@/providers/signin-provider'
 import { useMixpanel } from '@/lib/third-party/mixpanel/context'
 import { MixpanelActions } from '@/lib/third-party/mixpanel/events'
+import { useSession } from 'next-auth/react'
 
 
 
@@ -36,15 +37,19 @@ export const PollCard: React.FC<PollCardProps> = ({
 }) => {
   const { openSignInModal } = useSignIn();
   const { trackEvent } = useMixpanel();
+  const { data: sessionData } = useSession();
 
 
   // Check if the user has already voted on this poll
   const hasUserVoted = React.useMemo(() =>
     currentPoll?.options?.some(option =>
-      option.votes?.some(vote => vote.userId)
+      option.votes?.some(vote => vote.userId === sessionData?.user?.id)
     ),
-    [currentPoll?.options]
+    [currentPoll?.options, sessionData?.user?.id]
   );
+
+
+  console.log("has voted: ", hasUserVoted)
 
   const handleVoteClick = async () => {
     if (isUserLoggedIn) {
