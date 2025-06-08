@@ -49,7 +49,7 @@ export const PollCard: React.FC<PollCardProps> = ({
   );
 
 
-  console.log("has voted: ", hasUserVoted)
+
 
   const handleVoteClick = async () => {
     if (isUserLoggedIn) {
