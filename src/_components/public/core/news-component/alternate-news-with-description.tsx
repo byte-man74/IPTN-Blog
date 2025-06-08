@@ -31,7 +31,7 @@ const AlternateNewsWithDescription: React.FC<{ newsItem?: NewsDTO; allowMargin?:
     : undefined
   const views = analytics?.views || 0
   const commentsCount = comments?.length || 0
-  const authorName = "Admin"
+  const authorName = "Web team"
   const shouldShowViews = views >= ViewsThreshold
 
   return (

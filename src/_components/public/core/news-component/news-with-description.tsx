@@ -74,7 +74,7 @@ const NewsWithDescription: React.FC<{
               <div className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-primaryGreen text-white">
                 <User size={14} />
               </div>
-              <span className="text-xs sm:text-sm font-medium">Admin</span>
+              <span className="text-xs sm:text-sm font-medium">Web team</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-500">
               <Calendar size={14} />
