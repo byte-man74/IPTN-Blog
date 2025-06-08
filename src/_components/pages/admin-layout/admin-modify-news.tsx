@@ -57,6 +57,7 @@ type FormValues = {
   isPublished: boolean
   featuredImage: File | null
   featuredImageUrl: string | null
+  pubDate: Date | null
 }
 
 export const ModifyPostComponent = ({ slug }: { slug: string }) => {
@@ -80,6 +81,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       isPublished: false,
       featuredImage: null,
       featuredImageUrl: null,
+      pubDate: null,
     },
   })
 
@@ -103,6 +105,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     featuredImageUrl: string | null
     categoryIds: number[]
     tagIds: number[]
+    pubDate: Date | null
   } | null>(null)
   const [previewSheetOpen, setPreviewSheetOpen] = useState(false)
 
@@ -114,6 +117,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   const title = watch('title')
   const isPublished = watch('isPublished')
   const featuredImageUrl = watch('featuredImageUrl')
+  const pubDate = watch('pubDate')
 
   // Filter tags based on search term
   useEffect(() => {
@@ -133,6 +137,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       setValue('content', newsItem.contentEncoded || '')
       setValue('isPublished', newsItem.published || false)
       setValue('featuredImageUrl', newsItem.coverImage || null)
+      setValue('pubDate', newsItem.pubDate || null)
       setImagePreview(newsItem.coverImage || null)
       setContentLoaded(true)
 
@@ -154,6 +159,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
         featuredImageUrl: newsItem.coverImage || null,
         categoryIds: newsItem.categories?.map((cat) => cat.id) || [],
         tagIds: newsItem.tags?.map((tag) => tag.id) || [],
+        pubDate: newsItem.pubDate || null,
       })
     }
   }, [newsItem, setValue])
@@ -187,7 +193,8 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
               summary: data.summary,
               contentEncoded: data.content,
               published: data.isPublished,
-              pubDate: data.isPublished ? newsItem.pubDate || new Date() : null,
+              //Temporary
+              pubDate: data.isPublished ? data.pubDate || new Date() : null,
               coverImage: data.featuredImageUrl,
               categoryIds: categories,
               tagIds: tags,
@@ -203,6 +210,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
             featuredImageUrl: data.featuredImageUrl,
             categoryIds: categories,
             tagIds: tags,
+            pubDate: data.pubDate,
           })
 
           setAutoSaveStatus('saved')
@@ -223,7 +231,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     )
 
     return debouncedSave
-  }, [newsItem?.slug, updateNews, newsItem?.pubDate])
+  }, [newsItem?.slug, updateNews])
 
   // Watch for changes and auto-save
   useEffect(() => {
@@ -236,6 +244,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       isPublished,
       featuredImage: watch('featuredImage'),
       featuredImageUrl,
+      pubDate,
     }
 
     // Check if anything has changed compared to previous state
@@ -246,7 +255,8 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       isPublished !== previousFormState.isPublished ||
       featuredImageUrl !== previousFormState.featuredImageUrl ||
       !arraysEqual(selectedCategories, previousFormState.categoryIds) ||
-      !arraysEqual(selectedTags, previousFormState.tagIds)
+      !arraysEqual(selectedTags, previousFormState.tagIds) ||
+      new Date(pubDate || '').getTime() !== new Date(previousFormState.pubDate || '').getTime()
 
     if (hasChanges) {
       const debouncedSaveFn = saveProgress()
@@ -268,6 +278,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
     saveProgress,
     watch,
     previousFormState,
+    pubDate,
   ])
 
   // Helper function to compare arrays
@@ -350,7 +361,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
           summary: data.summary,
           contentEncoded: data.content,
           published: data.isPublished,
-          pubDate: data.isPublished ? new Date() : null,
+          pubDate: data.isPublished ? data.pubDate || new Date() : null,
           coverImage: data.featuredImageUrl,
           categoryIds: selectedCategories,
           tagIds: selectedTags,
@@ -366,6 +377,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
         featuredImageUrl: data.featuredImageUrl,
         categoryIds: selectedCategories,
         tagIds: selectedTags,
+        pubDate: data.pubDate,
       })
 
       toast({
@@ -520,6 +532,25 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
                     )}
                   />
                   <Label htmlFor="published">Published status</Label>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pubDate">Publication Date</Label>
+                  <Controller
+                    name="pubDate"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="pubDate"
+                        type="datetime-local"
+                        className="w-full"
+                        value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? new Date(e.target.value) : null)
+                        }
+                      />
+                    )}
+                  />
                 </div>
 
                 <CloudinaryImageUploader
