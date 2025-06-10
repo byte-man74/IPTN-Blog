@@ -6,7 +6,7 @@ import { NewsQueryKey } from '@/network/query-keys/news'
 import { logger } from '@/lib/utils/logger'
 import {
   CONTENT_CRITERIA,
-  HomePageEditorsPick,
+//   HomePageEditorsPick,
   HomePageFeatured,
 } from '@/app/(server)/modules/site-configurations/site-config.constants'
 
@@ -15,32 +15,32 @@ export default async function Home() {
 
   try {
     // Prefetch editor's pick news
-    await queryClient.prefetchQuery({
-      queryKey: [
-        NewsQueryKey.NEWS,
-        { categorySlug: HomePageEditorsPick.slug },
-        1,
-        HomePageEditorsPick.threshold || HomePageEditorsPick.maxThreshold || 2,
-      ],
-      queryFn: async () => {
-        try {
-          const response = await createServerAxiosInstance(routes.news.list, {
-            params: {
-              categorySlug: HomePageEditorsPick.slug,
-              page: 1,
-              limit: HomePageEditorsPick.threshold,
-            },
-          })
-          if (!response) {
-            throw new Error("Failed to fetch editor's pick news")
-          }
-          return response.data
-        } catch (error) {
-          logger.error("Error fetching editor's pick news:", error)
-          throw error
-        }
-      },
-    })
+    // await queryClient.prefetchQuery({
+    //   queryKey: [
+    //     NewsQueryKey.NEWS,
+    //     { categorySlug: HomePageEditorsPick.slug },
+    //     1,
+    //     HomePageEditorsPick.threshold || HomePageEditorsPick.maxThreshold || 2,
+    //   ],
+    //   queryFn: async () => {
+    //     try {
+    //       const response = await createServerAxiosInstance(routes.news.list, {
+    //         params: {
+    //           categorySlug: HomePageEditorsPick.slug,
+    //           page: 1,
+    //           limit: HomePageEditorsPick.threshold,
+    //         },
+    //       })
+    //       if (!response) {
+    //         throw new Error("Failed to fetch editor's pick news")
+    //       }
+    //       return response.data
+    //     } catch (error) {
+    //       logger.error("Error fetching editor's pick news:", error)
+    //       throw error
+    //     }
+    //   },
+    // })
 
     // Prefetch main content news
     await queryClient.prefetchQuery({
