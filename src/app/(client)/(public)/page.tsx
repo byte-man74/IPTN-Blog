@@ -11,35 +11,36 @@ import {
 
 export default async function Home() {
   const queryClient = new QueryClient()
+ 
 
   try {
     // Prefetch editor's pick news
-    await queryClient.prefetchQuery({
-      queryKey: [
-        NewsQueryKey.NEWS,
-        { categorySlug: CONTENT_CRITERIA.editorsPick.slug },
-        1,
-        CONTENT_CRITERIA.editorsPick.threshold,
-      ],
-      queryFn: async () => {
-        try {
-          const response = await createServerAxiosInstance(routes.news.list, {
-            params: {
-              categorySlug: CONTENT_CRITERIA.editorsPick.slug,
-              page: 1,
-              limit: CONTENT_CRITERIA.editorsPick.threshold,
-            },
-          })
-          if (!response) {
-            throw new Error("Failed to fetch editor's pick news")
-          }
-          return response.data
-        } catch (error) {
-          logger.error("Error fetching editor's pick news:", error)
-          throw error
-        }
-      },
-    })
+    // await queryClient.prefetchQuery({
+    //   queryKey: [
+    //     NewsQueryKey.NEWS,
+    //     { categorySlug: CONTENT_CRITERIA.editorsPick.slug },
+    //     1,
+    //     CONTENT_CRITERIA.editorsPick.threshold,
+    //   ],
+    //   queryFn: async () => {
+    //     try {
+    //       const response = await createServerAxiosInstance(routes.news.list, {
+    //         params: {
+    //           categorySlug: CONTENT_CRITERIA.editorsPick.slug,
+    //           page: 1,
+    //           limit: CONTENT_CRITERIA.editorsPick.threshold,
+    //         },
+    //       })
+    //       if (!response) {
+    //         throw new Error("Failed to fetch editor's pick news")
+    //       }
+    //       return response.data
+    //     } catch (error) {
+    //       logger.error("Error fetching editor's pick news:", error)
+    //       throw error
+    //     }
+    //   },
+    // })
 
     // Prefetch main content news
     await queryClient.prefetchQuery({
