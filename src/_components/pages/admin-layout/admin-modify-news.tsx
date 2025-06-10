@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ArrowLeft, Save, Plus, Check, X, Eye, Share } from 'lucide-react'
 import { AppLink } from '@/_components/global/app-link'
 import { Button } from '@/components/ui/button'
@@ -28,7 +28,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useForm, Controller } from 'react-hook-form'
 import { TagDTO } from '@/app/(server)/modules/news/news.types'
 import { AdminRoutes } from '@/lib/routes/admin'
-import { debounce } from 'lodash'
 import {
   useUpdateNews,
   useCreateCategory,
@@ -96,17 +95,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   const [tagPopoverOpen, setTagPopoverOpen] = useState(false)
   const [visibleTags, setVisibleTags] = useState<TagDTO[]>([])
   const [contentLoaded, setContentLoaded] = useState(false)
-  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
-  const [previousFormState, setPreviousFormState] = useState<{
-    title: string
-    summary: string
-    content: string
-    isPublished: boolean
-    featuredImageUrl: string | null
-    categoryIds: number[]
-    tagIds: number[]
-    pubDate: Date | null
-  } | null>(null)
   const [previewSheetOpen, setPreviewSheetOpen] = useState(false)
 
   const { data: categories, isLoading: categoriesLoading } = useFetchCategories()
@@ -115,9 +103,7 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
   const content = watch('content')
   const summary = watch('summary')
   const title = watch('title')
-  const isPublished = watch('isPublished')
   const featuredImageUrl = watch('featuredImageUrl')
-  const pubDate = watch('pubDate')
 
   // Filter tags based on search term
   useEffect(() => {
@@ -149,18 +135,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       if (newsItem.tags?.length) {
         setSelectedTags(newsItem.tags.map((tag) => tag.id))
       }
-
-      // Initialize previous form state
-      setPreviousFormState({
-        title: newsItem.title || '',
-        summary: newsItem.summary || '',
-        content: newsItem.contentEncoded || '',
-        isPublished: newsItem.published || false,
-        featuredImageUrl: newsItem.coverImage || null,
-        categoryIds: newsItem.categories?.map((cat) => cat.id) || [],
-        tagIds: newsItem.tags?.map((tag) => tag.id) || [],
-        pubDate: newsItem.pubDate || null,
-      })
     }
   }, [newsItem, setValue])
 
@@ -178,116 +152,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
       }
     }
   }, [content, summary, setValue])
-
-  // Debounced save function
-  const saveProgress = useCallback(() => {
-    const debouncedSave = debounce(
-      async (data: FormValues, categories: number[], tags: number[]) => {
-        if (!newsItem?.slug) return
-
-        setAutoSaveStatus('saving')
-        try {
-          await updateNews({
-            data: {
-              title: data.title,
-              summary: data.summary,
-              contentEncoded: data.content,
-              published: data.isPublished,
-              //Temporary
-              pubDate: data.isPublished ? data.pubDate || new Date() : null,
-              coverImage: data.featuredImageUrl,
-              categoryIds: categories,
-              tagIds: tags,
-            },
-          })
-
-          // Update previous form state after successful save
-          setPreviousFormState({
-            title: data.title,
-            summary: data.summary,
-            content: data.content,
-            isPublished: data.isPublished,
-            featuredImageUrl: data.featuredImageUrl,
-            categoryIds: categories,
-            tagIds: tags,
-            pubDate: data.pubDate,
-          })
-
-          setAutoSaveStatus('saved')
-          // Reset status after 3 seconds
-          setTimeout(() => {
-            setAutoSaveStatus('idle')
-          }, 3000)
-        } catch (error) {
-          toast({
-            title: 'Error auto-saving',
-            description: String(error),
-            variant: 'destructive',
-          })
-          setAutoSaveStatus('idle')
-        }
-      },
-      3000
-    )
-
-    return debouncedSave
-  }, [newsItem?.slug, updateNews])
-
-  // Watch for changes and auto-save
-  useEffect(() => {
-    if (!contentLoaded || !previousFormState) return
-
-    const currentData = {
-      title,
-      summary,
-      content,
-      isPublished,
-      featuredImage: watch('featuredImage'),
-      featuredImageUrl,
-      pubDate,
-    }
-
-    // Check if anything has changed compared to previous state
-    const hasChanges =
-      title !== previousFormState.title ||
-      summary !== previousFormState.summary ||
-      content !== previousFormState.content ||
-      isPublished !== previousFormState.isPublished ||
-      featuredImageUrl !== previousFormState.featuredImageUrl ||
-      !arraysEqual(selectedCategories, previousFormState.categoryIds) ||
-      !arraysEqual(selectedTags, previousFormState.tagIds) ||
-      new Date(pubDate || '').getTime() !== new Date(previousFormState.pubDate || '').getTime()
-
-    if (hasChanges) {
-      const debouncedSaveFn = saveProgress()
-      debouncedSaveFn(currentData, selectedCategories, selectedTags)
-
-      return () => {
-        debouncedSaveFn.cancel()
-      }
-    }
-  }, [
-    content,
-    title,
-    summary,
-    isPublished,
-    featuredImageUrl,
-    selectedCategories,
-    selectedTags,
-    contentLoaded,
-    saveProgress,
-    watch,
-    previousFormState,
-    pubDate,
-  ])
-
-  // Helper function to compare arrays
-  const arraysEqual = (a: number[], b: number[]) => {
-    if (a.length !== b.length) return false
-    const sortedA = [...a].sort()
-    const sortedB = [...b].sort()
-    return sortedA.every((val, idx) => val === sortedB[idx])
-  }
 
   const handleImageUploaded = (imageUrl: string, file: File) => {
     setValue('featuredImageUrl', imageUrl)
@@ -368,18 +232,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
         },
       })
 
-      // Update previous form state after manual save
-      setPreviousFormState({
-        title: data.title,
-        summary: data.summary,
-        content: data.content,
-        isPublished: data.isPublished,
-        featuredImageUrl: data.featuredImageUrl,
-        categoryIds: selectedCategories,
-        tagIds: selectedTags,
-        pubDate: data.pubDate,
-      })
-
       toast({
         title: 'Success',
         description: data.isPublished ? 'Post published successfully' : 'Draft saved successfully',
@@ -429,12 +281,6 @@ export const ModifyPostComponent = ({ slug }: { slug: string }) => {
             </Button>
           </AppLink>
           <h1 className="text-2xl font-bold">Edit Post</h1>
-          {autoSaveStatus === 'saving' && (
-            <span className="text-sm text-amber-500 ml-2">Auto-saving...</span>
-          )}
-          {autoSaveStatus === 'saved' && (
-            <span className="text-sm text-green-500 ml-2">Changes auto-saved</span>
-          )}
         </div>
         <div className="flex gap-2">
           {title && (
