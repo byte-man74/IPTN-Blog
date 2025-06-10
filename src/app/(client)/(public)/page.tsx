@@ -18,9 +18,9 @@ export default async function Home() {
     await queryClient.prefetchQuery({
       queryKey: [
         NewsQueryKey.NEWS,
-        { categorySlug: CONTENT_CRITERIA.editorsPick.slug },
+        { categorySlug: HomePageEditorsPick.slug },
         1,
-        CONTENT_CRITERIA.editorsPick.threshold,
+        HomePageEditorsPick.threshold || HomePageEditorsPick.maxThreshold || 2,
       ],
       queryFn: async () => {
         try {
@@ -28,7 +28,7 @@ export default async function Home() {
             params: {
               categorySlug: HomePageEditorsPick.slug,
               page: 1,
-              limit: HomePageEditorsPick.threshold || HomePageEditorsPick.maxThreshold || 2,
+              limit: HomePageEditorsPick.threshold,
             },
           })
           if (!response) {
