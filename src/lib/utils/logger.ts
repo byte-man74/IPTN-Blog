@@ -1,4 +1,5 @@
 import pino from 'pino'
+import * as Sentry from '@sentry/nextjs'
 
 // Determine environment (dev or prod)
 const isProd = process.env.NODE_ENV === 'production'
@@ -22,6 +23,20 @@ const logger = pino({
     },
   },
   timestamp: () => `,"time":"${new Date().toISOString()}"`,
+  hooks: {
+    logMethod(inputArgs, method) {
+      // Capture errors in Sentry when in production
+      if (isProd && inputArgs[0] === 'error') {
+        const error = inputArgs[1]
+        if (error instanceof Error) {
+          Sentry.captureException(error)
+        } else {
+          Sentry.captureMessage(String(error))
+        }
+      }
+      method.apply(this, inputArgs)
+    }
+  }
 })
 
 // Export the logger
